@@ -1,29 +1,35 @@
-/* Reset de margens e paddings */
+/* Importação da fonte Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Fonte global */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     line-height: 1.6;
     color: #333;
 }
 
-/* Header */
+/* Header com efeito blur */
 header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    background-color: #02ff41;
+    padding: 10px 30px;
+    backdrop-filter: blur(6px);
+    background-color: rgba(15, 85, 225, 0.5); /* Azul translúcido */
     color: white;
 }
 
 header .logo img {
-    height: 250px;
+    height: 50px;
 }
 
 header nav ul {
@@ -35,20 +41,21 @@ header nav ul {
 header nav a {
     text-decoration: none;
     color: white;
-    font-weight: bold;
-}
-
-header .cta {
-    background-color: #ff6600;
-    padding: 10px 20px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    padding: 8px 12px;
     border-radius: 5px;
-    color: white;
 }
 
-/* Seção Hero */
+header nav a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Hero section com compensação do header fixo */
 .hero {
     height: 100vh;
-    background-image: url('hero-image.jpg');
+    padding-top: 80px; /* Compensar header fixo */
+    background-image: url('hero-image.jpg'); /* ou use um <video> se preferir */
     background-size: cover;
     background-position: center;
     color: white;
@@ -56,6 +63,14 @@ header .cta {
     justify-content: center;
     align-items: center;
     text-align: center;
+    position: relative;
+}
+
+.hero-content {
+    max-width: 800px;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 10px;
 }
 
 .hero-content h1 {
@@ -69,30 +84,43 @@ header .cta {
 }
 
 .cta, .cta-secondary {
-    background-color: #ff6600;
+    display: inline-block;
+    text-decoration: none;
+    font-weight: bold;
     padding: 10px 20px;
     border-radius: 5px;
+    margin-top: 10px;
+}
+
+.cta {
+    background-color: #ff6600;
     color: white;
-    text-decoration: none;
 }
 
 .cta-secondary {
-    background-color: transparent;
     border: 2px solid white;
+    color: white;
+    background: transparent;
     margin-left: 10px;
 }
 
 /* Funcionalidades */
 #funcionalidades {
-    padding: 50px 20px;
+    padding: 60px 20px;
     background-color: #f4f4f4;
     text-align: center;
 }
 
 .funcionalidades {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 30px;
+    margin-top: 30px;
+}
+
+.funcao {
+    max-width: 300px;
 }
 
 .funcao img {
@@ -100,35 +128,35 @@ header .cta {
     margin-bottom: 15px;
 }
 
+.funcao h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
 /* Depoimentos */
 #depoimentos {
-    padding: 50px 20px;
+    padding: 60px 20px;
     background-color: #fff;
     text-align: center;
 }
 
 .depoimentos blockquote {
     font-size: 1.1rem;
-    color: #777;
-    margin-bottom: 20px;
+    color: #555;
+    max-width: 800px;
+    margin: 20px auto;
+    font-style: italic;
 }
 
 /* CTA Final */
 #cta-final {
-    padding: 50px 20px;
+    padding: 60px 20px;
     background-color: #0066cc;
     color: white;
     text-align: center;
 }
 
-#cta-final .cta {
-    background-color: #ff6600;
-    padding: 10px 20px;
-    border-radius: 5px;
-    color: white;
-}
-
-/* Rodapé */
+/* Footer */
 footer {
     padding: 20px;
     background-color: #333;
@@ -146,8 +174,60 @@ footer ul li {
     margin: 0 10px;
 }
 
+footer ul li a {
+    color: white;
+    text-decoration: none;
+}
+
 footer .social-media a {
     margin: 0 10px;
     color: white;
     text-decoration: none;
+}
+
+/* Estilos específicos para a seção de Meta, Missão e Valores */
+#missao-valores {
+    padding: 50px 20px;
+    background-color: #e6f2f1;
+    text-align: center;
+}
+
+#missao-valores h2 {
+    color: #0f55e1;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+#missao-valores .container {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+    color: #333;
+}
+
+#missao-valores h3 {
+    color: #0f55e1;
+    font-size: 1.8rem;
+    margin-top: 30px;
+}
+
+#missao-valores p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+
+#missao-valores ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: 1.1rem;
+}
+
+#missao-valores ul li {
+    margin-bottom: 10px;
+    line-height: 1.8;
+}
+
+#missao-valores ul li strong {
+    color: #0f55e1;
 }
