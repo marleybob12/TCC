@@ -24,7 +24,7 @@ header {
     align-items: center;
     padding: 10px 30px;
     backdrop-filter: blur(6px);
-    background-color: rgba(15, 85, 225, 0.5); /* Azul translúcido */
+    background-color: rgb(0, 37, 110); /* Azul translúcido */
     color: white;
 }
 
