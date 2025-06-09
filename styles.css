@@ -23,7 +23,7 @@ header {
   align-items: center;
   padding: 10px 30px;
   backdrop-filter: blur(6px);
-  background-color: rgb(0, 37, 110);
+  background-color: rgb(0, 0, 0);
   color: white;
 }
 
@@ -164,10 +164,55 @@ header nav a:hover {
 
 /* Sobre */
 #sobre {
-  padding: 50px 20px;
-  background-color: #ffffff;
+  padding: 80px 20px;
+  background: #f7f9fc;
   text-align: center;
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.sobre-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#sobre h2 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #4a90e2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+}
+
+#sobre h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: #4a90e2;
+  margin: 15px auto 0;
+  border-radius: 2px;
+}
+
+#sobre .descricao {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+#sobre .impacto {
+  font-size: 1.3rem;
+  color: #222;
+  margin-top: 30px;
+  font-weight: 600;
+}
+
+#sobre p strong {
+  color: #4a90e2;
+}
+
 
 /* Missão, Visão, Valores */
 #missao-valores {
@@ -238,7 +283,7 @@ header nav a:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Depoimentos */
+/* Depoimentos 
 #depoimentos {
   background-color: #fff;
   padding: 60px 20px;
@@ -252,7 +297,7 @@ blockquote {
   font-size: 1.1rem;
   color: #555;
 }
-
+*/
 /* CTA Final */
 #cta-final {
   padding: 60px 20px;
