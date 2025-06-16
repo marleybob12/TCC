@@ -185,8 +185,6 @@ header nav a:hover {
   text-align: center;
 }
 
-
-
 .acordeao-container {
   max-width: 900px;
   margin: 0 auto;
@@ -228,18 +226,18 @@ header nav a:hover {
 }
 
 /* Funcionalidades */
-#funcionalidades {
-  padding: 60px 20px;
-  background-color: #f4f4f4;
-  text-align: center;
-}
-#funcionalidades h2 {
+#funcionalidades  h2 {
   font-size: 2.5rem;
   margin-bottom: 30px;
   color: rgb(47,120,227);
   text-transform: uppercase;
   letter-spacing: 1px;
   position: relative;
+}
+#funcionalidades {
+  padding: 60px 20px;
+  background-color: #f4f4f4;
+  text-align: center;
 }
 
 .funcionalidades {
