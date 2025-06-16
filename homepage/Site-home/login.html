@@ -1,42 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-         <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Eventoflow - Pagina de Login</title>
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
- 
-  
-</head>
-<body>
-  <div class="login-container">
-    <div class="login-esquerda">
-      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Login illustration">
-    </div>
-    <div class="login-direita">
-      <h2>Fazer Login</h2>
-      <form>
-        <div class="input-group">
-          <input type="email" placeholder="Email" required>
-        </div>
-        <div class="input-group">
-          <input type="password" placeholder="Senha" required>
-        </div>
-        <button type="submit" class="login-btn">LOGIN</button>
-        <p class="esqueceu"><a href="homepage\recuperacaoUser.html">Esqueceu seu usuario?</a></p>
-        <p class="esqueceu"><a href="homepage\recuperacaoSenha.html">Esqueceu sua Senha?</a></p>
- <!-- Botão para criar conta -->
-<p>
-  <button type="button" class="criar-conta-btn" onclick="window.location.href='cadastro.html'">
-    Criar conta →
-  </button>
-</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Eventoflow - Página de Login</title>
 
-      </form>
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- Ícone -->
+    <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-esquerda">
+        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Ilustração de login" />
+      </div>
+
+      <div class="login-direita">
+        <h2>Fazer Login</h2>
+        <form>
+          <div class="input-group">
+            <label for="email" class="visually-hidden">Email</label>
+            <input type="email" id="email" placeholder="Email" required />
+          </div>
+          <div class="input-group">
+            <label for="senha" class="visually-hidden">Senha</label>
+            <input type="password" id="senha" placeholder="Senha" required />
+          </div>
+
+          <button type="submit" class="login-btn">LOGIN</button>
+
+          <p class="esqueceu"><a href="homepage/recuperacaoUser.html">Esqueceu seu usuário?</a></p>
+          <p class="esqueceu"><a href="homepage/recuperacaoSenha.html">Esqueceu sua senha?</a></p>
+
+          <p>
+            <button type="button" class="criar-conta-btn" onclick="window.location.href='cadastro.html'">
+              Criar conta →
+            </button>
+          </p>
+        </form>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

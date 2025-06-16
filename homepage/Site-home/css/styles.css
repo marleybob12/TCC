@@ -1,13 +1,19 @@
 /* Importação da fonte Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+<<<<<<<< HEAD:homepage/Site-home/css/styles.css
 /* atributos da pagina em geral */
+========
+>>>>>>>> 39a862e078dc082dd7fa78630caf9600e8fa223a:homepage/css/styles.css
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+<<<<<<<< HEAD:homepage/Site-home/css/styles.css
 /* body  */
+========
+>>>>>>>> 39a862e078dc082dd7fa78630caf9600e8fa223a:homepage/css/styles.css
 
 body {
   height: 100vh;
@@ -52,7 +58,11 @@ body {
   width: 100%;
   margin-bottom: 20px;
 }
+<<<<<<<< HEAD:homepage/Site-home/css/styles.css
 /*input email e senha  */
+========
+
+>>>>>>>> 39a862e078dc082dd7fa78630caf9600e8fa223a:homepage/css/styles.css
 .input-group input {
   width: 100%;
   padding: 15px 20px;
@@ -62,7 +72,11 @@ body {
   font-size: 1rem;
   outline: none;
 }
+<<<<<<<< HEAD:homepage/Site-home/css/styles.css
 /* botão login */
+========
+
+>>>>>>>> 39a862e078dc082dd7fa78630caf9600e8fa223a:homepage/css/styles.css
 .login-btn {
   width: 100%;
   padding: 15px;
@@ -94,6 +108,7 @@ body {
 .esqueceu a:hover {
   text-decoration: underline;
 }
+<<<<<<<< HEAD:homepage/Site-home/css/styles.css
 /*botão cadastro */
 .criar-conta-btn {
   width: 100%;
@@ -113,6 +128,15 @@ body {
 }
 
 
+========
+
+.criar-conta {
+  margin-top: 30px;
+  font-weight: 600;
+  color: #444;
+}
+
+>>>>>>>> 39a862e078dc082dd7fa78630caf9600e8fa223a:homepage/css/styles.css
 /* Responsivo */
 @media (max-width: 768px) {
   .login-container {
