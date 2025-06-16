@@ -1,13 +1,11 @@
 /* Importação da fonte Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-/* atributos da pagina em geral */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
-/* body  */
 
 body {
   height: 100vh;
@@ -52,7 +50,7 @@ body {
   width: 100%;
   margin-bottom: 20px;
 }
-/*input email e senha  */
+
 .input-group input {
   width: 100%;
   padding: 15px 20px;
@@ -62,7 +60,7 @@ body {
   font-size: 1rem;
   outline: none;
 }
-/* botão login */
+
 .login-btn {
   width: 100%;
   padding: 15px;
@@ -94,24 +92,12 @@ body {
 .esqueceu a:hover {
   text-decoration: underline;
 }
-/*botão cadastro */
-.criar-conta-btn {
-  width: 100%;
-  padding: 15px;
-  border: none;
-  border-radius: 30px;
-  background-color: #6b5bdf;
-  color: white;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
 
-.criar-conta-btn:hover {
-  background-color: #5545c9;
+.criar-conta {
+  margin-top: 30px;
+  font-weight: 600;
+  color: #444;
 }
-
 
 /* Responsivo */
 @media (max-width: 768px) {
