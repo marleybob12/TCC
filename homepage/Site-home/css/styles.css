@@ -1,7 +1,7 @@
 /* Importação da fonte Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-/* Reset geral e fonte padrão */
+/* Reset e fonte padrão */
 * {
   margin: 0;
   padding: 0;
@@ -9,12 +9,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* Garantir que input e button herdem a fonte */
-input, button, textarea {
-  font-family: inherit;
-}
-
-/* body */
+/* Body e fundo */
 body {
   height: 100vh;
   background: linear-gradient(135deg, #6b5bdf, #c151c6);
@@ -23,7 +18,7 @@ body {
   align-items: center;
 }
 
-/* Container geral */
+/* Container do login */
 .login-container {
   background-color: white;
   width: 900px;
@@ -34,7 +29,7 @@ body {
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
 }
 
-/* Lados do layout */
+/* Lado esquerdo e direito */
 .login-esquerda,
 .login-direita {
   flex: 1;
@@ -45,63 +40,107 @@ body {
   flex-direction: column;
 }
 
-/* Imagem da esquerda */
+/* Imagem esquerda */
 .login-esquerda img {
   width: 80%;
   max-width: 250px;
 }
 
-/* Título da direita */
+/* Título login */
 .login-direita h2 {
   font-size: 1.8rem;
   margin-bottom: 30px;
   color: #333;
 }
 
-/* Grupo de inputs */
+/* Campos de entrada */
 .input-group {
   width: 100%;
   margin-bottom: 20px;
 }
 
-/* Estilo dos inputs */
 .input-group input {
   width: 100%;
   padding: 15px 20px;
   border: none;
   border-radius: 30px;
-  background-color: #f0f0f0;
-  outline: none;
+  background-color: #eee;
   font-size: 1rem;
-  transition: 0.3s;
+  outline: none;
 }
 
-.input-group input:focus {
-  background-color: #e0e0e0;
-}
-
-/* Estilo padrão dos botões (Login) */
-button {
+/* Botão login estilizado */
+.login-btn {
   width: 100%;
-  padding: 15px 20px;
+  padding: 15px;
   border: none;
   border-radius: 30px;
-  background-color: #6b5bdf;
+  background: linear-gradient(135deg, #28a745, #218838);
   color: white;
   font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  transition: all 0.3s ease;
 }
 
-button:hover {
-  background-color: #5948c1;
+.login-btn:hover {
+  background: linear-gradient(135deg, #218838, #1e7e34);
+  box-shadow: 0 6px 18px rgba(40, 167, 69, 0.4);
+  transform: translateY(-2px);
 }
 
-/* Botão específico: Criar Conta (verde) */
-button.btn-criar {
-  background-color: #4CAF50;
+/* Textos abaixo dos campos */
+.esqueceu,
+.criar-conta {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #555;
 }
 
-button.btn-criar:hover {
-  background-color: #45a049;
+.esqueceu a {
+  color: #333;
+  text-decoration: none;
+}
+
+.esqueceu a:hover {
+  text-decoration: underline;
+}
+
+/* Botão Criar Conta estilizado */
+.criar-conta-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #6b5bdf, #8e44ad);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(107, 91, 223, 0.3);
+  transition: all 0.3s ease;
+}
+
+.criar-conta-btn:hover {
+  background: linear-gradient(135deg, #5545c9, #732d91);
+  box-shadow: 0 6px 18px rgba(107, 91, 223, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Responsivo para telas menores */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .login-direita {
+    width: 100%;
+  }
+
+  .login-esquerda {
+    display: none;
+  }
 }
