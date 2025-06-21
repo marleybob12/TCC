@@ -9,13 +9,14 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* Body e fundo */
+/* Body e fundo com paleta EventFlow */
 body {
   height: 100vh;
-  background: linear-gradient(135deg, #6b5bdf, #c151c6);
+  background: linear-gradient(135deg, #2F78E3, #5251E8);
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 /* Container do login */
@@ -27,6 +28,7 @@ body {
   display: flex;
   overflow: hidden;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
 }
 
 /* Lado esquerdo e direito */
@@ -38,6 +40,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  min-width: 300px;
 }
 
 /* Imagem esquerda */
@@ -46,11 +49,11 @@ body {
   max-width: 250px;
 }
 
-/* Título login */
+/* Título Login */
 .login-direita h2 {
   font-size: 1.8rem;
   margin-bottom: 30px;
-  color: #333;
+  color: #2F78E3;
 }
 
 /* Campos de entrada */
@@ -62,31 +65,37 @@ body {
 .input-group input {
   width: 100%;
   padding: 15px 20px;
-  border: none;
+  border: 2px solid #199BD9;
   border-radius: 30px;
-  background-color: #eee;
+  background-color: #F0F8FF;
   font-size: 1rem;
   outline: none;
+  transition: 0.3s;
 }
 
-/* Botão login estilizado */
+.input-group input:focus {
+  border-color: #09B3CF;
+  box-shadow: 0 0 8px rgba(9, 179, 207, 0.4);
+}
+
+/* Botão Login com as cores principais */
 .login-btn {
   width: 100%;
   padding: 15px;
   border: none;
   border-radius: 30px;
-  background: linear-gradient(135deg, #28a745, #218838);
+  background: linear-gradient(135deg, #09B3CF, #199BD9);
   color: white;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 4px 15px rgba(9, 179, 207, 0.3);
   transition: all 0.3s ease;
 }
 
 .login-btn:hover {
-  background: linear-gradient(135deg, #218838, #1e7e34);
-  box-shadow: 0 6px 18px rgba(40, 167, 69, 0.4);
+  background: linear-gradient(135deg, #199BD9, #2F78E3);
+  box-shadow: 0 6px 18px rgba(9, 179, 207, 0.4);
   transform: translateY(-2px);
 }
 
@@ -99,7 +108,7 @@ body {
 }
 
 .esqueceu a {
-  color: #333;
+  color: #7D2AE7;
   text-decoration: none;
 }
 
@@ -107,25 +116,25 @@ body {
   text-decoration: underline;
 }
 
-/* Botão Criar Conta estilizado */
+/* Botão Criar Conta estilizado com outro tom da paleta */
 .criar-conta-btn {
   width: 100%;
   padding: 15px;
   border: none;
   border-radius: 30px;
-  background: linear-gradient(135deg, #6b5bdf, #8e44ad);
+  background: linear-gradient(135deg, #5251E8, #7D2AE7);
   color: white;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   margin-top: 20px;
-  box-shadow: 0 4px 15px rgba(107, 91, 223, 0.3);
+  box-shadow: 0 4px 15px rgba(82, 81, 232, 0.3);
   transition: all 0.3s ease;
 }
 
 .criar-conta-btn:hover {
-  background: linear-gradient(135deg, #5545c9, #732d91);
-  box-shadow: 0 6px 18px rgba(107, 91, 223, 0.4);
+  background: linear-gradient(135deg, #2F78E3, #5251E8);
+  box-shadow: 0 6px 18px rgba(82, 81, 232, 0.4);
   transform: translateY(-2px);
 }
 
