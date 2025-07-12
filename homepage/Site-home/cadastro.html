@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EventFlow - Cadastro</title>
+  <link rel="stylesheet" href="css/cadastro.css" />
+  <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="login-container">
+    <div class="login-esquerda">
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Ilustração de Cadastro">
+    </div>
+
+    <div class="login-direita">
+      <h2>Criar Conta</h2>
+      <form action="PHP/cadastroProcess.php" method="POST" autocomplete="off">
+        <div class="input-group">
+          <input type="text" name="nome" placeholder="Nome Completo" required maxlength="100">
+        </div>
+        <div class="input-group">
+          <input type="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="input-group">
+          <input type="tel" name="telefone" placeholder="Telefone (Opcional)" pattern="\d{10,15}">
+        </div>
+        <div class="input-group">
+          <input type="password" name="senha" placeholder="Senha (mínimo 6 caracteres)" required minlength="6">
+        </div>
+        <div class="input-group">
+          <input type="password" name="confirmarSenha" placeholder="Confirmar Senha" required minlength="6">
+        </div>
+        <button type="submit" class="Cadastrar-btn">Cadastrar</button>
+        <p class="voltar-login">
+          <a href="login.html">← Já tem conta? Fazer Login</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Validação extra no front-end
+    document.querySelector("form").addEventListener("submit", function(e) {
+      const senha = document.querySelector('input[name="senha"]').value;
+      const confirmarSenha = document.querySelector('input[name="confirmarSenha"]').value;
+      if (senha !== confirmarSenha) {
+        alert("As senhas não coincidem!");
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
