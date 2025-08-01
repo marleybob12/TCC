@@ -6,7 +6,6 @@
   <title>EventFlow - Cadastro</title>
   <link rel="stylesheet" href="css/cadastro.css" />
   <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head> 
 
 <body>
@@ -17,21 +16,22 @@
 
     <div class="login-direita">
       <h2>Criar Conta</h2>
-      <form action="PHP/cadastroProcess.php" method="POST" autocomplete="off">
+      <!-- Tirei o action PHP -->
+      <form id="cadastroForm" autocomplete="off">
         <div class="input-group">
-          <input type="text" name="nome" placeholder="Nome Completo" required maxlength="100">
+          <input type="text" id="nome" placeholder="Nome Completo" required maxlength="100">
         </div>
         <div class="input-group">
-          <input type="email" name="email" placeholder="Email" required>
+          <input type="email" id="email" placeholder="Email" required>
         </div>
         <div class="input-group">
-          <input type="tel" name="telefone" placeholder="Telefone (Opcional)" pattern="\d{10,15}">
+          <input type="tel" id="telefone" placeholder="Telefone (Opcional)" pattern="\d{10,15}">
         </div>
         <div class="input-group">
-          <input type="password" name="senha" placeholder="Senha (mínimo 6 caracteres)" required minlength="6">
+          <input type="password" id="senha" placeholder="Senha (mínimo 6 caracteres)" required minlength="6">
         </div>
         <div class="input-group">
-          <input type="password" name="confirmarSenha" placeholder="Confirmar Senha" required minlength="6">
+          <input type="password" id="confirmarSenha" placeholder="Confirmar Senha" required minlength="6">
         </div>
         <button type="submit" class="Cadastrar-btn">Cadastrar</button>
         <p class="voltar-login">
@@ -41,14 +41,63 @@
     </div>
   </div>
 
-  <script>
-    // Validação extra no front-end
-    document.querySelector("form").addEventListener("submit", function(e) {
-      const senha = document.querySelector('input[name="senha"]').value;
-      const confirmarSenha = document.querySelector('input[name="confirmarSenha"]').value;
+  <!-- Script Firebase -->
+  <script type="module">
+    // Importa Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } 
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc } 
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "eventflow-87d51.firebaseapp.com",
+      projectId: "eventflow-87d51",
+      storageBucket: "eventflow-87d51.appspot.com",
+      messagingSenderId: "SEU_SENDER_ID",
+      appId: "SEU_APP_ID"
+    };
+
+    // Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Cadastro
+    document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("telefone").value;
+      const senha = document.getElementById("senha").value;
+      const confirmarSenha = document.getElementById("confirmarSenha").value;
+
       if (senha !== confirmarSenha) {
         alert("As senhas não coincidem!");
-        e.preventDefault();
+        return;
+      }
+
+      try {
+        // Cria usuário no Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+        const user = userCredential.user;
+
+        // Salva dados adicionais no Firestore
+        await setDoc(doc(db, "Usuario", user.uid), {
+          nome: nome,
+          email: email,
+          telefone: telefone || "",
+          dataCriacao: new Date()
+        });
+
+        alert("Conta criada com sucesso!");
+        window.location.href = "home.html"; // Redireciona para home
+
+      } catch (error) {
+        alert("Erro ao criar conta: " + error.message);
       }
     });
   </script>

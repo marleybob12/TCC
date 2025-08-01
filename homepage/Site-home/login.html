@@ -7,6 +7,7 @@
   <title>EventFlow - Login</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="login-container">
@@ -16,7 +17,7 @@
     <div class="login-direita">
       <h2>Fazer Login</h2>
 
-      <!-- Formulário de Login -->
+      <!-- Adicionei id no form -->
       <form id="loginForm" autocomplete="off">
         <div class="input-group">
           <input type="email" id="email" placeholder="Email" required>
@@ -41,12 +42,11 @@
   <!-- Script Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged }
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     // Configuração do Firebase
-    
-      const firebaseConfig = {
+  const firebaseConfig = {
   apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
   authDomain: "eventflow-87d51.firebaseapp.com",
   databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
@@ -60,24 +60,26 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Se já estiver logado, vai para home direto
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        window.location.href = "home.html";
-      }
-    });
-
-    // Login
+    // Quando o formulário for enviado
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const email = document.getElementById("email").value;
       const senha = document.getElementById("senha").value;
 
       try {
         await signInWithEmailAndPassword(auth, email, senha);
+        // Redireciona para página inicial
         window.location.href = "home.html";
       } catch (error) {
         alert("Erro no login: " + error.message);
+      }
+    });
+
+    // Se já estiver logado, pula login
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "home.html";
       }
     });
   </script>

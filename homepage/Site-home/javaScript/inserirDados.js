@@ -17,6 +17,9 @@ async function inserirDados() {
     nome: "Tecnologia",
     descricao: "Eventos voltados para inovação tecnológica"
   });
+  categoriaRef = await addDoc(collection(db, "Categoria"),{
+    nome : "Eventos sociais",
+    descricao: "Os eventos sociais têm como objetivo a comemoração de algum momento marcante. Por isso, eles não possuem caráter comercial nem buscam obter lucros: aqui, a intenção é reunir família, amigos, colegas de trabalho e pessoas importantes na sua vida para festejar alguns exemplos são casamentos,aniversários,happy hours,churrascos"  });
 
   // Criar local
   const localRef = await addDoc(collection(db, "Local"), {
