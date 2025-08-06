@@ -1,27 +1,33 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>EventFlow - Home</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="css/stylesHome.css" />
+
+  <!-- Ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Fonte Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- === Cabeçalho === -->
+  <!-- Cabeçalho -->
   <header>
-    <div >
-      <!-- Logo com link para a página de cadastro -->
+    <div class="header-container">
       <a href="home.html" class="logo">
         <img src="img/logo_barra.png" alt="Logo EventFlow" />
       </a>
-      <!--icone menu hamburguer-->
-      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu">
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
         <i class="fas fa-bars"></i>
       </button>
-      
-      <!-- Navegação -->
-      <nav class="nav-links" id="nav-links" aria-label="Menu principal">
+      <nav class="nav-links" aria-label="Menu principal">
         <ul>
           <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
           <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
@@ -32,20 +38,21 @@
     </div>
   </header>
 
-  <!-- === Conteúdo Principal === -->
-   <section class="hero" role="banner">
+  <!-- Conteúdo -->
   <main>
-    <h1>Bem-vindo ao EventFlow 🎉</h1>
-    <button id="logoutBtn">Sair</button>
-    <p>Você está logado. Em breve seus eventos aparecerão aqui.</p>
+    <section class="hero" role="banner">
+      <h1>Bem-vindo ao EventFlow 🎉</h1>
+      <p>Você está logado. Em breve seus eventos aparecerão aqui.</p>
+      <button id="logoutBtn" type="button" class="btn btn-logout">Sair</button>
+    </section>
   </main>
-</section>
-  <!-- Script de Inicialização do Firebase e Autenticação de Usuário -->
+
+  <!-- Firebase e Menu -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // Configuração do Firebase
+    // Configuração Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
       authDomain: "eventflow-87d51.firebaseapp.com",
@@ -56,21 +63,23 @@
       appId: "1:1060995756519:web:1963ecc800497812630d42"
     };
 
-    // Inicializa o Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Protege a página: se não estiver logado, redireciona para o login
+    // Proteção da página
     onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-      }
+      if (!user) window.location.href = "login.html";
     });
 
-    // Função de logout
+    // Logout
     document.getElementById("logoutBtn").addEventListener("click", async () => {
       await signOut(auth);
       window.location.href = "login.html";
+    });
+
+    // Menu hambúrguer
+    document.getElementById("menu-icon").addEventListener("click", () => {
+      document.querySelector("header nav ul").classList.toggle("show");
     });
   </script>
 </body>
