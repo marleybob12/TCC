@@ -8,11 +8,9 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="../css/stylesHome.css" />
-  <!--icone da pagina-->
   <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
 
-
-  <!-- Ícones (Font Awesome) -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <!-- Fonte Poppins -->
@@ -26,48 +24,71 @@
 </head>
 <body>
   
-  <!-- Cabeçalho -->
+  <!-- Header com glassmorphism -->
   <header>
     <div class="header-container">
       <a href="home.html" class="logo">
         <img src="../img/logo_barra.png" alt="Logo EventFlow" />
       </a>
+      <!-- Botão do menu para dispositivos móveis -->
       <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
         <i class="fas fa-bars"></i>
       </button>
+      <!-- Navegação principal -->
       <nav class="nav-links" aria-label="Menu principal">
         <ul>
           <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
           <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
           <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
           <li><a href="home.html" class="btn">EventFlow</a></li>
+          <li>
+            <!-- Dropdown do usuário -->
+            <div class="user-dropdown">
+              <div class="user-account" onclick="toggleDropdown()">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+                <span class="user-name">Marley</span>
+                <span class="arrow">▾</span>
+              </div>
+              <div class="dropdown-menu" id="dropdown">
+                <a href="#">👤 Perfil</a>
+                <a href="#">⚙️ Configurações</a>
+                <a href="#">🚪 Sair</a>
+              </div>
+            </div>
+          </li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- Conteúdo -->
+  <!-- Conteúdo principal -->
   <main>
+    <!-- Carrossel com imagens -->
     <section class="carrosel">
       <div id="demo" class="carousel slide" data-ride="carousel">
+        <!-- Indicadores do carrossel -->
         <ul class="carousel-indicators">
           <li data-target="#demo" data-slide-to="0" class="active"></li>
           <li data-target="#demo" data-slide-to="1"></li>
           <li data-target="#demo" data-slide-to="2"></li>
         </ul>
 
+        <!-- Slides do carrossel -->
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <img src="../img/ChatGPT Image 6 de jun. de 2025, 10_13_38.png" alt="Los Angeles">
+            <a>
+              <img src="../img/ChatGPT Image 6 de jun. de 2025, 10_13_38.png" alt="Evento 1">
+            </a>
           </div>
           <div class="carousel-item">
-            <img src="../img/icon_relatorio(1).png" alt="Chicago">
+            <img src="../img/icon_relatorio(1).png" alt="Evento 2">
           </div>
           <div class="carousel-item">
-            <img src="../img/logo_barra.png" alt="New York">
+            <img src="../img/logo_barra.png" alt="Evento 3">
           </div>
         </div>
 
+        <!-- Controles do carrossel -->
         <a class="carousel-control-prev" href="#demo" data-slide="prev">
           <span class="carousel-control-prev-icon"></span>
         </a>
@@ -77,18 +98,33 @@
       </div>
     </section>
 
-    <section class="hero" role="banner">
-      <h1>Bem-vindo ao EventFlow 🎉</h1>
-      <p>Você está logado. Em breve seus eventos aparecerão aqui.</p>
-      <button id="logoutBtn" type="button" class="btn btn-logout">Sair</button>
-    </section>
-  </main>
+    <!-- Conteúdo principal da página -->
+    <main role="main">
+      <!-- Hero (boas-vindas) -->
+      <section class="hero" aria-label="Boas-vindas">
+        <h1>Bem-vindo ao EventFlow 🎉</h1>
+        <p>Você está logado. Em breve seus eventos aparecerão aqui.</p>
+      </section>
 
-  <!-- Firebase e Menu -->
+      <section class="explorer" aria-label="Explorar eventos">
+        <h2>Explorar nossos eventos</h2>
+      </section>
+
+      <section class="favoritos-da-semana" aria-label="Favoritos da semana">
+        <h2>Favoritos da semana</h2>
+      </section>
+    </main>
+
+    <!-- Botão para logout -->
+    <button id="logoutBtn" type="button" class="btn btn-logout">Sair</button>
+
+  <!-- Firebase -->
   <script type="module">
+    // Importa as funções necessárias do Firebase para iniciar o app, autenticação e logout
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+    // Configuração do Firebase do seu projeto
     const firebaseConfig = {
       apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
       authDomain: "eventflow-87d51.firebaseapp.com",
@@ -99,25 +135,55 @@
       appId: "1:1060995756519:web:1963ecc800497812630d42"
     };
 
+    // Inicializa o app Firebase com as configurações
     const app = initializeApp(firebaseConfig);
+    // Inicializa o serviço de autenticação
     const auth = getAuth(app);
 
-    // Proteção da página
+    // Verifica se o usuário está logado
     onAuthStateChanged(auth, (user) => {
-      if (!user) window.location.href = "../login.html"; // volta para login
+      // Se não estiver logado, redireciona para a página de login
+      if (!user) window.location.href = "../login.html";
     });
 
-    // Logout
+    // Evento do botão de logout
     document.getElementById("logoutBtn").addEventListener("click", async () => {
+      // Desloga o usuário
       await signOut(auth);
+      // Redireciona para a página de login após logout
       window.location.href = "../login.html";
     });
 
-    // Menu hambúrguer
+    // Evento do botão de menu (ícone hamburguer) para mostrar/ocultar menu em dispositivos móveis
     document.getElementById("menu-icon").addEventListener("click", () => {
       document.querySelector("header nav ul").classList.toggle("show");
     });
-    
   </script>
+
+  <!-- Funções JS globais (sem type="module") -->
+  <script>
+    /**
+     * Função para abrir ou fechar o dropdown do usuário ao clicar na área da conta.
+     */
+    function toggleDropdown() {
+      const menu = document.getElementById("dropdown");
+      // Alterna entre mostrar e esconder o menu do dropdown
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+
+    /**
+     * Fecha o dropdown se o clique for fora da área da conta do usuário.
+     */
+    window.addEventListener("click", function (e) {
+      const dropdown = document.getElementById("dropdown");
+      const account = document.querySelector(".user-account");
+
+      // Se o clique não for dentro da área da conta, esconde o dropdown
+      if (!account.contains(e.target)) {
+        dropdown.style.display = "none";
+      }
+    });
+  </script>
+
 </body>
 </html>
