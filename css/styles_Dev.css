@@ -1,28 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
+/* Reset básico para evitar inconsistências */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Estilo base do body com fonte Poppins e fundo em degrade escuro */
 body {
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: #f0f0f0;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Azul escuro degradê */
+  color: #f0f0f0; /* Texto claro */
   line-height: 1.6;
 }
 
+/* Header fixo no topo com blur e transparência */
 header {
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(12px);
-  color: #00bfff;
+  background: rgba(0, 0, 0, 0.8); /* Preto transparente */
+  backdrop-filter: blur(12px); /* Glassmorphism forte */
+  color: #00bfff; /* Azul claro */
   padding: 1rem 0;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 1000; /* Fica sobre tudo */
 }
 
+/* Container do header centralizado e flexível */
 header .container {
   display: flex;
   justify-content: space-between;
@@ -31,18 +35,21 @@ header .container {
   margin: auto;
 }
 
+/* Título do header */
 header h1 {
   font-size: 2rem;
   font-weight: 700;
 }
 
+/* Menu de navegação em linha */
 nav ul {
   list-style: none;
   display: flex;
   gap: 1.2rem;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Para quebrar linha se necessário */
 }
 
+/* Links do menu */
 nav a {
   color: #00bfff;
   text-decoration: none;
@@ -50,11 +57,13 @@ nav a {
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
+/* Efeito hover: troca cor e leve zoom */
 nav a:hover, nav a.btn {
   color: #fff;
   transform: scale(1.05);
 }
 
+/* Seção hero com fundo translúcido, blur e borda arredondada */
 .hero {
   display: flex;
   flex-direction: column;
@@ -70,16 +79,19 @@ nav a:hover, nav a.btn {
   max-width: 1000px;
 }
 
+/* Título do hero */
 .hero h2 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
 }
 
+/* Parágrafo do hero */
 .hero p {
   font-size: 1.2rem;
   margin-bottom: 2rem;
 }
 
+/* Botão estilizado com azul vibrante e borda arredondada */
 .btn {
   background: #00bfff;
   color: #fff;
@@ -90,11 +102,13 @@ nav a:hover, nav a.btn {
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
+/* Efeito hover do botão: escurece e sobe levemente */
 .btn:hover {
   background: #009acd;
   transform: translateY(-3px);
 }
 
+/* Footer escuro com texto claro centralizado */
 footer {
   background: rgba(0, 0, 0, 0.9);
   text-align: center;
@@ -103,7 +117,7 @@ footer {
   font-size: 0.95rem;
 }
 
-/* ==== ESTILO DAS SEÇÕES ==== */
+/* Cartões de seção com efeito glass, sombra azul e animação */
 .section-card {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(15px);
@@ -118,11 +132,25 @@ footer {
   animation: fadeUp 0.8s ease-in-out;
 }
 
+/* Animação de subir e aparecer */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover no cartão: sobe e sombra fica mais forte */
 .section-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
 }
 
+/* Título dos cartões com brilho azul */
 .section-card h2 {
   font-size: 2.2rem;
   margin-bottom: 1rem;
@@ -130,6 +158,7 @@ footer {
   text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
 }
 
+/* Texto dos cartões */
 .section-card p {
   font-size: 1.1rem;
   opacity: 0.9;
@@ -138,7 +167,7 @@ footer {
   margin: auto;
 }
 
-/* ==== FORMULÁRIO ==== */
+/* Formulário dentro do cartão */
 .section-card form {
   margin-top: 1.5rem;
   display: flex;
@@ -146,6 +175,7 @@ footer {
   gap: 1rem;
 }
 
+/* Inputs e textarea com fundo translúcido e foco azul */
 .section-card input,
 .section-card textarea {
   width: 100%;
@@ -165,7 +195,7 @@ footer {
   box-shadow: 0 0 8px #00d4ff;
 }
 
-/* ==== BOTÃO DO FORMULÁRIO ==== */
+/* Botão do formulário com degrade azul e efeito hover */
 .section-card .btn {
   background: linear-gradient(135deg, #00d4ff, #0072ff);
   padding: 0.9rem 1.6rem;
@@ -183,19 +213,7 @@ footer {
   box-shadow: 0 8px 20px rgba(0, 212, 255, 0.5);
 }
 
-/* ==== ANIMAÇÃO ==== */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(25px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ==== RESPONSIVIDADE ==== */
+/* Responsividade para telas menores */
 @media (max-width: 768px) {
   .section-card {
     padding: 2rem 1.5rem;
