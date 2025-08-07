@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>EventFlow - Login</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-esquerda">
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Ilustração Login">
+    </div>
+    <div class="login-direita">
+      <h2>Fazer Login</h2>
+
+      <!-- Adicionei id no form -->
+      <form id="loginForm" autocomplete="off">
+        <div class="input-group">
+          <input type="email" id="email" placeholder="Email" required>
+        </div>
+        <div class="input-group">
+          <input type="password" id="senha" placeholder="Senha" required minlength="6">
+        </div>
+        <button type="submit" class="login-btn">LOGIN</button>
+
+        <p class="esqueceu"><a href="recuperacaoUser.html">Esqueceu seu usuário?</a></p>
+        <p class="esqueceu"><a href="recuperacaoSenha.html">Esqueceu sua senha?</a></p>
+
+        <p>
+          <button type="button" class="criar-conta-btn" onclick="window.location.href='cadastro.html'">
+            Criar conta →
+          </button>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // Configuração do Firebase
+  const firebaseConfig = {
+  apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
+  authDomain: "eventflow-87d51.firebaseapp.com",
+  databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
+  projectId: "eventflow-87d51",
+  storageBucket: "eventflow-87d51.firebasestorage.app",
+  messagingSenderId: "1060995756519",
+  appId: "1:1060995756519:web:1963ecc800497812630d42"
+    };
+
+    // Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Quando o formulário for enviado
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, senha);
+        // Redireciona para página inicial
+        window.location.href = "../home/home.html";
+      } catch (error) {
+        alert("Erro no login: " + error.message);
+      }
+    });
+
+    // Se já estiver logado, pula login
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "../home/home.html";
+      }
+    });
+  </script>
+</body>
+</html>
