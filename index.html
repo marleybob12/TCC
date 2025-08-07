@@ -5,45 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Eventflow - Gerenciamento de Eventos</title>
+  <!-- Link para o arquivo CSS com estilo moderno -->
   <link rel="stylesheet" href="css/estilo-moderno.css" />
+  <!-- Ícone da aba do navegador -->
   <link rel="icon" href="img/logo_colorida_cortada.png" type="image/png" />
+  <!-- FontAwesome para ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Header: barra superior fixa com logo, menu hamburguer e links -->
   <header>
     <div class="logo">
       <img src="img/logo_barra.png" alt="Eventflow Logo" />
     </div>
 
-    <!-- Ícone do Menu Hamburguer (botão com aria-label para acessibilidade) -->
+    <!-- Botão do menu hamburguer para abrir menu em telas pequenas -->
     <button class="menu-icon" id="menu-icon" aria-label="Abrir menu">
       <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Navegação -->
+    <!-- Menu de navegação principal -->
     <nav class="nav-links" id="nav-links" aria-label="Menu principal">
       <a href="#sobre">Sobre</a>
       <a href="#funcionalidades">Funcionalidades</a>
       <a href="#contato">Contato</a>
+      <!-- Link para página de login/cadastro -->
       <a href="login.html" class="login">Login/Cadastro</a>
     </nav>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Seção Hero: destaque principal da página -->
   <section class="hero" role="banner">
     <div class="hero-content">
       <h1>Gerencie seus eventos de forma simples e eficiente</h1>
       <p>Com o Eventflow, você organiza, gerencia e executa eventos com facilidade, em qualquer lugar.</p>
       <div class="hero-buttons">
+        <!-- Botões de chamada para ação -->
         <a href="#cadastro" class="btn-primary">Experimente agora</a>
         <a href="#sobre" class="btn-secondary">Saiba mais</a>
       </div>
     </div>
   </section>
 
-  <!-- Seção Sobre -->
+  <!-- Seção Sobre: explicação sobre o Eventflow -->
   <section id="sobre" tabindex="-1">
     <div class="sobre-container">
       <h2>Sobre o Eventflow</h2>
@@ -58,11 +63,12 @@
     </div>
   </section>
 
-  <!-- Missão e Valores -->
+  <!-- Seção Missão, Meta e Valores: usando acordeão para conteúdo expandível -->
   <section id="missao-valores" tabindex="-1">
     <h2>Nossa Meta, Missão e Valores</h2>
 
     <div class="acordeao-container">
+      <!-- Item Meta -->
       <div class="acordeao-item">
         <button class="acordeao-titulo" aria-expanded="false" aria-controls="meta-content" id="meta-btn">
           <i class="fas fa-bullseye"></i> Meta
@@ -74,6 +80,7 @@
         </div>
       </div>
 
+      <!-- Item Missão -->
       <div class="acordeao-item">
         <button class="acordeao-titulo" aria-expanded="false" aria-controls="missao-content" id="missao-btn">
           <i class="fas fa-rocket"></i> Missão
@@ -85,6 +92,7 @@
         </div>
       </div>
 
+      <!-- Item Valores -->
       <div class="acordeao-item">
         <button class="acordeao-titulo" aria-expanded="false" aria-controls="valores-content" id="valores-btn">
           <i class="fas fa-lightbulb"></i> Valores
@@ -102,7 +110,7 @@
     </div>
   </section>
 
-  <!-- Funcionalidades -->
+  <!-- Seção Funcionalidades com cards explicativos -->
   <section id="funcionalidades" tabindex="-1">
     <h2>Funcionalidades do Eventflow</h2>
     <div class="funcionalidades">
@@ -124,14 +132,14 @@
     </div>
   </section>
 
-  <!-- CTA Final -->
+  <!-- Call to Action final para download do app -->
   <section id="cta-final" tabindex="-1">
     <h2>Pronto para gerenciar seus eventos?</h2>
     <p>Baixe o aplicativo agora e comece a criar eventos incríveis.</p>
     <a href="#cadastro" class="cta">Baixe o App</a>
   </section>
 
-  <!-- Rodapé -->
+  <!-- Rodapé com links importantes e redes sociais -->
   <footer>
     <ul>
       <li><a href="#sobre">Sobre</a></li>
@@ -145,28 +153,31 @@
     </div>
   </footer>
 
-  <!-- JavaScript -->
+  <!-- Script JavaScript para interatividade -->
   <script>
-    // Acordeão acessível: alterna visibilidade e aria-expanded
+    // Seleciona todos os botões do acordeão
     const botoes = document.querySelectorAll('.acordeao-titulo');
+
+    // Para cada botão, adiciona um evento de clique
     botoes.forEach(botao => {
       botao.addEventListener('click', () => {
-        const item = botao.parentElement;
-        const conteudo = botao.nextElementSibling;
-        const ativo = item.classList.toggle('ativo');
-        conteudo.hidden = !ativo;
-        botao.setAttribute('aria-expanded', ativo);
+        const item = botao.parentElement; // pai do botão: o acordeão item
+        const conteudo = botao.nextElementSibling; // o conteúdo a mostrar/ocultar
+        const ativo = item.classList.toggle('ativo'); // alterna classe ativo
+        conteudo.hidden = !ativo; // esconde se não ativo, mostra se ativo
+        botao.setAttribute('aria-expanded', ativo); // atualiza atributo aria para acessibilidade
       });
     });
 
-    // Menu Responsivo
+    // Menu responsivo: seleciona botão e menu
     const menuIcon = document.getElementById('menu-icon');
     const navLinks = document.getElementById('nav-links');
 
+    // Quando clicar no ícone do menu hamburguer, alterna a classe active no menu
     menuIcon.addEventListener('click', () => {
       navLinks.classList.toggle('active');
 
-      // Alterna aria-expanded para acessibilidade
+      // Alterna aria-expanded para informar o estado do menu para leitores de tela
       const expanded = menuIcon.getAttribute('aria-expanded') === 'true' || false;
       menuIcon.setAttribute('aria-expanded', !expanded);
     });

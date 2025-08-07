@@ -4,36 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EventFlow - Cadastro</title>
+  <!-- Link para arquivo CSS externo -->
   <link rel="stylesheet" href="css/cadastro.css" />
+  <!-- Ícone da aba do navegador -->
   <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
 </head> 
 
 <body>
+  <!-- Container principal do formulário de cadastro -->
   <div class="login-container">
+
+    <!-- Lado esquerdo com imagem ilustrativa -->
     <div class="login-esquerda">
       <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Ilustração de Cadastro">
     </div>
 
+    <!-- Lado direito com o formulário de cadastro -->
     <div class="login-direita">
       <h2>Criar Conta</h2>
     
+      <!-- Formulário de cadastro -->
       <form id="cadastroForm" autocomplete="off">
+        <!-- Campo Nome Completo -->
         <div class="input-group">
           <input type="text" id="nome" placeholder="Nome Completo" required maxlength="100">
         </div>
+        <!-- Campo Email -->
         <div class="input-group">
           <input type="email" id="email" placeholder="Email" required>
         </div>
+        <!-- Campo Telefone (opcional) com validação de dígitos -->
         <div class="input-group">
           <input type="tel" id="telefone" placeholder="Telefone (Opcional)" pattern="\d{10,15}">
         </div>
+        <!-- Campo Senha -->
         <div class="input-group">
           <input type="password" id="senha" placeholder="Senha (mínimo 6 caracteres)" required minlength="6">
         </div>
+        <!-- Campo Confirmar Senha -->
         <div class="input-group">
           <input type="password" id="confirmarSenha" placeholder="Confirmar Senha" required minlength="6">
         </div>
+        <!-- Botão de envio do formulário -->
         <button type="submit" class="Cadastrar-btn">Cadastrar</button>
+        <!-- Link para voltar ao login -->
         <p class="voltar-login">
           <a href="login.html">← Já tem conta? Fazer Login</a>
         </p>
@@ -41,65 +55,91 @@
     </div>
   </div>
 
-  <!-- Script Firebase -->
+  <!-- Script Firebase para autenticação e armazenamento dos dados -->
   <script type="module">
-    // Importa Firebase
+    // Importa as funções necessárias do Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } 
       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, doc, setDoc } 
       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // Configuração do Firebase
+    // Configurações do seu projeto Firebase
     const firebaseConfig = {
-  apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
-  authDomain: "eventflow-87d51.firebaseapp.com",
-  databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
-  projectId: "eventflow-87d51",
-  storageBucket: "eventflow-87d51.firebasestorage.app",
-  messagingSenderId: "1060995756519",
-  appId: "1:1060995756519:web:1963ecc800497812630d42"
+      apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
+      authDomain: "eventflow-87d51.firebaseapp.com",
+      databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
+      projectId: "eventflow-87d51",
+      storageBucket: "eventflow-87d51.firebasestorage.app",
+      messagingSenderId: "1060995756519",
+      appId: "1:1060995756519:web:1963ecc800497812630d42"
     };
 
-
-    // Inicializa Firebase
+    // Inicializa o Firebase com a configuração acima
     const app = initializeApp(firebaseConfig);
+    // Inicializa o serviço de autenticação
     const auth = getAuth(app);
+    // Inicializa o banco de dados Firestore
     const db = getFirestore(app);
 
-    // Cadastro
+    // Adiciona um listener para o evento submit do formulário
     document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+      e.preventDefault(); // Evita o envio padrão do formulário para recarregar a página
 
+      // Coleta os valores dos campos do formulário
       const nome = document.getElementById("nome").value;
       const email = document.getElementById("email").value;
       const telefone = document.getElementById("telefone").value;
       const senha = document.getElementById("senha").value;
       const confirmarSenha = document.getElementById("confirmarSenha").value;
 
+      // Validação simples: verifica se as senhas coincidem
       if (senha !== confirmarSenha) {
         alert("As senhas não coincidem!");
-        return;
+        return; // Interrompe a execução se não coincidir
       }
 
       try {
-        // Cria usuário no Auth
+        // Cria o usuário no Firebase Authentication com email e senha
         const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
         const user = userCredential.user;
 
-        // Salva dados adicionais no Firestore
+        // Salva os dados adicionais do usuário no Firestore (nome, email, telefone e data de criação)
         await setDoc(doc(db, "Usuario", user.uid), {
           nome: nome,
           email: email,
-          telefone: telefone || "",
-          dataCriacao: new Date()
+          telefone: telefone || "", // Se telefone estiver vazio, salva string vazia
+          dataCriacao: new Date()   // Data atual do cadastro
         });
 
+        // Confirmação para o usuário
         alert("Conta criada com sucesso!");
-        window.location.href = "home.html"; // Redireciona para home
+        // Redireciona para a página principal após o cadastro
+        window.location.href = "home.html";
 
       } catch (error) {
-        alert("Erro ao criar conta: " + error.message);
+        // Traduz os erros retornados pelo Firebase para mensagens amigáveis
+        let mensagem;
+
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            mensagem = "Este endereço de email já está em uso.";
+            break;
+          case 'auth/invalid-email':
+            mensagem = "O endereço de email é inválido.";
+            break;
+          case 'auth/operation-not-allowed':
+            mensagem = "Cadastro com email e senha não está habilitado.";
+            break;
+          case 'auth/weak-password':
+            mensagem = "A senha é muito fraca. Use pelo menos 6 caracteres.";
+            break;
+          default:
+            mensagem = "Erro ao criar conta: " + error.message;
+        }
+
+        // Exibe a mensagem de erro para o usuário
+        alert(mensagem);
       }
     });
   </script>
