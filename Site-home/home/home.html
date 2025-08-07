@@ -7,15 +7,19 @@
   <title>EventFlow - Home</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="css/stylesHome.css" />
+  <link rel="stylesheet" href="../css/stylesHome.css" />
+  <!--icone da pagina-->
+  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
+
 
   <!-- Ícones (Font Awesome) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <!-- Fonte Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Boostrap-->
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -26,7 +30,7 @@
   <header>
     <div class="header-container">
       <a href="home.html" class="logo">
-        <img src="img/logo_barra.png" alt="Logo EventFlow" />
+        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
       </a>
       <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
         <i class="fas fa-bars"></i>
@@ -42,43 +46,37 @@
     </div>
   </header>
 
-
   <!-- Conteúdo -->
   <main>
     <section class="carrosel">
       <div id="demo" class="carousel slide" data-ride="carousel">
+        <ul class="carousel-indicators">
+          <li data-target="#demo" data-slide-to="0" class="active"></li>
+          <li data-target="#demo" data-slide-to="1"></li>
+          <li data-target="#demo" data-slide-to="2"></li>
+        </ul>
 
-  <!-- Indicators -->
-  <ul class="carousel-indicators">
-    <li data-target="#demo" data-slide-to="0" class="active"></li>
-    <li data-target="#demo" data-slide-to="1"></li>
-    <li data-target="#demo" data-slide-to="2"></li>
-  </ul>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="../img/ChatGPT Image 6 de jun. de 2025, 10_13_38.png" alt="Los Angeles">
+          </div>
+          <div class="carousel-item">
+            <img src="../img/icon_relatorio(1).png" alt="Chicago">
+          </div>
+          <div class="carousel-item">
+            <img src="../img/logo_barra.png" alt="New York">
+          </div>
+        </div>
 
-  <!-- The slideshow -->
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="img/ChatGPT Image 6 de jun. de 2025, 10_13_38.png" alt="Los Angeles">
-    </div>
-    <div class="carousel-item">
-      <img src="img/icon_relatorio(1).png" alt="Chicago">
-    </div>
-    <div class="carousel-item">
-      <img src="img/logo_barra.png" alt="New York">
-    </div>
-  </div>
-
-  <!-- Left and right controls -->
-  <a class="carousel-control-prev" href="#demo" data-slide="prev">
-    <span class="carousel-control-prev-icon"></span>
-  </a>
-  <a class="carousel-control-next" href="#demo" data-slide="next">
-    <span class="carousel-control-next-icon"></span>
-  </a>
-
-</div>
-
+        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#demo" data-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </a>
+      </div>
     </section>
+
     <section class="hero" role="banner">
       <h1>Bem-vindo ao EventFlow 🎉</h1>
       <p>Você está logado. Em breve seus eventos aparecerão aqui.</p>
@@ -91,7 +89,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // Configuração Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
       authDomain: "eventflow-87d51.firebaseapp.com",
@@ -107,19 +104,20 @@
 
     // Proteção da página
     onAuthStateChanged(auth, (user) => {
-      if (!user) window.location.href = "login.html";
+      if (!user) window.location.href = "../login.html"; // volta para login
     });
 
     // Logout
     document.getElementById("logoutBtn").addEventListener("click", async () => {
       await signOut(auth);
-      window.location.href = "login.html";
+      window.location.href = "../login.html";
     });
 
     // Menu hambúrguer
     document.getElementById("menu-icon").addEventListener("click", () => {
       document.querySelector("header nav ul").classList.toggle("show");
     });
+    
   </script>
 </body>
 </html>
