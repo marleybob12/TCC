@@ -52,7 +52,7 @@
               <div class="dropdown-menu" id="dropdown">
                 <a href="#">👤 Perfil</a>
                 <a href="#">⚙️ Configurações</a>
-                <a href="#">🚪 Sair</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
               </div>
             </div>
           </li>
@@ -151,6 +151,13 @@
       // Desloga o usuário
       await signOut(auth);
       // Redireciona para a página de login após logout
+      window.location.href = "../login.html";
+    });
+//fazendo logout do dropdown
+    // Evento do botão de logout no dropdown
+    document.getElementById("dropdownLogout").addEventListener("click", async (e) => {
+      e.preventDefault();
+      await signOut(auth);
       window.location.href = "../login.html";
     });
 

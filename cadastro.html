@@ -37,6 +37,14 @@
         <div class="input-group">
           <input type="tel" id="telefone" placeholder="Telefone (Opcional)" pattern="\d{10,15}">
         </div>
+        <!-- Campo CPF -->
+        <div class="input-group">
+          <input type="text" id="cpf" placeholder="CPF (somente números)" required pattern="\d{11}" maxlength="11">
+        </div>
+        <!-- Campo Data de Nascimento -->
+        <div class="input-group">
+          <input type="date" id="dataNascimento" placeholder="Data de Nascimento" required>
+        </div>
         <!-- Campo Senha -->
         <div class="input-group">
           <input type="password" id="senha" placeholder="Senha (mínimo 6 caracteres)" required minlength="6">
@@ -87,16 +95,30 @@
       e.preventDefault(); // Evita o envio padrão do formulário para recarregar a página
 
       // Coleta os valores dos campos do formulário
-      const nome = document.getElementById("nome").value;
-      const email = document.getElementById("email").value;
-      const telefone = document.getElementById("telefone").value;
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const telefone = document.getElementById("telefone").value.trim();
+      const cpf = document.getElementById("cpf").value.trim();
+      const dataNascimento = document.getElementById("dataNascimento").value;
       const senha = document.getElementById("senha").value;
       const confirmarSenha = document.getElementById("confirmarSenha").value;
 
-      // Validação simples: verifica se as senhas coincidem
+      // Validação de CPF (apenas números e 11 dígitos)
+      if (!/^\d{11}$/.test(cpf)) {
+        alert("CPF deve conter 11 dígitos numéricos.");
+        return;
+      }
+
+      // Validação de data de nascimento (não pode ser vazia e deve ser uma data válida)
+      if (!dataNascimento) {
+        alert("Informe a data de nascimento.");
+        return;
+      }
+
+      // Validação de senha
       if (senha !== confirmarSenha) {
         alert("As senhas não coincidem!");
-        return; // Interrompe a execução se não coincidir
+        return;// Interrompe a execução se as senhas não coincidirem
       }
 
       try {
@@ -109,13 +131,15 @@
           nome: nome,
           email: email,
           telefone: telefone || "", // Se telefone estiver vazio, salva string vazia
+          cpf: cpf,
+          dataNascimento: dataNascimento,
           dataCriacao: new Date()   // Data atual do cadastro
         });
 
         // Confirmação para o usuário
         alert("Conta criada com sucesso!");
         // Redireciona para a página principal após o cadastro
-        window.location.href = "home.html";
+        window.location.href = "home/home.html";
 
       } catch (error) {
         // Traduz os erros retornados pelo Firebase para mensagens amigáveis
