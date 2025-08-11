@@ -21,6 +21,9 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- SwiperJS CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 </head>
 <body>
   
@@ -108,30 +111,133 @@
 
       <section class="explorer" aria-label="Explorar eventos">
         <h2>Explorar nossos eventos</h2>
+        <!-- Carrossel de categorias de eventos usando SwiperJS -->
         <div class="eventos-categoria">
-          <button class="btn-categoria"><i class="fa-solid fa-headphones"></i><br>Música</button>
-          <button class="btn-categoria"><i class="fa-solid fa-volleyball"></i><br>Esportes</button>
-          <button class="btn-categoria"><i class="fa-solid fa-masks-theater"></i><br>Teatro e Espetáculos</button>
-          <button class="btn-categoria"><i class="fa-solid fa-microchip"></i><br>Tecnologia</button>
-          <button class="btn-categoria"><i class="fa-solid fa-palette"></i><br>Artes</button>
-          <button class="btn-categoria"><i class="fa-solid fa-burger"></i><br>Gastronomia</button>
-          <button class="btn-categoria"><i class="fa-solid fa-user-tie"></i><br>Negócios</button>
-          <button class="btn-categoria"><i class="fa-solid fa-school"></i><br>Educação</button>
-          <button class="btn-categoria"><i class="fa-solid fa-heart"></i><br>Saúde</button>
-          <button class="btn-categoria"><i class="fa-solid fa-shirt"></i><br>Moda</button>
-          <button class="btn-categoria"><i class="fa-solid fa-champagne-glasses"></i><br>Festas e Shows</button>
-          <button class="btn-categoria"><i class="fa-solid fa-laugh"></i><br>Stand up Comedy</button>
-          <button class="btn-categoria"><i class="fa-solid fa-child"></i><br>Infantil</button>
-          <button class="btn-categoria"><i class="fa-solid fa-people-group"></i><br>Passeios para toda família</button>
-          <button class="btn-categoria"><i class="fa-solid fa-globe"></i><br>Festas Típicas</button>
-          <button class="btn-categoria"><i class="fa-solid fa-ellipsis"></i><br>Outros</button>
-          <button class="btn-categoria"><i class="fa-solid fa-handshake"></i><br>Convenções</button>
-          <button class="btn-categoria"><i class="fa-solid fa-gamepad"></i><br>Games</button>
-          <button class="btn-categoria"><i class="fa-solid fa-dumbbell"></i><br>Fitness</button>
-          <button class="btn-categoria"><i class="fa-solid fa-users"></i><br>Encontros Sociais</button>
-          <button class="btn-categoria"><i class="fa-solid fa-mug-hot"></i><br>Cafés e Networking</button>
-          <button class="btn-categoria"><i class="fa-solid fa-calendar-days"></i><br>Workshops</button>
-          <button class="btn-categoria"><i class="fa-solid fa-music"></i><br>Festivais</button>
+          <!-- Container principal do Swiper -->
+          <div class="swiper categoria-swiper">
+            <!-- Wrapper que agrupa todos os slides (cada slide é um botão de categoria) -->
+            <div class="swiper-wrapper">
+              <!-- Cada slide representa uma categoria -->
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-headphones"></i><br>Música
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-volleyball"></i><br>Esportes
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-masks-theater"></i><br>Teatro e Espetáculos
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-microchip"></i><br>Tecnologia
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-palette"></i><br>Artes
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-burger"></i><br>Gastronomia
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-user-tie"></i><br>Negócios
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-school"></i><br>Educação
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-heart"></i><br>Saúde
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-shirt"></i><br>Moda
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-champagne-glasses"></i><br>Festas e Shows
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-laugh"></i><br>Stand up Comedy
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-child"></i><br>Infantil
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-people-group"></i><br>Passeios para toda família
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-globe"></i><br>Festas Típicas
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-ellipsis"></i><br>Outros
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-handshake"></i><br>Convenções
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-gamepad"></i><br>Games
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-dumbbell"></i><br>Fitness
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-users"></i><br>Encontros Sociais
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-mug-hot"></i><br>Cafés e Networking
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-calendar-days"></i><br>Workshops
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-music"></i><br>Festivais
+                </button>
+              </div>
+            </div>
+            <!-- Botões de navegação do carrossel (setas) -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+          </div>
         </div>
 
       </section>
@@ -221,5 +327,26 @@
     });
   </script>
 
+  <!-- SwiperJS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    // Cria uma nova instância do Swiper para o carrossel de categorias
+    new Swiper('.categoria-swiper', {
+      slidesPerView: 'auto', // Mostra vários slides ao mesmo tempo, conforme o espaço disponível
+      spaceBetween: 16,      // Espaçamento entre os slides (em pixels)
+      navigation: {
+        nextEl: '.swiper-button-next', // Elemento para avançar o carrossel
+        prevEl: '.swiper-button-prev'  // Elemento para retroceder o carrossel
+      },
+      freeMode: true,        // Permite rolagem livre (não trava em cada slide)
+      grabCursor: true,      // Mostra cursor de "pegar" ao passar o mouse
+      breakpoints: {         // Responsividade: ajusta slides visíveis conforme largura da tela
+        0: { slidesPerView: 2 },
+        480: { slidesPerView: 3 },
+        768: { slidesPerView: 5 },
+        1024: { slidesPerView: 7 }
+      }
+    });
+  </script>
 </body>
 </html>

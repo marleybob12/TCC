@@ -1,42 +1,52 @@
-/* Importa a fonte Poppins do Google Fonts */
+/* =========================
+   Importação de fontes
+   ========================= */
+/* Importa a fonte Poppins do Google Fonts para uso global no projeto */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-/* Variável CSS para altura do header */
+/* =========================
+   Variáveis globais
+   ========================= */
 :root {
-  --header-height: 85px;
+  --header-height: 85px; /* Altura padrão do header fixo */
 }
 
-/* Reset básico: remove margens/padding padrão e ajusta box-sizing para facilitar layouts */
+/* =========================
+   Reset e estilos globais
+   ========================= */
+/* Remove margens e paddings padrão, define box-sizing e rolagem suave */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth; /* Rolagem suave para âncoras */
+  scroll-behavior: smooth;
 }
 
-/* Estilos básicos do body */
+/* Define fonte, cor e fundo padrão do body */
 body {
-  font-family: 'Poppins', sans-serif; /* Usa a fonte importada */
+  font-family: 'Poppins', sans-serif;
   line-height: 1.6;
   color: #1f1f1f;
-  background: linear-gradient(to bottom, #f5f9ff, #e6eeff); /* Gradiente suave azul claro */
+  background: linear-gradient(to bottom, #f5f9ff, #e6eeff); /* Gradiente azul claro */
   padding-top: var(--header-height); /* Espaço para o header fixo */
 }
 
-/* ===== Header com efeito Glassmorphism ===== */
+/* =========================
+   Header com Glassmorphism
+   ========================= */
 header {
-  position: fixed; /* Fixa no topo da página */
+  position: fixed;
   top: 0;
   width: 100%;
-  z-index: 10; /* Fica acima dos outros elementos */
-  background: linear-gradient(135deg,  rgba(156, 140, 235, 0.7),rgba(47, 120, 227, 0.7)); /* Fundo translúcido azul com gradiente */
-  backdrop-filter: blur(12px); /* Desfoque do fundo (glassmorphism) */
-  -webkit-backdrop-filter: blur(12px); /* Compatibilidade Safari */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra sutil para destaque */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Linha branca translúcida abaixo */
+  z-index: 10;
+  background: linear-gradient(135deg, rgba(156, 140, 235, 0.7), rgba(47, 120, 227, 0.7));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Container interno do header para centralizar e distribuir elementos */
+/* Container interno do header para alinhamento dos elementos */
 .header-container {
   display: flex;
   justify-content: space-between;
@@ -49,29 +59,33 @@ header .logo img {
   width: 190px;
 }
 
-/* ===== Navegação principal ===== */
+/* =========================
+   Navegação principal
+   ========================= */
 header nav ul {
-  list-style: none; /* Remove bullets */
-  display: flex; /* Itens em linha */
-  gap: 20px; /* Espaço entre os links */
+  list-style: none;
+  display: flex;
+  gap: 20px;
 }
 
 header nav a {
-  text-decoration: none; /* Remove sublinhado */
-  color: #ffffff; /* Cor branca */
+  text-decoration: none;
+  color: #ffffff;
   font-weight: 600;
-  padding: 8px 12px; /* Espaçamento interno */
-  border-radius: 5px; /* Bordas arredondadas */
-  transition: background-color 0.3s ease; /* Transição suave no hover */
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
 header nav a:hover {
-  background-color: rgba(0, 86, 210, 0.8); /* Fundo azul mais escuro ao passar o mouse */
+  background-color: rgba(0, 86, 210, 0.8);
 }
 
-/* ===== Botão hambúrguer (menu mobile) ===== */
+/* =========================
+   Botão hambúrguer (menu mobile)
+   ========================= */
 .menu-icon {
-  display: none; /* Escondido no desktop */
+  display: none; /* Só aparece no mobile */
   font-size: 1.8rem;
   color: white;
   background: none;
@@ -79,31 +93,35 @@ header nav a:hover {
   cursor: pointer;
 }
 
-/* ===== Carrossel ===== */
+/* =========================
+   Carrossel de imagens (Bootstrap)
+   ========================= */
 .carousel {
   position: relative;
   width: 100%;
-  max-width: 1200px; /* Largura máxima */
-  margin: auto; /* Centraliza horizontalmente */
-  overflow: hidden; /* Esconde overflow */
+  max-width: 1200px;
+  margin: auto;
+  overflow: hidden;
 }
 
 .carousel-item img {
-  width: 80%; /* Largura da imagem */
-  height: 350px; /* Altura fixa */
-  object-fit: cover; /* Corta a imagem para preencher o espaço */
-  border-radius: 20px; /* Cantos arredondados */
+  width: 80%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 20px;
 }
 
 /* Botões de navegação do carrossel */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  background-color: rgba(0, 0, 0, 0.4); /* Fundo escuro translúcido */
-  border-radius: 50%; /* Botões redondos */
-  padding: 20px; /* Espaço interno para ficar maior */
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  padding: 20px;
 }
 
-/* ===== Hero (Boas-vindas) ===== */
+/* =========================
+   Hero (Boas-vindas)
+   ========================= */
 .hero {
   text-align: center;
   padding: 40px 20px;
@@ -111,7 +129,7 @@ header nav a:hover {
 
 .hero h1 {
   font-size: 2.5rem;
-  color: #1673ff; /* Azul vivo */
+  color: #1673ff;
 }
 
 .hero p {
@@ -119,31 +137,32 @@ header nav a:hover {
   margin-bottom: 20px;
 }
 
-/* ===== Botões ===== */
+/* =========================
+   Botões gerais
+   ========================= */
 .btn {
-  background: #1673ff; /* Azul */
+  background: #1673ff;
   color: #fff;
   padding: 0.8rem 1.4rem;
-  border-radius: 30px; /* Botões arredondados */
+  border-radius: 30px;
   font-weight: 600;
   text-decoration: none;
   border: none;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease; /* Animação suave */
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .btn:hover {
-  background: #0056d2; /* Azul mais escuro no hover */
-  transform: translateY(-2px); /* Levanta o botão */
+  background: #0056d2;
+  transform: translateY(-2px);
 }
 
 /* Botão logout com cor vermelha */
 .btn-logout {
   background: #ff4d4d;
 }
-
 .btn-logout:hover {
-  background: #cc0000; /* Vermelho mais escuro no hover */
+  background: #cc0000;
 }
 
 /* Botão estilo glass (transparente com blur) */
@@ -153,12 +172,9 @@ header nav a:hover {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Teste de cor de fundo para a seção explorer */
-.explorer {
-  background-color: #cc0000; /* Vermelho forte */
-}
-
-/* ===== Dropdown do usuário ===== */
+/* =========================
+   Dropdown do usuário
+   ========================= */
 .user-dropdown {
   position: relative;
   display: inline-block;
@@ -204,12 +220,12 @@ header nav a:hover {
 .dropdown-menu {
   position: absolute;
   right: 0;
-  top: 120%; /* Fica um pouco abaixo do botão */
+  top: 120%;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
-  display: none; /* Escondido inicialmente */
+  display: none;
   flex-direction: column;
   min-width: 150px;
   z-index: 1000;
@@ -229,7 +245,9 @@ header nav a:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* ===== Estilo Glass para cards (opcional) ===== */
+/* =========================
+   Card estilo glass (opcional)
+   ========================= */
 .card-glass {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(8px);
@@ -239,9 +257,11 @@ header nav a:hover {
   padding: 20px;
   color: #fff;
 }
-/* Exemplo de uso do card-glass no btn-categoria */
-.btn-categoria {
 
+/* =========================
+   Botão de categoria (usado no carrossel)
+   ========================= */
+.btn-categoria {
   background: rgba(97, 94, 94, 0.15);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -253,65 +273,174 @@ header nav a:hover {
   transition: background 0.3s ease, transform 0.2s ease;
 }
 .btn-categoria:hover {
-  background: rgba(97, 94, 94, 0.25); /* Fundo mais escuro no hover */
-  transform: translateY(-13px); /* Levanta o botão */
+  background: rgba(97, 94, 94, 0.25);
+  transform: translateY(-13px);
 }
-/* ===== Container principal do conteúdo ===== */
+
+/* =========================
+   Container principal do conteúdo
+   ========================= */
 main {
   max-width: 1200px;
   margin: 0 auto;
   padding: 30px 20px;
 }
 
-/* ===== Responsividade para telas menores ===== */
+/* =========================
+   Carrossel de categorias com SwiperJS
+   ========================= */
+/* Container do carrossel de categorias */
+.categoria-swiper {
+  padding-bottom: 20px;
+}
+/* Cada slide do carrossel de categorias */
+.categoria-swiper .swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+}
+/* Botão de categoria dentro do carrossel */
+.btn-categoria {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 2rem;
+  background: #4f8cff;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-categoria:hover {
+  background: #2563eb;
+}
+
+/* =========================
+   Responsividade para telas menores
+   ========================= */
+@media (max-width: 1024px) {
+  main {
+    padding: 20px 8px;
+  }
+  .carousel-item img {
+    height: 220px;
+  }
+}
+
 @media (max-width: 768px) {
-  /* Ajusta padding do header container */
   .header-container {
-    padding: 10px 15px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 8px;
   }
-
-  /* Reduz tamanho do logo */
   header .logo img {
-    width: 150px;
+    width: 120px;
   }
-
-  /* Reduz tamanho da fonte no hero */
   .hero h1 {
-    font-size: 1.8rem;
+    font-size: 1.3rem;
   }
-
   .hero p {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
-
   /* Menu escondido por padrão no mobile */
   header nav ul {
     display: none;
     flex-direction: column;
     position: absolute;
     top: var(--header-height);
-    right: 20px;
+    right: 10px;
     background: rgba(22, 115, 255, 0.95);
-    padding: 15px;
+    padding: 12px;
     border-radius: 8px;
-    gap: 10px;
+    gap: 8px;
+    min-width: 160px;
   }
-
-  /* Quando o menu estiver aberto (classe show), exibe no mobile */
+  /* Exibe menu quando aberto (classe show) */
   header nav ul.show {
     display: flex !important;
   }
-
-  /* Botão menu (hambúrguer) aparece no mobile */
   .menu-icon {
     display: block;
+    margin-left: auto;
+  }
+  .user-account {
+    padding: 6px 8px;
+  }
+  .dropdown-menu {
+    min-width: 120px;
+    right: 0;
+    left: auto;
+  }
+  .categoria-swiper .swiper-slide {
+    min-width: 120px;
+  }
+  .btn-categoria {
+    font-size: 0.95rem;
+    padding: 0.6rem 1.1rem;
   }
 }
 
-/* Esconde botão menu no desktop */
-@media (min-width: 769px) {
-  .menu-icon {
-    display: none;
+@media (max-width: 480px) {
+  .header-container {
+    padding: 6px 2px;
+  }
+  .hero {
+    padding: 20px 4px;
+  }
+  .hero h1 {
+    font-size: 1.1rem;
+  }
+  .carousel-item img {
+    height: 120px;
+    width: 100%;
+  }
+  .categoria-swiper .swiper-slide {
+    min-width: 90px;
+  }
+  .btn-categoria {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.7rem;
+  }
+  main {
+    padding: 10px 2px;
   }
 }
-/* ===== Responsividade para o explorer ===== */
+
+/* =========================
+   Carrossel horizontal simples para categorias (scroll)
+   ========================= */
+/* Caso queira usar scroll horizontal ao invés do SwiperJS */
+.eventos-categoria {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #eee;
+}
+.eventos-categoria::-webkit-scrollbar {
+  height: 8px;
+}
+.eventos-categoria::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+.eventos-categoria::-webkit-scrollbar-track {
+  background: #eee;
+}
+.categoria-btn {
+  flex: 0 0 auto;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 2rem;
+  background: #4f8cff;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.categoria-btn:hover {
+  background: #2563eb;
+}
