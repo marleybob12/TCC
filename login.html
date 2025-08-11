@@ -57,7 +57,7 @@
       authDomain: "eventflow-87d51.firebaseapp.com",
       databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
       projectId: "eventflow-87d51",
-      storageBucket: "eventflow-87d51.firebasestorage.app",
+      storageBucket: "eventflow-87d51.appspot.com",
       messagingSenderId: "1060995756519",
       appId: "1:1060995756519:web:1963ecc800497812630d42"
     };
@@ -69,17 +69,17 @@
 
     // Evento que captura o envio do formulário de login
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault(); // Prevê o comportamento padrão para evitar reload da página
+      e.preventDefault(); // Evita reload da página
 
       // Pega os valores digitados nos campos
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value.trim();
       const senha = document.getElementById("senha").value;
 
       try {
         // Tenta fazer login com email e senha no Firebase
         await signInWithEmailAndPassword(auth, email, senha);
         // Se sucesso, redireciona para página inicial
-        window.location.href = "../home/home.html";
+        window.location.href = "home/home.html";
       } catch (error) {
         // Variável para armazenar a mensagem amigável
         let mensagem;
@@ -113,8 +113,8 @@
     // Verifica se o usuário já está logado ao carregar a página
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Se estiver logado, redireciona direto para home, pulando o login
-        window.location.href = "../home/home.html";
+        // Se estiver logado, redireciona direto para home
+        window.location.href = "home/home.html";
       }
     });
   </script>

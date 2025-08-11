@@ -65,107 +65,103 @@
 
   <!-- Script Firebase para autenticação e armazenamento dos dados -->
   <script type="module">
-    // Importa as funções necessárias do Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } 
-      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, setDoc } 
-      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  // Importa as funções necessárias do Firebase para autenticação e banco de dados
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } 
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, setDoc } 
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // Configurações do seu projeto Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
-      authDomain: "eventflow-87d51.firebaseapp.com",
-      databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
-      projectId: "eventflow-87d51",
-      storageBucket: "eventflow-87d51.firebasestorage.app",
-      messagingSenderId: "1060995756519",
-      appId: "1:1060995756519:web:1963ecc800497812630d42"
-    };
+  // Configurações do Firebase do projeto
+  const firebaseConfig = {
+    apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
+    authDomain: "eventflow-87d51.firebaseapp.com",
+    databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
+    projectId: "eventflow-87d51",
+    storageBucket: "eventflow-87d51.appspot.com",
+    messagingSenderId: "1060995756519",
+    appId: "1:1060995756519:web:1963ecc800497812630d42"
+  };
 
-    // Inicializa o Firebase com a configuração acima
-    const app = initializeApp(firebaseConfig);
-    // Inicializa o serviço de autenticação
-    const auth = getAuth(app);
-    // Inicializa o banco de dados Firestore
-    const db = getFirestore(app);
+  // Inicializa o Firebase com as configurações fornecidas
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app); // Serviço de autenticação
+  const db = getFirestore(app); // Serviço de banco de dados Firestore
 
-    // Adiciona um listener para o evento submit do formulário
-    document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
-      e.preventDefault(); // Evita o envio padrão do formulário para recarregar a página
+  // Adiciona um listener para o envio do formulário de cadastro
+  document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
+    e.preventDefault(); // Evita o recarregamento da página
 
-      // Coleta os valores dos campos do formulário
-      const nome = document.getElementById("nome").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const telefone = document.getElementById("telefone").value.trim();
-      const cpf = document.getElementById("cpf").value.trim();
-      const dataNascimento = document.getElementById("dataNascimento").value;
-      const senha = document.getElementById("senha").value;
-      const confirmarSenha = document.getElementById("confirmarSenha").value;
+    // Coleta os valores dos campos do formulário
+    const nome = document.getElementById("nome").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const telefone = document.getElementById("telefone").value.trim();
+    const cpf = document.getElementById("cpf").value.trim();
+    const dataNascimento = document.getElementById("dataNascimento").value;
+    const senha = document.getElementById("senha").value;
+    const confirmarSenha = document.getElementById("confirmarSenha").value;
 
-      // Validação de CPF (apenas números e 11 dígitos)
-      if (!/^\d{11}$/.test(cpf)) {
-        alert("CPF deve conter 11 dígitos numéricos.");
-        return;
+    // Validação do CPF: deve conter 11 dígitos numéricos
+    if (!/^\d{11}$/.test(cpf)) {
+      alert("CPF deve conter 11 dígitos numéricos.");
+      return;
+    }
+
+    // Validação da data de nascimento: campo obrigatório
+    if (!dataNascimento) {
+      alert("Informe a data de nascimento.");
+      return;
+    }
+
+    // Validação das senhas: devem ser iguais
+    if (senha !== confirmarSenha) {
+      alert("As senhas não coincidem!");
+      return;
+    }
+
+    try {
+      // Cria o usuário no Firebase Authentication com email e senha
+      const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+      const user = userCredential.user; // Objeto do usuário criado
+
+      // Salva os dados adicionais do usuário no Firestore
+      // O documento é identificado pelo UID do usuário (user.uid)
+      await setDoc(doc(db, "Usuario", user.uid), {
+        usuarioID: user.uid, // UID do Firebase Authentication
+        nome: nome,
+        email: email,
+        telefone: telefone || "",
+        cpf: cpf,
+        dataNascimento: dataNascimento,
+        dataCriacao: new Date().toISOString() // Data de criação no formato ISO
+      });
+
+      alert("Conta criada com sucesso!");
+      // Redireciona para a página inicial do usuário
+      window.location.href = "home/home.html";
+
+    } catch (error) {
+      // Tratamento de erros comuns do Firebase Authentication
+      let mensagem;
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          mensagem = "Este endereço de email já está em uso.";
+          break;
+        case 'auth/invalid-email':
+          mensagem = "O endereço de email é inválido.";
+          break;
+        case 'auth/operation-not-allowed':
+          mensagem = "Cadastro com email e senha não está habilitado.";
+          break;
+        case 'auth/weak-password':
+          mensagem = "A senha é muito fraca. Use pelo menos 6 caracteres.";
+          break;
+        default:
+          mensagem = "Erro ao criar conta: " + error.message;
       }
-
-      // Validação de data de nascimento (não pode ser vazia e deve ser uma data válida)
-      if (!dataNascimento) {
-        alert("Informe a data de nascimento.");
-        return;
-      }
-
-      // Validação de senha
-      if (senha !== confirmarSenha) {
-        alert("As senhas não coincidem!");
-        return;// Interrompe a execução se as senhas não coincidirem
-      }
-
-      try {
-        // Cria o usuário no Firebase Authentication com email e senha
-        const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
-        const user = userCredential.user;
-
-        // Salva os dados adicionais do usuário no Firestore (nome, email, telefone e data de criação)
-        await setDoc(doc(db, "Usuario", user.uid), {
-          nome: nome,
-          email: email,
-          telefone: telefone || "", // Se telefone estiver vazio, salva string vazia
-          cpf: cpf,
-          dataNascimento: dataNascimento,
-          dataCriacao: new Date()   // Data atual do cadastro
-        });
-
-        // Confirmação para o usuário
-        alert("Conta criada com sucesso!");
-        // Redireciona para a página principal após o cadastro
-        window.location.href = "home/home.html";
-
-      } catch (error) {
-        // Traduz os erros retornados pelo Firebase para mensagens amigáveis
-        let mensagem;
-
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            mensagem = "Este endereço de email já está em uso.";
-            break;
-          case 'auth/invalid-email':
-            mensagem = "O endereço de email é inválido.";
-            break;
-          case 'auth/operation-not-allowed':
-            mensagem = "Cadastro com email e senha não está habilitado.";
-            break;
-          case 'auth/weak-password':
-            mensagem = "A senha é muito fraca. Use pelo menos 6 caracteres.";
-            break;
-          default:
-            mensagem = "Erro ao criar conta: " + error.message;
-        }
-
-        // Exibe a mensagem de erro para o usuário
-        alert(mensagem);
-      }
-    });
-  </script>
+      alert(mensagem);
+    }
+  });
+</script>
 </body>
 </html>
