@@ -29,7 +29,7 @@ header {
   top: 0;
   width: 100%;
   z-index: 10; /* Fica acima dos outros elementos */
-  background: linear-gradient(135deg, rgba(47, 120, 227, 0.7), rgba(156, 140, 235, 0.7)); /* Fundo translúcido azul com gradiente */
+  background: linear-gradient(135deg,  rgba(156, 140, 235, 0.7),rgba(47, 120, 227, 0.7)); /* Fundo translúcido azul com gradiente */
   backdrop-filter: blur(12px); /* Desfoque do fundo (glassmorphism) */
   -webkit-backdrop-filter: blur(12px); /* Compatibilidade Safari */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra sutil para destaque */
@@ -239,7 +239,23 @@ header nav a:hover {
   padding: 20px;
   color: #fff;
 }
+/* Exemplo de uso do card-glass no btn-categoria */
+.btn-categoria {
 
+  background: rgba(97, 94, 94, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  color: rgb(3, 0, 0);
+  padding: 10px 20px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.btn-categoria:hover {
+  background: rgba(97, 94, 94, 0.25); /* Fundo mais escuro no hover */
+  transform: translateY(-13px); /* Levanta o botão */
+}
 /* ===== Container principal do conteúdo ===== */
 main {
   max-width: 1200px;
@@ -298,3 +314,4 @@ main {
     display: none;
   }
 }
+/* ===== Responsividade para o explorer ===== */
