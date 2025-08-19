@@ -462,3 +462,18 @@ main {
 .categoria-btn:hover {
   background: #2563eb;
 }
+.eventos-categoria {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-categoria,
+.categoria-btn {
+  flex: 1 1 0;        /* todos crescem igualmente */
+  min-width: 120px;   /* largura mínima */
+  min-height: 100px; /* altura mínima */
+  text-align: center;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
