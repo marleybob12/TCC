@@ -21,6 +21,9 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- SwiperJS CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 </head>
 <body>
   
@@ -46,13 +49,13 @@
             <div class="user-dropdown">
               <div class="user-account" onclick="toggleDropdown()">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
-                <span class="user-name">Marley</span>
+                <span class="user-name">Usuário</span>
                 <span class="arrow">▾</span>
               </div>
-              <div class="dropdown-menu" id="dropdown">
+              <div class="dropdown-menu" id="dropdown" style="display:none;">
                 <a href="perfil.html">👤 Perfil</a>
                 <a href="config.html">⚙️ Configurações</a>
-                <a href="../index.html" id="dropdownLogout">🚪 Sair</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
               </div>
             </div>
           </li>
@@ -108,10 +111,145 @@
 
       <section class="explorer" aria-label="Explorar eventos">
         <h2>Explorar nossos eventos</h2>
+        <!-- Carrossel de categorias de eventos usando SwiperJS -->
+        <div class="eventos-categoria">
+          <!-- Container principal do Swiper -->
+          <div class="swiper categoria-swiper">
+            <!-- Wrapper que agrupa todos os slides (cada slide é um botão de categoria) -->
+            <div class="swiper-wrapper">
+              <!-- Cada slide representa uma categoria -->
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-headphones"></i><br>Música
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-volleyball"></i><br>Esportes
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-masks-theater"></i><br>Teatro e Espetáculos
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-microchip"></i><br>Tecnologia
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-palette"></i><br>Artes
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-burger"></i><br>Gastronomia
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-user-tie"></i><br>Negócios
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-school"></i><br>Educação
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-heart"></i><br>Saúde
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-shirt"></i><br>Moda
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-champagne-glasses"></i><br>Festas e Shows
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-laugh"></i><br>Stand up Comedy
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-child"></i><br>Infantil
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-people-group"></i><br>Passeios para toda família
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-globe"></i><br>Festas Típicas
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-ellipsis"></i><br>Outros
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-handshake"></i><br>Convenções
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-gamepad"></i><br>Games
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-dumbbell"></i><br>Fitness
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-users"></i><br>Encontros Sociais
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-mug-hot"></i><br>Cafés e Networking
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-calendar-days"></i><br>Workshops
+                </button>
+              </div>
+              <div class="swiper-slide">
+                <button class="btn-categoria">
+                  <i class="fa-solid fa-music"></i><br>Festivais
+                </button>
+              </div>
+            </div>
+            <!-- Botões de navegação do carrossel botos (setas) -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+          </div>
+        </div>
+
       </section>
 
       <section class="favoritos-da-semana" aria-label="Favoritos da semana">
         <h2>Favoritos da semana</h2>
+        <div class="card-glass">
+          <a class="link-img">
+          
+         
+
+        </div>
       </section>
     </main>
 
@@ -123,6 +261,7 @@
     // Importa as funções necessárias do Firebase para iniciar o app, autenticação e logout
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     // Configuração do Firebase do seu projeto
     const firebaseConfig = {
@@ -137,60 +276,83 @@
 
     // Inicializa o app Firebase com as configurações
     const app = initializeApp(firebaseConfig);
-    // Inicializa o serviço de autenticação
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    // Verifica se o usuário está logado
-    onAuthStateChanged(auth, (user) => {
-      // Se não estiver logado, redireciona para a página de login
-      if (!user) window.location.href = "../login.html";
+    // Verifica se o usuário está logado e busca o nome no Firestore
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "../login.html";
+        return;
+      }
+      // Busca o nome do usuário no Firestore usando o UID
+      try {
+        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
+        if (userDoc.exists()) {
+          const dados = userDoc.data();
+          document.querySelector(".user-name").textContent = dados.nome;
+        }
+      } catch (e) {
+        console.error("Erro ao buscar dados do usuário:", e);
+      }
     });
 
-    // Evento do botão de logout
+    // Logout pelo botão principal
     document.getElementById("logoutBtn").addEventListener("click", async () => {
-      // Desloga o usuário
       await signOut(auth);
-      // Redireciona para a página de login após logout
       window.location.href = "../login.html";
     });
-//fazendo logout do dropdown
-    // Evento do botão de logout no dropdown
+
+    // Logout pelo dropdown
     document.getElementById("dropdownLogout").addEventListener("click", async (e) => {
       e.preventDefault();
       await signOut(auth);
       window.location.href = "../login.html";
     });
 
-    // Evento do botão de menu (ícone hamburguer) para mostrar/ocultar menu em dispositivos móveis
+    // Menu responsivo
     document.getElementById("menu-icon").addEventListener("click", () => {
       document.querySelector("header nav ul").classList.toggle("show");
     });
   </script>
 
-  <!-- Funções JS globais (sem type="module") -->
   <script>
-    /**
-     * Função para abrir ou fechar o dropdown do usuário ao clicar na área da conta.
-     */
+    // Função para abrir/fechar o dropdown do usuário
     function toggleDropdown() {
       const menu = document.getElementById("dropdown");
-      // Alterna entre mostrar e esconder o menu do dropdown
       menu.style.display = menu.style.display === "flex" ? "none" : "flex";
     }
 
-    /**
-     * Fecha o dropdown se o clique for fora da área da conta do usuário.
-     */
+    // Fecha o dropdown se clicar fora
     window.addEventListener("click", function (e) {
       const dropdown = document.getElementById("dropdown");
       const account = document.querySelector(".user-account");
-
-      // Se o clique não for dentro da área da conta, esconde o dropdown
       if (!account.contains(e.target)) {
         dropdown.style.display = "none";
       }
     });
   </script>
 
+  <!-- SwiperJS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    // Cria uma nova instância do Swiper para o carrossel de categorias
+    new Swiper('.categoria-swiper', {
+      slidesPerView: 'auto', // Mostra vários slides ao mesmo tempo, conforme o espaço disponível
+      spaceBetween: 16,      // Espaçamento entre os slides (em pixels)
+      navigation: {
+        nextEl: '.swiper-button-next', // Elemento para avançar o carrossel
+        prevEl: '.swiper-button-prev'  // Elemento para retroceder o carrossel
+      },
+      freeMode: true,        // Permite rolagem livre (não trava em cada slide)
+      grabCursor: true,      // Mostra cursor de "pegar" ao passar o mouse
+      breakpoints: {         // Responsividade: ajusta slides visíveis conforme largura da tela
+        0: { slidesPerView: 2 },
+        480: { slidesPerView: 3 },
+        768: { slidesPerView: 5 },
+        1024: { slidesPerView: 7 }
+      }
+    });
+  </script>
 </body>
 </html>

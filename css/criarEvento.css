@@ -1,0 +1,113 @@
+/* Importa a fonte Poppins do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* Variável CSS para altura do header */
+:root {
+  --header-height: 85px;
+}
+
+/* Reset básico: remove margens/padding padrão e ajusta box-sizing para facilitar layouts */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth; /* Rolagem suave para âncoras */
+}
+
+/* Estilos básicos do body */
+body {
+  font-family: 'Poppins', sans-serif; /* Usa a fonte importada */
+  line-height: 1.6;
+  color: #1f1f1f;
+  background: linear-gradient(to bottom, #f5f9ff, #e6eeff); /* Gradiente suave azul claro */
+  padding-top: var(--header-height); /* Espaço para o header fixo */
+}
+
+/* ===== Header com efeito Glassmorphism ===== */
+header {
+  position: fixed; /* Fixa no topo da página */
+  top: 0;
+  width: 100%;
+  z-index: 10; /* Fica acima dos outros elementos */
+  background: linear-gradient(135deg, rgba(47, 120, 227, 0.7), rgba(156, 140, 235, 0.7)); /* Fundo translúcido azul com gradiente */
+  backdrop-filter: blur(12px); /* Desfoque do fundo (glassmorphism) */
+  -webkit-backdrop-filter: blur(12px); /* Compatibilidade Safari */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra sutil para destaque */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Linha branca translúcida abaixo */
+}
+
+/* Container interno do header para centralizar e distribuir elementos */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+}
+
+/* Logo do header */
+header .logo img {
+  width: 190px;
+}
+
+/* ===== Navegação principal ===== */
+header nav ul {
+  list-style: none; /* Remove bullets */
+  display: flex; /* Itens em linha */
+  gap: 20px; /* Espaço entre os links */
+}
+
+header nav a {
+  text-decoration: none; /* Remove sublinhado */
+  color: #ffffff; /* Cor branca */
+  font-weight: 600;
+  padding: 8px 12px; /* Espaçamento interno */
+  border-radius: 5px; /* Bordas arredondadas */
+  transition: background-color 0.3s ease; /* Transição suave no hover */
+}
+
+header nav a:hover {
+  background-color: rgba(0, 86, 210, 0.8); /* Fundo azul mais escuro ao passar o mouse */
+}
+
+/* ===== Botão hambúrguer (menu mobile) ===== */
+.menu-icon {
+  display: none; /* Escondido no desktop */
+  font-size: 1.8rem;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+/* ===== Botões ===== */
+.btn {
+    background: #1673ff; /* Azul */
+    color: #fff;
+    padding: 0.8rem 1.4rem;
+    border-radius: 30px; /* Botões arredondados */
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease; /* Animação suave */
+  }
+  
+  .btn:hover {
+    background: #0056d2; /* Azul mais escuro no hover */
+    transform: translateY(-2px); /* Levanta o botão */
+  }
+  
+  /* Botão logout com cor vermelha */
+  .btn-logout {
+    background: #ff4d4d;
+  }
+  
+  .btn-logout:hover {
+    background: #cc0000; /* Vermelho mais escuro no hover */
+  }
+  
+  /* Botão estilo glass (transparente com blur) */
+  .btn-glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
