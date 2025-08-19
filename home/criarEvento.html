@@ -1,27 +1,41 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="../css/criarEvento.css">
-    <title>EventFlow - criar evento</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <!-- Importa o CSS específico da página de criação de evento -->
+  <link rel="stylesheet" href="../css/criarEvento.css">
+  <title>EventFlow - Criar Evento</title>
 </head>
-       <!-- Navegação principal -->
-        <header>
-       <nav class="nav-links" aria-label="Menu principal">
+<body>
+  <!-- Header fixo da página -->
+  <header>
+    <div class="header-container">
+      <!-- Logo -->
+      <div class="logo">
+        <a href="home.html">
+          <img src="../img/logo.png" alt="EventFlow Logo">
+        </a>
+      </div>
+
+      <!-- Navegação principal -->
+      <nav class="nav-links" aria-label="Menu principal">
         <ul>
+          <!-- Links de navegação -->
           <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
           <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
           <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
           <li><a href="home.html" class="btn">EventFlow</a></li>
           <li>
-            <!-- Dropdown do usuário -->
+            <!-- Dropdown do usuário logado -->
             <div class="user-dropdown">
               <div class="user-account" onclick="toggleDropdown()">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
                 <span class="user-name">Muzy</span>
                 <span class="arrow">▾</span>
               </div>
+              <!-- Menu do dropdown -->
               <div class="dropdown-menu" id="dropdown">
                 <a href="perfil.html">👤 Perfil</a>
                 <a href="config.html">⚙️ Configurações</a>
@@ -33,11 +47,186 @@
       </nav>
     </div>
   </header>
-  
-  
-</head>
-<body>
-  <section class="hero">
-    
-  </section>
+
+  <!-- Conteúdo principal da página -->
+  <main>
+    <section class="hero">
+      <h1>Criar Evento</h1>
+      <p>Preencha os detalhes do seu evento</p>
+
+      <!-- Formulário de criação de evento -->
+      <form id="eventForm">
+        <!-- Nome do evento -->
+        <div class="form-group">
+          <label for="eventName">Nome do Evento:</label>
+          <input type="text" id="eventName" name="eventName" required>
+        </div>
+
+        <!-- Data -->
+        <div class="form-group">
+          <label for="eventDate">Data do Evento:</label>
+          <input type="date" id="eventDate" name="eventDate" required>
+        </div>
+
+        <!-- Hora -->
+        <div class="form-group">
+          <label for="eventTime">Hora do Evento:</label>
+          <input type="time" id="eventTime" name="eventTime" required>
+        </div>
+
+        <!-- Local -->
+        <div class="form-group">
+          <label for="eventLocation">Local do Evento:</label>
+          <input type="text" id="eventLocation" name="eventLocation" required>
+        </div>
+
+        <!-- CEP (auto-preenche endereço com API ViaCEP) -->
+        <div class="form-group">
+          <label for="eventCep">CEP:</label>
+          <input type="text" id="eventCep" name="eventCep" maxlength="9" required onblur="buscarEnderecoPorCep()">
+        </div>
+
+        <!-- Endereço (preenchido automaticamente pelo CEP) -->
+        <div class="form-group">
+          <label for="eventAddress">Endereço:</label>
+          <input type="text" id="eventAddress" name="eventAddress" required readonly>
+        </div>
+
+        <!-- Tipo de evento -->
+        <div class="form-group">
+          <label for="eventType">Tipo de Evento:</label>
+          <select id="eventType" name="eventType" required>
+            <option value="show">Show</option>
+            <option value="theater">Teatro</option>
+            <option value="conference">Conferência</option>
+            <option value="workshop">Workshop</option>
+            <option value="other">Outro</option>
+          </select>
+        </div>
+
+        <!-- Descrição -->
+        <div class="form-group">
+          <label for="eventDescription">Descrição do Evento:</label>
+          <textarea id="eventDescription" name="eventDescription" rows="4" required></textarea>
+        </div>
+
+        <!-- Banner -->
+        <div class="form-group">
+          <label for="eventImage">Banner do Evento:</label>
+          <input type="file" id="eventImage" name="eventImage" accept="image/*">
+        </div>
+
+        <!-- Preço do ingresso -->
+        <div class="form-group">
+          <label for="eventPrice">Lote do Ingresso (R$):</label>
+          <input type="number" id="eventPrice" name="eventPrice" min="0" step="0.01" required>
+        </div>
+
+        <!-- Quantidade de ingressos -->
+        <div class="form-group">
+          <label for="eventQuantity">Quantidade de Ingressos:</label>
+          <input type="number" id="eventQuantity" name="eventQuantity" min="1" required>
+        </div>
+
+        <!-- Botão de envio -->
+        <button type="submit" class="btn">Salvar Evento</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Script: busca endereço pelo CEP usando API ViaCEP -->
+  <script>
+    function buscarEnderecoPorCep() {
+      const cep = document.getElementById('eventCep').value.replace(/\D/g, '');
+      if (cep.length !== 8) return;
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => response.json())
+        .then(data => {
+          if (!data.erro) {
+            // Preenche o campo de endereço com os dados retornados
+            document.getElementById('eventAddress').value =
+              `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+          } else {
+            document.getElementById('eventAddress').value = '';
+          }
+        })
+        .catch(() => {
+          document.getElementById('eventAddress').value = '';
+        });
+    }
+  </script>
+
+  <!-- Script Firebase: autenticação e Firestore -->
+  <script type="module">
+    // Importa módulos do Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
+      authDomain: "eventflow-87d51.firebaseapp.com",
+      databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
+      projectId: "eventflow-87d51",
+      storageBucket: "eventflow-87d51.appspot.com",
+      messagingSenderId: "1060995756519",
+      appId: "1:1060995756519:web:1963ecc800497812630d42"
+    };
+
+    // Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Protege a página: redireciona se não estiver logado
+    onAuthStateChanged(auth, (user) => {
+      if (!user) window.location.href = "../login.html";
+    });
+
+    // Listener do formulário -> salva evento no Firestore
+    document.getElementById("eventForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      // Monta objeto com os dados do evento
+      const evento = {
+        nome: document.getElementById("eventName").value,
+        data: document.getElementById("eventDate").value,
+        hora: document.getElementById("eventTime").value,
+        local: document.getElementById("eventLocation").value,
+        cep: document.getElementById("eventCep").value,
+        endereco: document.getElementById("eventAddress").value,
+        tipo: document.getElementById("eventType").value,
+        descricao: document.getElementById("eventDescription").value,
+        preco: parseFloat(document.getElementById("eventPrice").value),
+        quantidade: parseInt(document.getElementById("eventQuantity").value),
+        dataCriacao: new Date().toISOString() // salva timestamp de criação
+      };
+
+      try {
+        // Salva no Firestore
+        await addDoc(collection(db, "Evento"), evento);
+        alert("Evento criado com sucesso!");
+        document.getElementById("eventForm").reset(); // limpa o formulário
+      } catch (error) {
+        alert("Erro ao criar evento: " + error.message);
+      }
+    });
+  </script>
+  <!-- ======= RODAPÉ ======= -->
+<footer>
+  <ul>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#política">Política de Privacidade</a></li>
+    <li><a href="#termos">Termos de Serviço</a></li>
+  </ul>
+  <div class="social-media">
+    <a href="#">Instagram</a>
+    <a href="#">Facebook</a>
+    <a href="#">LinkedIn</a>
+  </div>
+  <p>&copy; 2025 DevGeneration. Todos os direitos reservados.</p>
+</footer>
+
 </body>
+</html>
