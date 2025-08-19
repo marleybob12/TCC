@@ -115,6 +115,7 @@ header nav a:hover {
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   background-color: rgba(0, 0, 0, 0.904);
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 50%;
   padding: 20px;
 }
@@ -267,7 +268,7 @@ header nav a:hover {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 30px;
   color: rgb(3, 0, 0);
-  padding: 10px 20px ;
+  padding: 10px 20px;
   font-weight: 600;
   text-decoration: none;
   transition: background 0.3s ease, transform 0.2s ease;
