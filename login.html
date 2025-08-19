@@ -23,21 +23,28 @@
       <!-- Formulário com id para manipulação via JS -->
       <form id="loginForm" autocomplete="off">
         <div class="input-group">
-          <input type="email" id="email" placeholder="Email" required> <!-- Campo email -->
+          <input type="email" id="email" placeholder="Email" required>
         </div>
         <div class="input-group">
-          <input type="password" id="senha" placeholder="Senha" required minlength="6"> <!-- Campo senha -->
+          <input type="password" id="senha" placeholder="Senha" required minlength="6">
         </div>
-        <button type="submit" class="login-btn">LOGIN</button> <!-- Botão de login -->
+        <button type="submit" class="login-btn">LOGIN</button>
 
         <!-- Links para recuperação de usuário e senha -->
         <p class="esqueceu"><a href="recuperacaoUser.html">Esqueceu seu usuário?</a></p>
         <p class="esqueceu"><a href="recuperacaoSenha.html">Esqueceu sua senha?</a></p>
 
-        <!-- Botão para criar conta que redireciona para página de cadastro -->
+        <!-- Botão para criar conta -->
         <p>
           <button type="button" class="criar-conta-btn" onclick="window.location.href='cadastro.html'">
             Criar conta →
+          </button>
+        </p>
+
+        <!-- Botão opcional para login com Google -->
+        <p>
+          <button type="button" id="googleLogin" class="google-btn">
+            <i class="fa-brands fa-google"></i> Entrar com Google
           </button>
         </p>
       </form>
@@ -46,77 +53,83 @@
 
   <!-- Script Firebase para autenticação -->
   <script type="module">
-    // Importa os módulos do Firebase necessários para autenticação
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
-      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+   // Importa os módulos do Firebase necessários
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } 
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // Configurações do Firebase (identificação do projeto)
-    const firebaseConfig = {
-      apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
-      authDomain: "eventflow-87d51.firebaseapp.com",
-      databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
-      projectId: "eventflow-87d51",
-      storageBucket: "eventflow-87d51.appspot.com",
-      messagingSenderId: "1060995756519",
-      appId: "1:1060995756519:web:1963ecc800497812630d42"
-    };
+// Configurações do Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
+  authDomain: "eventflow-87d51.firebaseapp.com",
+  projectId: "eventflow-87d51",
+  storageBucket: "eventflow-87d51.appspot.com",
+  messagingSenderId: "1060995756519",
+  appId: "1:1060995756519:web:1963ecc800497812630d42"
+};
 
-    // Inicializa a aplicação Firebase
-    const app = initializeApp(firebaseConfig);
-    // Instancia o serviço de autenticação
-    const auth = getAuth(app);
+// Inicializa o Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-    // Evento que captura o envio do formulário de login
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault(); // Evita reload da página
+// 🔎 Debug: qual redirect o Firebase espera
+const expectedRedirectUri = `https://${auth.app.options.authDomain}/__/auth/handler`;
+console.log("🔎 Firebase Auth debug:", {
+  authDomain: auth.app.options.authDomain,
+  expectedRedirectUri
+});
+window._authDebug = { authDomain: auth.app.options.authDomain, expectedRedirectUri };
 
-      // Pega os valores digitados nos campos
-      const email = document.getElementById("email").value.trim();
-      const senha = document.getElementById("senha").value;
+// Login com email e senha
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  const senha = document.getElementById("senha").value;
 
-      try {
-        // Tenta fazer login com email e senha no Firebase
-        await signInWithEmailAndPassword(auth, email, senha);
-        // Se sucesso, redireciona para página inicial
-        window.location.href = "home/home.html";
-      } catch (error) {
-        // Variável para armazenar a mensagem amigável
-        let mensagem;
+  try {
+    await signInWithEmailAndPassword(auth, email, senha);
+    window.location.href = "home/home.html";
+  } catch (error) {
+    let mensagem;
+    switch (error.code) {
+      case 'auth/invalid-email': mensagem = "O endereço de email é inválido."; break;
+      case 'auth/user-disabled': mensagem = "Este usuário está desabilitado."; break;
+      case 'auth/user-not-found': mensagem = "Usuário não encontrado."; break;
+      case 'auth/wrong-password': mensagem = "Senha incorreta."; break;
+      case 'auth/too-many-requests': mensagem = "Muitas tentativas falhas. Tente novamente mais tarde."; break;
+      default: mensagem = "Erro no login: " + error.message;
+    }
+    alert(mensagem);
+  }
+});
 
-        // Verifica o código do erro retornado pelo Firebase
-        switch (error.code) {
-          case 'auth/invalid-email':
-            mensagem = "O endereço de email é inválido.";
-            break;
-          case 'auth/user-disabled':
-            mensagem = "Este usuário está desabilitado.";
-            break;
-          case 'auth/user-not-found':
-            mensagem = "Usuário não encontrado.";
-            break;
-          case 'auth/wrong-password':
-            mensagem = "Senha incorreta.";
-            break;
-          case 'auth/too-many-requests':
-            mensagem = "Muitas tentativas falhas. Tente novamente mais tarde.";
-            break;
-          default:
-            mensagem = "Erro no login: " + error.message; // Mensagem padrão para outros erros
-        }
-
-        // Exibe a mensagem para o usuário
-        alert(mensagem);
-      }
+// Login com Google
+document.getElementById("googleLogin").addEventListener("click", async () => {
+  try {
+    await signInWithPopup(auth, provider);
+    window.location.href = "home/home.html";
+  } catch (error) {
+    console.error("Google login error:", {
+      code: error.code,
+      message: error.message,
+      email: error.customData?.email,
+      credential: GoogleAuthProvider.credentialFromError(error)
     });
+    alert(
+      `Erro no login com Google: ${error.code}\n` +
+      `Redirect URI esperado: ${expectedRedirectUri}`
+    );
+  }
+});
 
-    // Verifica se o usuário já está logado ao carregar a página
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // Se estiver logado, redireciona direto para home
-        window.location.href = "home/home.html";
-      }
-    });
+// Se já estiver logado, redireciona
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    window.location.href = "home/home.html";
+  }
+});
+// Exibe o debug no console
   </script>
 </body>
 </html>
