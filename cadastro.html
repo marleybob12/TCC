@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="css/cadastro.css" />
   <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
 </head>
-
 <body>
   <div class="login-container">
     <div class="login-esquerda">
@@ -27,10 +26,10 @@
           <input type="tel" id="telefone" placeholder="Telefone (Opcional)" pattern="\d{10,15}">
         </div>
         <div class="input-group">
-          <input type="text" id="cpf" placeholder="CPF (somente números)" required pattern="\d{11}" maxlength="11">
+          <input type="text" id="cpf" placeholder="CPF (somente números)" required pattern="\d{11}" maxlength="11" inputmode="numeric">
         </div>
         <div class="input-group">
-          <input type="date" id="dataNascimento" placeholder="Data de Nascimento" required>
+          <input type="date" id="dataNascimento" required>
         </div>
         <div class="input-group">
           <input type="password" id="senha" placeholder="Senha (mínimo 6 caracteres)" required minlength="6">
@@ -46,21 +45,19 @@
     </div>
   </div>
 
-  <!-- Firebase e lógica de cadastro -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { inserirDadosComOrganizador } from "./javaScript/inserirDados.js";
+    import { inserirDadosUsuario } from "./inserirDados.js"; <!-- ✅ corrigido caminho -->
 
     const firebaseConfig = {
       apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
       authDomain: "eventflow-87d51.firebaseapp.com",
-      databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
       projectId: "eventflow-87d51",
       storageBucket: "eventflow-87d51.appspot.com",
       messagingSenderId: "1060995756519",
-      appId: "1:1060995756519:web:1963ecc800497812630d42" // Inicializa o Firebase com as configurações fornecidas
+      appId: "1:1060995756519:web:1963ecc800497812630d42"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -83,11 +80,6 @@
         return;
       }
 
-      if (!dataNascimento) {
-        alert("Informe a data de nascimento.");
-        return;
-      }
-
       if (senha !== confirmarSenha) {
         alert("As senhas não coincidem!");
         return;
@@ -97,7 +89,7 @@
         const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
         const user = userCredential.user;
 
-        await inserirDadosComOrganizador(db, user.uid, nome, email, telefone, cpf, dataNascimento);
+        await inserirDadosUsuario(db, user.uid, nome, email, telefone, cpf, dataNascimento);
 
         alert("Conta criada com sucesso!");
         window.location.href = "home/home.html";

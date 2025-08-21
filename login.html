@@ -57,7 +57,9 @@
     import {
       getFirestore,
       doc,
-      getDoc
+      getDoc,
+      setDoc,
+      serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     // Configurações do Firebase
@@ -87,7 +89,6 @@
           const userData = userDocSnap.data();
           const tipo = userData.tipo || "participante"; // fallback
 
-          // Redirecionamento baseado no tipo
           switch (tipo) {
             case "organizador":
               window.location.href = "organizador/painelOrganizador.html";
@@ -128,6 +129,21 @@
     document.getElementById("googleLogin").addEventListener("click", async () => {
       try {
         const result = await signInWithPopup(auth, provider);
+        const userDocRef = doc(db, "Usuario", result.user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (!userDocSnap.exists()) {
+          await setDoc(userDocRef, {
+            usuarioID: result.user.uid,
+            nome: result.user.displayName || "",
+            email: result.user.email || "",
+            telefone: null,
+            cpf: null,
+            dataNascimento: null,
+            tipo: "participante",
+            dataCriacao: serverTimestamp() // ✅ padronizado
+          });
+        }
         await redirecionarUsuario(result.user);
       } catch (error) {
         console.error("Google login error:", error);

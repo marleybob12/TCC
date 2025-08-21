@@ -1,12 +1,15 @@
-/* Importa a fonte Poppins do Google Fonts */
+/* =========================
+   Fonte e Variáveis Globais
+========================= */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-/* Variável CSS para altura do header */
 :root {
   --header-height: 85px;
 }
 
-/* Reset */
+/* =========================
+   Reset
+========================= */
 * {
   margin: 0;
   padding: 0;
@@ -14,7 +17,6 @@
   scroll-behavior: smooth;
 }
 
-/* ===== Body ===== */
 body {
   font-family: 'Poppins', sans-serif;
   line-height: 1.6;
@@ -23,17 +25,19 @@ body {
   padding-top: var(--header-height);
 }
 
-/* ===== Header (Glassmorphism) ===== */
+/* =========================
+   Header - Glassmorphism
+========================= */
 header {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 10;
-  background: linear-gradient(135deg, rgba(47, 120, 227, 0.7), rgba(156, 140, 235, 0.7));
+  background: linear-gradient(135deg, rgba(47,120,227,0.7), rgba(156,140,235,0.7));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
 .header-container {
@@ -43,11 +47,13 @@ header {
   padding: 10px 30px;
 }
 
-header .logo img {
+.logo img {
   width: 160px;
 }
 
-/* ===== Navegação ===== */
+/* =========================
+   Navegação
+========================= */
 header nav ul {
   list-style: none;
   display: flex;
@@ -57,7 +63,7 @@ header nav ul {
 
 header nav a {
   text-decoration: none;
-  color: #ffffff;
+  color: #fff;
   font-weight: 600;
   padding: 8px 14px;
   border-radius: 8px;
@@ -65,35 +71,58 @@ header nav a {
 }
 
 header nav a:hover {
-  background-color: rgba(0, 86, 210, 0.8);
+  background-color: rgba(0,86,210,0.8);
 }
 
-/* ===== Botões ===== */
-.btn {
-  background: linear-gradient(135deg, #1673ff, #6c63ff);
-  color: #fff;
-  padding: 0.8rem 1.4rem;
-  border-radius: 30px;
-  font-weight: 600;
+/* =========================
+   Menu Responsivo
+========================= */
+.menu-icon {
+  display: none;
+  font-size: 1.8rem;
+  color: white;
+  background: none;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.btn:hover {
-  background: linear-gradient(135deg, #0056d2, #5145cd);
-  transform: translateY(-2px);
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 8px;
+  }
+
+  header .logo img {
+    width: 120px;
+  }
+
+  header nav ul {
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(22,115,255,0.95);
+    position: absolute;
+    top: var(--header-height);
+    right: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    min-width: 160px;
+    display: none;
+  }
+
+  header nav ul.show {
+    display: flex !important;
+  }
+
+  .menu-icon {
+    display: block;
+    margin-left: auto;
+  }
 }
 
-.btn-logout {
-  background: #ff4d4d;
-}
-
-.btn-logout:hover {
-  background: #cc0000;
-}
-
-/* ===== Dropdown do usuário ===== */
+/* =========================
+   Dropdown Usuário
+========================= */
 .user-dropdown {
   position: relative;
 }
@@ -134,75 +163,19 @@ header nav a:hover {
 }
 
 .dropdown-menu a:hover {
-  background: rgba(22, 115, 255, 0.2);
+  background: rgba(22,115,255,0.2);
 }
 
 .user-dropdown.active .dropdown-menu {
   display: block;
 }
 
-/* ===== Responsividade ===== */
-@media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 8px;
-  }
-
-  header .logo img {
-    width: 120px;
-  }
-
-  header nav ul {
-    flex-direction: column;
-    gap: 10px;
-    background: rgba(22, 115, 255, 0.95);
-    position: absolute;
-    top: var(--header-height);
-    right: 10px;
-    padding: 12px;
-    border-radius: 8px;
-    min-width: 160px;
-    display: none;
-  }
-
-  header nav ul.show {
-    display: flex !important;
-  }
-
-  .menu-icon {
-    display: block;
-    margin-left: auto;
-    font-size: 1.8rem;
-    color: white;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-}
-
-/* ===== Hero ===== */
-.hero {
-  text-align: center;
-  padding: 40px 20px;
-}
-
-.hero h1 {
-  font-size: 2rem;
-  color: #1673ff;
-  margin-bottom: 10px;
-}
-
-.hero p {
-  color: #555;
-  font-size: 1.1rem;
-  margin-bottom: 25px;
-}
-
-/* ===== Formulário ===== */
+/* =========================
+   Formulário
+========================= */
 form {
-  max-width: 600px;
-  margin: 0 auto 40px auto;
+  max-width: 700px;
+  margin: 30px auto 50px auto;
   background: rgba(255,255,255,0.2);
   backdrop-filter: blur(10px);
   border-radius: 16px;
@@ -210,9 +183,13 @@ form {
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
+h2 {
+  color: #1673ff;
+  margin-bottom: 15px;
+}
+
 .form-group {
   margin-bottom: 18px;
-  text-align: left;
 }
 
 label {
@@ -238,6 +215,7 @@ input:focus, textarea:focus, select:focus {
   background: #fff;
   outline: none;
 }
+
 button[type="submit"] {
   background: linear-gradient(135deg, #1673ff, #6c63ff);
   color: #fff;
@@ -247,26 +225,29 @@ button[type="submit"] {
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-} 
+}
+
 button[type="submit"]:hover {
   background: linear-gradient(135deg, #0056d2, #5145cd);
   transform: translateY(-2px);
 }
-/* ===== Footer ===== */
-footer {
-  background: rgba(22, 115, 255, 0.95);
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-  position: relative;
+
+/* =========================
+   Preview Banner
+========================= */
+#previewBanner {
+  display: none;
+  max-width: 300px;
+  margin-top: 10px;
+  border-radius: 10px;
 }
-footer p {
-  margin: 0;
-  font-size: 0.9rem;
+
+
+/* =========================
+   Responsividade Form
+========================= */
+@media (max-width: 768px) {
+  form {
+    padding: 20px 15px;
+  }
 }
-footer a {
-  color: #fff;
-  text-decoration: underline;
-}
-/* ===== Hero Section Adjustment ===== */
-/* Adicione ao seu criarEvento.css */ 
