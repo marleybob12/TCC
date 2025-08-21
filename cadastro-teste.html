@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro Teste - EventFlow</title>
+</head>
+<body>
+  <h1>Cadastro de Teste Firebase</h1>
+
+  <form id="cadastroForm">
+    <input type="email" id="email" placeholder="Email" required><br><br>
+    <input type="password" id="senha" placeholder="Senha" required minlength="6"><br><br>
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <h1>Login de Teste Firebase</h1>
+
+  <form id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Email" required><br><br>
+    <input type="password" id="loginSenha" placeholder="Senha" required><br><br>
+    <button type="submit">Login</button>
+  </form>
+
+  <p id="mensagem"></p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
+      authDomain: "eventflow-87d51.firebaseapp.com",
+      projectId: "eventflow-87d51",
+      storageBucket: "eventflow-87d51.appspot.com",
+      messagingSenderId: "1060995756519",
+      appId: "1:1060995756519:web:1963ecc800497812630d42"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Cadastro
+    document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+        document.getElementById("mensagem").innerText = "✅ Usuário criado com sucesso: " + userCredential.user.email;
+      } catch (error) {
+        document.getElementById("mensagem").innerText = "❌ Erro ao cadastrar: " + error.message;
+      }
+    });
+
+    // Login
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const senha = document.getElementById("loginSenha").value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, senha);
+        document.getElementById("mensagem").innerText = "✅ Login realizado: " + userCredential.user.email;
+      } catch (error) {
+        document.getElementById("mensagem").innerText = "❌ Erro ao logar: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
