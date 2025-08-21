@@ -46,13 +46,19 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { 
-      getAuth, 
-      signInWithEmailAndPassword, 
-      onAuthStateChanged, 
-      GoogleAuthProvider, 
-      signInWithPopup 
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      GoogleAuthProvider,
+      signInWithPopup
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     // Configurações do Firebase
     const firebaseConfig = {
@@ -65,20 +71,53 @@
       appId: "1:1060995756519:web:1963ecc800497812630d42"
     };
 
-    // Inicializa Firebase
+    // Inicialização
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // Login com email e senha
+    // Redireciona baseado no tipo de usuário
+    async function redirecionarUsuario(user) {
+      try {
+        const userDocRef = doc(db, "Usuario", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          const tipo = userData.tipo || "participante"; // fallback
+
+          // Redirecionamento baseado no tipo
+          switch (tipo) {
+            case "organizador":
+              window.location.href = "organizador/painelOrganizador.html";
+              break;
+            case "admin":
+              window.location.href = "admin/dashboard.html";
+              break;
+            case "participante":
+            default:
+              window.location.href = "home/home.html";
+              break;
+          }
+        } else {
+          alert("Usuário não encontrado no banco de dados.");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados do usuário:", error);
+        alert("Erro ao carregar os dados do usuário.");
+      }
+    }
+
+    // Login com email/senha
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("email").value.trim();
       const senha = document.getElementById("senha").value;
 
       try {
-        await signInWithEmailAndPassword(auth, email, senha);
-        window.location.href = "home/home.html";
+        const userCredential = await signInWithEmailAndPassword(auth, email, senha);
+        await redirecionarUsuario(userCredential.user);
       } catch (error) {
         alert("Erro ao fazer login: " + error.message);
         console.error("Login error:", error);
@@ -88,18 +127,18 @@
     // Login com Google
     document.getElementById("googleLogin").addEventListener("click", async () => {
       try {
-        await signInWithPopup(auth, provider);
-        window.location.href = "home/home.html";
+        const result = await signInWithPopup(auth, provider);
+        await redirecionarUsuario(result.user);
       } catch (error) {
         console.error("Google login error:", error);
         alert("Erro no login com Google: " + error.message);
       }
     });
 
-    // Verifica se usuário já está logado
-    onAuthStateChanged(auth, (user) => {
+    // Se já estiver logado, redireciona automaticamente
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        window.location.href = "home/home.html";
+        await redirecionarUsuario(user);
       }
     });
   </script>

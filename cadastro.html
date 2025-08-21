@@ -4,58 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EventFlow - Cadastro</title>
-  <!-- Link para arquivo CSS externo -->
   <link rel="stylesheet" href="css/cadastro.css" />
-  <!-- Ícone da aba do navegador -->
   <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
-</head> 
+</head>
 
 <body>
-  <!-- Container principal do formulário de cadastro -->
   <div class="login-container">
-
-    <!-- Lado esquerdo com imagem ilustrativa -->
     <div class="login-esquerda">
       <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Ilustração de Cadastro">
     </div>
 
-    <!-- Lado direito com o formulário de cadastro -->
     <div class="login-direita">
       <h2>Criar Conta</h2>
-    
-      <!-- Formulário de cadastro -->
       <form id="cadastroForm" autocomplete="off">
-        <!-- Campo Nome Completo -->
         <div class="input-group">
           <input type="text" id="nome" placeholder="Nome Completo" required maxlength="100">
         </div>
-        <!-- Campo Email -->
         <div class="input-group">
           <input type="email" id="email" placeholder="Email" required>
         </div>
-        <!-- Campo Telefone (opcional) com validação de dígitos -->
         <div class="input-group">
           <input type="tel" id="telefone" placeholder="Telefone (Opcional)" pattern="\d{10,15}">
         </div>
-        <!-- Campo CPF -->
         <div class="input-group">
           <input type="text" id="cpf" placeholder="CPF (somente números)" required pattern="\d{11}" maxlength="11">
         </div>
-        <!-- Campo Data de Nascimento -->
         <div class="input-group">
           <input type="date" id="dataNascimento" placeholder="Data de Nascimento" required>
         </div>
-        <!-- Campo Senha -->
         <div class="input-group">
           <input type="password" id="senha" placeholder="Senha (mínimo 6 caracteres)" required minlength="6">
         </div>
-        <!-- Campo Confirmar Senha -->
         <div class="input-group">
           <input type="password" id="confirmarSenha" placeholder="Confirmar Senha" required minlength="6">
         </div>
-        <!-- Botão de envio do formulário -->
         <button type="submit" class="Cadastrar-btn">Cadastrar</button>
-        <!-- Link para voltar ao login -->
         <p class="voltar-login">
           <a href="login.html">← Já tem conta? Fazer Login</a>
         </p>
@@ -63,105 +46,82 @@
     </div>
   </div>
 
-  <!-- Script Firebase para autenticação e armazenamento dos dados -->
+  <!-- Firebase e lógica de cadastro -->
   <script type="module">
-  // Importa as funções necessárias do Firebase para autenticação e banco de dados
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword } 
-    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, setDoc } 
-    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { inserirDadosComOrganizador } from "./javaScript/inserirDados.js";
 
-  // Configurações do Firebase do projeto
-  const firebaseConfig = {
-    apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
-    authDomain: "eventflow-87d51.firebaseapp.com",
-    databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
-    projectId: "eventflow-87d51",
-    storageBucket: "eventflow-87d51.appspot.com",
-    messagingSenderId: "1060995756519",
-    appId: "1:1060995756519:web:1963ecc800497812630d42"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
+      authDomain: "eventflow-87d51.firebaseapp.com",
+      databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
+      projectId: "eventflow-87d51",
+      storageBucket: "eventflow-87d51.appspot.com",
+      messagingSenderId: "1060995756519",
+      appId: "1:1060995756519:web:1963ecc800497812630d42" // Inicializa o Firebase com as configurações fornecidas
+    };
 
-  // Inicializa o Firebase com as configurações fornecidas
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app); // Serviço de autenticação
-  const db = getFirestore(app); // Serviço de banco de dados Firestore
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  // Adiciona um listener para o envio do formulário de cadastro
-  document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
-    e.preventDefault(); // Evita o recarregamento da página
+    document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    // Coleta os valores dos campos do formulário
-    const nome = document.getElementById("nome").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const telefone = document.getElementById("telefone").value.trim();
-    const cpf = document.getElementById("cpf").value.trim();
-    const dataNascimento = document.getElementById("dataNascimento").value;
-    const senha = document.getElementById("senha").value;
-    const confirmarSenha = document.getElementById("confirmarSenha").value;
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const telefone = document.getElementById("telefone").value.trim();
+      const cpf = document.getElementById("cpf").value.trim();
+      const dataNascimento = document.getElementById("dataNascimento").value;
+      const senha = document.getElementById("senha").value;
+      const confirmarSenha = document.getElementById("confirmarSenha").value;
 
-    // Validação do CPF: deve conter 11 dígitos numéricos
-    if (!/^\d{11}$/.test(cpf)) {
-      alert("CPF deve conter 11 dígitos numéricos.");
-      return;
-    }
-
-    // Validação da data de nascimento: campo obrigatório
-    if (!dataNascimento) {
-      alert("Informe a data de nascimento.");
-      return;
-    }
-
-    // Validação das senhas: devem ser iguais
-    if (senha !== confirmarSenha) {
-      alert("As senhas não coincidem!");
-      return;
-    }
-
-    try {
-      // Cria o usuário no Firebase Authentication com email e senha
-      const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
-      const user = userCredential.user; // Objeto do usuário criado
-
-      // Salva os dados adicionais do usuário no Firestore
-      // O documento é identificado pelo UID do usuário (user.uid)
-      await setDoc(doc(db, "Usuario", user.uid), {
-        usuarioID: user.uid, // UID do Firebase Authentication
-        nome: nome,
-        email: email,
-        telefone: telefone || "",
-        cpf: cpf,
-        dataNascimento: dataNascimento,
-        dataCriacao: new Date().toISOString() // Data de criação no formato ISO
-      });
-
-      alert("Conta criada com sucesso!");
-      // Redireciona para a página inicial do usuário
-      window.location.href = "home/home.html";
-
-    } catch (error) {
-      // Tratamento de erros comuns do Firebase Authentication
-      let mensagem;
-      switch (error.code) {
-        case 'auth/email-already-in-use':
-          mensagem = "Este endereço de email já está em uso.";
-          break;
-        case 'auth/invalid-email':
-          mensagem = "O endereço de email é inválido.";
-          break;
-        case 'auth/operation-not-allowed':
-          mensagem = "Cadastro com email e senha não está habilitado.";
-          break;
-        case 'auth/weak-password':
-          mensagem = "A senha é muito fraca. Use pelo menos 6 caracteres.";
-          break;
-        default:
-          mensagem = "Erro ao criar conta: " + error.message;
+      if (!/^\d{11}$/.test(cpf)) {
+        alert("CPF deve conter 11 dígitos numéricos.");
+        return;
       }
-      alert(mensagem);
-    }
-  });
-</script>
+
+      if (!dataNascimento) {
+        alert("Informe a data de nascimento.");
+        return;
+      }
+
+      if (senha !== confirmarSenha) {
+        alert("As senhas não coincidem!");
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+        const user = userCredential.user;
+
+        await inserirDadosComOrganizador(db, user.uid, nome, email, telefone, cpf, dataNascimento);
+
+        alert("Conta criada com sucesso!");
+        window.location.href = "home/home.html";
+      } catch (error) {
+        let mensagem;
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            mensagem = "Este endereço de email já está em uso.";
+            break;
+          case 'auth/invalid-email':
+            mensagem = "O endereço de email é inválido.";
+            break;
+          case 'auth/operation-not-allowed':
+            mensagem = "Cadastro com email e senha não está habilitado.";
+            break;
+          case 'auth/weak-password':
+            mensagem = "A senha é muito fraca. Use pelo menos 6 caracteres.";
+            break;
+          default:
+            mensagem = "Erro ao criar conta: " + error.message;
+        }
+        alert(mensagem);
+      }
+    });
+  </script>
 </body>
 </html>
