@@ -48,53 +48,34 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    // Importa a função de cadastro do auth.js (que já lida com Firebase Auth e Firestore)
+    import { cadastrarUsuario } from "./javaScript/auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
-      authDomain: "eventflow-87d51.firebaseapp.com",
-      projectId: "eventflow-87d51",
-      storageBucket: "eventflow-87d51.appspot.com",
-      messagingSenderId: "1060995756519",
-      appId: "1:1060995756519:web:1963ecc800497812630d42"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    async function inserirDadosUsuario(uid, nome, email, telefone, cpf, dataNascimento) {
-      await setDoc(doc(db, "Usuario", uid), {
-        nome,
-        email,
-        telefone,
-        cpf,
-        dataNascimento
-      });
-    }
-
+    // Seleciona o formulário e o elemento de mensagem
     const cadastroForm = document.getElementById("cadastroForm");
     const mensagemEl = document.getElementById("mensagem");
 
+    // Função principal de cadastro ao enviar o formulário
     cadastroForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+      e.preventDefault(); // Evita que a página recarregue
 
-      const nome = String(document.getElementById("nome").value.trim());
-      const email = String(document.getElementById("email").value.trim());
-      const telefone = String(document.getElementById("telefone").value.trim());
-      const cpf = String(document.getElementById("cpf").value.trim());
-      const dataNascimento = String(document.getElementById("dataNascimento").value);
-      const senha = String(document.getElementById("senha").value);
-      const confirmarSenha = String(document.getElementById("confirmarSenha").value);
+      // Pega valores dos inputs
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const telefone = document.getElementById("telefone").value.trim();
+      const cpf = document.getElementById("cpf").value.trim();
+      const dataNascimento = document.getElementById("dataNascimento").value;
+      const senha = document.getElementById("senha").value;
+      const confirmarSenha = document.getElementById("confirmarSenha").value;
 
+      // Valida CPF (11 dígitos numéricos)
       if (!/^\d{11}$/.test(cpf)) {
         mensagemEl.innerText = "❌ CPF deve conter 11 dígitos numéricos.";
         mensagemEl.style.color = "red";
         return;
       }
 
+      // Valida se as senhas coincidem
       if (senha !== confirmarSenha) {
         mensagemEl.innerText = "❌ As senhas não coincidem!";
         mensagemEl.style.color = "red";
@@ -102,19 +83,20 @@
       }
 
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
-        const user = userCredential.user;
+        // Chama a função do auth.js para criar o usuário e salvar no Firestore
+        const user = await cadastrarUsuario(nome, email, telefone, cpf, dataNascimento, senha);
 
-        await inserirDadosUsuario(user.uid, nome, email, telefone, cpf, dataNascimento);
-
+        // Mensagem de sucesso
         mensagemEl.innerText = "✅ Conta criada com sucesso! Redirecionando...";
         mensagemEl.style.color = "#2F78E3";
 
+        // Redireciona para home.html após 2 segundos
         setTimeout(() => {
           window.location.href = "home/home.html";
         }, 2000);
 
       } catch (error) {
+        // Tratamento detalhado dos erros do Firebase Auth
         let mensagem;
         switch (error.code) {
           case 'auth/email-already-in-use':
@@ -132,6 +114,7 @@
           default:
             mensagem = "Erro ao criar conta: " + error.message;
         }
+
         mensagemEl.innerText = "❌ " + mensagem;
         mensagemEl.style.color = "red";
       }

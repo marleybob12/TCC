@@ -1,33 +1,33 @@
 /* =========================
    Importação de fontes
    ========================= */
-/* Importa a fonte Poppins do Google Fonts para uso global no projeto */
+/* Importa a fonte 'Poppins' do Google Fonts para uso em todo o projeto */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 /* =========================
    Variáveis globais
    ========================= */
 :root {
-  --header-height: 85px; /* Altura padrão do header fixo */
+  --header-height: 85px; /* Altura do header fixo, usada no padding do body para não sobrepor conteúdo */
 }
 
 /* =========================
    Reset e estilos globais
    ========================= */
-/* Remove margens e paddings padrão, define box-sizing e rolagem suave */
+/* Remove margens e paddings padrões e aplica box-sizing border-box */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth;
+  scroll-behavior: smooth; /* Rolagem suave ao navegar entre âncoras */
 }
 
-/* Define fonte, cor e fundo padrão do body */
+/* Estilo base do body */
 body {
-  font-family: 'Poppins', sans-serif;
-  line-height: 1.6;
-  color: #1f1f1f;
-  background: linear-gradient(to bottom, #f5f9ff, #e6eeff); /* Gradiente azul claro */
+  font-family: 'Poppins', sans-serif; /* Fonte principal */
+  line-height: 1.6; /* Espaçamento entre linhas */
+  color: #1f1f1f; /* Cor padrão do texto */
+  background: linear-gradient(to bottom, #f5f9ff, #e6eeff); /* Fundo gradiente azul claro */
   padding-top: var(--header-height); /* Espaço para o header fixo */
 }
 
@@ -35,18 +35,18 @@ body {
    Header com Glassmorphism
    ========================= */
 header {
-  position: fixed;
+  position: fixed; /* Fixa o header no topo */
   top: 0;
   width: 100%;
-  z-index: 10;
-  background: linear-gradient(135deg, rgba(156, 140, 235, 0.7), rgba(47, 120, 227, 0.7));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 10; /* Garante que fique acima de outros elementos */
+  background: linear-gradient(135deg, rgba(156, 140, 235, 0.7), rgba(47, 120, 227, 0.7)); /* Gradiente transparente */
+  backdrop-filter: blur(12px); /* Efeito blur do glassmorphism */
+  -webkit-backdrop-filter: blur(12px); /* Compatibilidade Safari */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Linha inferior sutil */
 }
 
-/* Container interno do header para alinhamento dos elementos */
+/* Container interno do header para organizar logo e navegação */
 .header-container {
   display: flex;
   justify-content: space-between;
@@ -63,29 +63,29 @@ header .logo img {
    Navegação principal
    ========================= */
 header nav ul {
-  list-style: none;
+  list-style: none; /* Remove bullets */
   display: flex;
-  gap: 20px;
+  gap: 20px; /* Espaçamento entre links */
 }
 
 header nav a {
-  text-decoration: none;
-  color: #ffffff;
+  text-decoration: none; /* Remove sublinhado */
+  color: #ffffff; /* Cor do texto */
   font-weight: 600;
   padding: 8px 12px;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease; /* Transição suave no hover */
 }
 
 header nav a:hover {
-  background-color: rgba(0, 86, 210, 0.8);
+  background-color: rgba(0, 86, 210, 0.8); /* Fundo azul ao passar o mouse */
 }
 
 /* =========================
    Botão hambúrguer (menu mobile)
    ========================= */
 .menu-icon {
-  display: none; /* Só aparece no mobile */
+  display: none; /* Esconde no desktop */
   font-size: 1.8rem;
   color: white;
   background: none;
@@ -101,20 +101,18 @@ header nav a:hover {
   width: 100%;
   max-width: 1200px;
   margin: auto;
-  overflow: hidden;
+  overflow: hidden; /* Esconde overflow das imagens */
 }
 
 .carousel-item img {
   width: 80%;
   height: 350px;
-  object-fit: cover;
+  object-fit: cover; /* Corta a imagem proporcionalmente */
   border-radius: 20px;
 }
 
-/* Botões de navegação do carrossel */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  background-color: rgba(0, 0, 0, 0.904);
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 50%;
   padding: 20px;
@@ -130,7 +128,7 @@ header nav a:hover {
 
 .hero h1 {
   font-size: 2.5rem;
-  color: #1673ff;
+  color: #1673ff; /* Azul chamativo */
 }
 
 .hero p {
@@ -155,22 +153,15 @@ header nav a:hover {
 
 .btn:hover {
   background: #0056d2;
-  transform: translateY(-2px);
+  transform: translateY(-2px); /* Pequeno efeito de elevação */
 }
 
-/* Botão logout com cor vermelha */
+/* Botão de logout em vermelho */
 .btn-logout {
   background: #ff4d4d;
 }
 .btn-logout:hover {
   background: #cc0000;
-}
-
-/* Botão estilo glass (transparente com blur) */
-.btn-glass {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* =========================
@@ -217,7 +208,6 @@ header nav a:hover {
   font-size: 14px;
 }
 
-/* Menu dropdown escondido por padrão */
 .dropdown-menu {
   position: absolute;
   right: 0;
@@ -247,7 +237,7 @@ header nav a:hover {
 }
 
 /* =========================
-   Card estilo glass (opcional)
+   Cards estilo glass
    ========================= */
 .card-glass {
   background: rgba(255, 255, 255, 0.15);
@@ -260,51 +250,13 @@ header nav a:hover {
 }
 
 /* =========================
-   Botão de categoria (usado no carrossel)
+   Botões de categoria
    ========================= */
 .btn-categoria {
-  background: rgba(97, 94, 94, 0.15);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 30px;
-  color: rgb(3, 0, 0);
-  padding: 10px 20px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-.btn-categoria:hover {
-  background: rgba(97, 94, 94, 0.25);
-  transform: translateY(-6px);
-}
-
-/* =========================
-   Container principal do conteúdo
-   ========================= */
-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 60px 20px;
-}
-
-/* =========================
-   Carrossel de categorias com SwiperJS
-   ========================= */
-/* Container do carrossel de categorias */
-.categoria-swiper {
-  padding-bottom: 20px;
-  position: relative; /* Para garantir que os botões fiquem posicionados corretamente */
-}
-/* Cada slide do carrossel de categorias */
-.categoria-swiper .swiper-slide {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: auto;
-
-}
-/* Botão de categoria dentro do carrossel */
-.btn-categoria {
+  flex: 1 1 0; /* Crescem igualmente */
+  min-width: 120px;
+  min-height: 100px;
+  text-align: center;
   padding: 0.7rem 1.5rem;
   border: none;
   border-radius: 2rem;
@@ -313,55 +265,57 @@ main {
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s;
-}
-.btn-categoria:hover {
-  background: #2563eb;
-}
-.eventos-categoria {
-  display: flex;
-  overflow-x: auto;
-  gap: 1rem;
-  padding: 1rem 0;
-  margin-bottom: 20px; /* Espaço abaixo do contêiner */
-  scrollbar-width: thin;
-  scrollbar-color: #888 #eee;
-  
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.swiper-button-next,
-.swiper-button-prev {
-  margin: 0 20px; /* Adiciona espaçamento lateral */
+.btn-categoria:hover {
+  background: #2563eb;
+  transform: translateY(-4px);
+}
+
+.eventos-categoria {
+  display: flex;
+  overflow-x: auto; /* Scroll horizontal */
+  gap: 1rem;
+  padding: 1rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #eee;
+}
+
+.eventos-categoria::-webkit-scrollbar {
+  height: 8px;
+}
+.eventos-categoria::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+.eventos-categoria::-webkit-scrollbar-track {
+  background: #eee;
 }
 
 /* =========================
-   Responsividade para telas menores
+   Container principal
+   ========================= */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+/* =========================
+   Responsividade
    ========================= */
 @media (max-width: 1024px) {
-  main {
-    padding: 20px 8px;
-  }
-  .carousel-item img {
-    height: 220px;
-  }
+  main { padding: 20px 8px; }
+  .carousel-item img { height: 220px; }
 }
 
 @media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 8px;
-  }
-  header .logo img {
-    width: 120px;
-  }
-  .hero h1 {
-    font-size: 1.3rem;
-  }
-  .hero p {
-    font-size: 0.95rem;
-  }
-  /* Menu escondido por padrão no mobile */
+  .header-container { flex-direction: column; align-items: flex-start; padding: 10px 8px; }
+  header .logo img { width: 120px; }
+  .hero h1 { font-size: 1.3rem; }
+  .hero p { font-size: 0.95rem; }
+
   header nav ul {
     display: none;
     flex-direction: column;
@@ -374,106 +328,170 @@ main {
     gap: 8px;
     min-width: 160px;
   }
-  /* Exibe menu quando aberto (classe show) */
-  header nav ul.show {
-    display: flex !important;
-  }
-  .menu-icon {
-    display: block;
-    margin-left: auto;
-  }
-  .user-account {
-    padding: 6px 8px;
-  }
-  .dropdown-menu {
-    min-width: 120px;
-    right: 0;
-    left: auto;
-  }
-  .categoria-swiper .swiper-slide {
-    min-width: 120px;
-  }
-  .btn-categoria {
-    font-size: 0.95rem;
-    padding: 0.6rem 1.1rem;
-  }
+  header nav ul.show { display: flex !important; }
+  .menu-icon { display: block; margin-left: auto; }
+  .user-account { padding: 6px 8px; }
+  .dropdown-menu { min-width: 120px; right: 0; left: auto; }
+  .categoria-swiper .swiper-slide { min-width: 120px; }
+  .btn-categoria { font-size: 0.95rem; padding: 0.6rem 1.1rem; }
 }
 
 @media (max-width: 480px) {
-  .header-container {
-    padding: 6px 2px;
+  .header-container { padding: 6px 2px; }
+  .hero { padding: 20px 4px; }
+  .hero h1 { font-size: 1.1rem; }
+  .carousel-item img { height: 120px; width: 100%; }
+  .categoria-swiper .swiper-slide { min-width: 90px; }
+  .btn-categoria { font-size: 0.85rem; padding: 0.5rem 0.7rem; }
+  main { padding: 10px 2px; }
+}
+/* =========================
+   Footer
+========================= */
+footer {
+  background: rgba(47, 120, 227, 0.85); /* Azul com leve transparência */
+  backdrop-filter: blur(10px); /* Efeito glass */
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  padding: 40px 20px 20px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  margin-top: 40px;
+}
+
+/* Container geral do footer */
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Cada seção do footer */
+.footer-section {
+  flex: 1 1 200px;
+  min-width: 180px;
+}
+
+.footer-section h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.footer-section p, 
+.footer-section ul li {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #ffffffcc;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li a {
+  color: #ffffffcc;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-section ul li a:hover {
+  color: #fff;
+}
+
+/* Redes sociais */
+.social-media {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.social-media a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 1.3rem;
+  transition: all 0.3s ease;
+}
+
+.social-media a:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: #a8c6ff;
+}
+
+/* Copyright */
+footer .copyright {
+  margin-top: 25px;
+  font-size: 0.85rem;
+  color: #ffffff99;
+}
+
+/* =========================
+   Responsividade
+========================= */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
   }
-  .hero {
-    padding: 20px 4px;
-  }
-  .hero h1 {
-    font-size: 1.1rem;
-  }
-  .carousel-item img {
-    height: 120px;
-    width: 100%;
-  }
-  .categoria-swiper .swiper-slide {
-    min-width: 90px;
-  }
-  .btn-categoria {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.7rem;
-  }
-  main {
-    padding: 10px 2px;
+  .footer-section {
+    text-align: center;
   }
 }
 
 /* =========================
-   Carrossel horizontal simples para categorias (scroll)
+   Ajustes gerais para responsividade
    ========================= */
-/* Caso queira usar scroll horizontal ao invés do SwiperJS */
-.eventos-categoria {
-  display: flex;
-  overflow-x: auto;
-  gap: 1rem;
-  padding: 1rem 0;
-  scrollbar-width: thin;
-  scrollbar-color: #888 #eee;
-}
-.eventos-categoria::-webkit-scrollbar {
-  height: 8px;
-}
-.eventos-categoria::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-.eventos-categoria::-webkit-scrollbar-track {
-  background: #eee;
-}
-.categoria-btn {
-  flex: 0 0 auto;
-  padding: 0.7rem 1.5rem;
-  border: none;
-  border-radius: 2rem;
-  background: #4f8cff;
-  color: #fff;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.categoria-btn:hover {
-  background: #2563eb;
-}
-.eventos-categoria {
-  display: flex;
-  gap: 1rem;
+@media (max-width: 1024px) {
+  main { padding: 20px 8px; }
+  .carousel-item img { height: 220px; }
 }
 
-.btn-categoria,
-.categoria-btn {
-  flex: 1 1 0;        /* todos crescem igualmente */
-  min-width: 120px;   /* largura mínima */
-  min-height: 100px; /* altura mínima */
-  text-align: center;
-  padding: 0.7rem 1.5rem;
-  border: none;
-  transition: background 0.3s ease, transform 0.2s ease;
+@media (max-width: 768px) {
+  .header-container { flex-direction: column; align-items: flex-start; padding: 10px 8px; }
+  header .logo img { width: 120px; }
+  .hero h1 { font-size: 1.3rem; }
+  .hero p { font-size: 0.95rem; }
+  header nav ul {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: var(--header-height);
+    right: 10px;
+    background: rgba(22, 115, 255, 0.95);
+    padding: 12px;
+    border-radius: 8px;
+    gap: 8px;
+    min-width: 160px;
+  }
+  header nav ul.show { display: flex !important; }
+  .menu-icon { display: block; margin-left: auto; }
+  .user-account { padding: 6px 8px; }
+  .dropdown-menu { min-width: 120px; right: 0; left: auto; }
+  .categoria-swiper .swiper-slide { min-width: 120px; }
+  .btn-categoria { font-size: 0.95rem; padding: 0.6rem 1.1rem; }
+}
+
+@media (max-width: 480px) {
+  .header-container { padding: 6px 2px; }
+  .hero { padding: 20px 4px; }
+  .hero h1 { font-size: 1.1rem; }
+  .carousel-item img { height: 120px; width: 100%; }
+  .categoria-swiper .swiper-slide { min-width: 90px; }
+  .btn-categoria { font-size: 0.85rem; padding: 0.5rem 0.7rem; }
+  main { padding: 10px 2px; }
 }

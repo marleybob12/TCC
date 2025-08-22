@@ -46,29 +46,17 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      GoogleAuthProvider,
-      signInWithPopup
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    // Importa funções do auth.js e instâncias do firebaseConfig.js
+    import { auth, db } from "./javaScript/firebaseConfig.js";
+    import { loginUsuario } from "./javaScript/auth.js";
+    import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
-      authDomain: "eventflow-87d51.firebaseapp.com",
-      projectId: "eventflow-87d51",
-      storageBucket: "eventflow-87d51.appspot.com",
-      messagingSenderId: "1060995756519",
-      appId: "1:1060995756519:web:1963ecc800497812630d42"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    const loginForm = document.getElementById("loginForm");
+    const mensagemEl = document.getElementById("mensagem");
     const provider = new GoogleAuthProvider();
 
+    // Função para redirecionar usuário baseado no tipo
     async function redirecionarUsuario(user) {
       const userDocRef = doc(db, "Usuario", user.uid);
       const userDocSnap = await getDoc(userDocRef);
@@ -84,22 +72,39 @@
       }
     }
 
-    // Login com email e senha
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    // Login com email e senha usando loginUsuario do auth.js
+    loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const email = document.getElementById("loginEmail").value.trim();
       const senha = document.getElementById("loginSenha").value;
 
       if (!email || !senha) {
-        document.getElementById("mensagem").innerText = "Preencha todos os campos!";
+        mensagemEl.innerText = "Preencha todos os campos!";
+        mensagemEl.style.color = "red";
         return;
       }
 
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, senha);
-        redirecionarUsuario(userCredential.user);
+        const user = await loginUsuario(email, senha); // auth.js
+        await redirecionarUsuario(user);
       } catch (error) {
-        document.getElementById("mensagem").innerText = "❌ " + error.message;
+        let mensagem = "";
+        switch(error.code) {
+          case 'auth/user-not-found':
+            mensagem = "Usuário não encontrado.";
+            break;
+          case 'auth/wrong-password':
+            mensagem = "Senha incorreta.";
+            break;
+          case 'auth/invalid-email':
+            mensagem = "Email inválido.";
+            break;
+          default:
+            mensagem = error.message;
+        }
+        mensagemEl.innerText = "❌ " + mensagem;
+        mensagemEl.style.color = "red";
       }
     });
 
@@ -107,21 +112,25 @@
     document.getElementById("googleLogin").addEventListener("click", async () => {
       try {
         const result = await signInWithPopup(auth, provider);
-        const userDocRef = doc(db, "Usuario", result.user.uid);
+        const user = result.user;
+        const userDocRef = doc(db, "Usuario", user.uid);
         const userDocSnap = await getDoc(userDocRef);
 
+        // Se usuário não existir no Firestore, cria
         if (!userDocSnap.exists()) {
           await setDoc(userDocRef, {
-            usuarioID: result.user.uid,
-            nome: result.user.displayName || "",
-            email: result.user.email || "",
+            usuarioID: user.uid,
+            nome: user.displayName || "",
+            email: user.email || "",
             tipo: "participante",
             dataCriacao: serverTimestamp()
           });
         }
-        redirecionarUsuario(result.user);
+
+        await redirecionarUsuario(user);
       } catch (error) {
-        document.getElementById("mensagem").innerText = "❌ Erro Google: " + error.message;
+        mensagemEl.innerText = "❌ Erro Google: " + error.message;
+        mensagemEl.style.color = "red";
       }
     });
   </script>

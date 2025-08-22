@@ -33,11 +33,9 @@
       <a href="../home/home.html" class="logo">
         <img src="../img/logo_barra.png" alt="Logo EventFlow" />
       </a>
-      <!-- Botão do menu para dispositivos móveis -->
       <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
         <i class="fas fa-bars"></i>
       </button>
-      <!-- Navegação principal -->
       <nav class="nav-links" aria-label="Menu principal">
         <ul>
           <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
@@ -45,7 +43,6 @@
           <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
           <li><a href="home.html" class="btn">EventFlow</a></li>
           <li>
-            <!-- Dropdown do usuário -->
             <div class="user-dropdown">
               <div class="user-account" onclick="toggleDropdown()">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
@@ -64,24 +61,24 @@
     </div>
   </header>
 
-  <!-- Conteúdo principal -->
   <main>
-    <!-- Carrossel com imagens -->
+    <!-- Hero (boas-vindas) -->
+    <section class="hero" aria-label="Boas-vindas">
+      <h1>Bem-vindo ao EventFlow 🎉</h1>
+      <p>Você está logado. Em breve seus eventos aparecerão aqui.</p>
+    </section>
+
+    <!-- Carrossel principal -->
     <section class="carrosel">
       <div id="demo" class="carousel slide" data-ride="carousel">
-        <!-- Indicadores do carrossel -->
         <ul class="carousel-indicators">
           <li data-target="#demo" data-slide-to="0" class="active"></li>
           <li data-target="#demo" data-slide-to="1"></li>
           <li data-target="#demo" data-slide-to="2"></li>
         </ul>
-
-        <!-- Slides do carrossel -->
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <a>
-              <img src="../img/evento.jpg" alt="Evento 1">
-            </a>
+            <img src="../img/evento.jpg" alt="Evento 1">
           </div>
           <div class="carousel-item">
             <img src="../img/evento1.png" alt="Evento 2">
@@ -90,8 +87,6 @@
             <img src="../img/evento2.jpeg" alt="Evento 3">
           </div>
         </div>
-
-        <!-- Controles do carrossel -->
         <a class="carousel-control-prev" href="#demo" data-slide="prev">
           <span class="carousel-control-prev-icon"></span>
         </a>
@@ -101,197 +96,73 @@
       </div>
     </section>
 
-    <!-- Conteúdo principal da página -->
-    <main role="main">
-      <!-- Hero (boas-vindas) -->
-      <section class="hero" aria-label="Boas-vindas">
-        <h1>Bem-vindo ao EventFlow 🎉</h1>
-        <p>Você está logado. Em breve seus eventos aparecerão aqui.</p>
-      </section>
-
-      <section class="explorer" aria-label="Explorar eventos">
-        <h2>Explorar nossos eventos</h2>
-        <!-- Carrossel de categorias de eventos usando SwiperJS -->
-        <div class="eventos-categoria">
-          <!-- Container principal do Swiper -->
-          <div class="swiper categoria-swiper">
-            <!-- Wrapper que agrupa todos os slides (cada slide é um botão de categoria) -->
-            <div class="swiper-wrapper">
-              <!-- Cada slide representa uma categoria -->
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-headphones"></i><br>Música
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-volleyball"></i><br>Esportes
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-masks-theater"></i><br>Teatro e Espetáculos
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-microchip"></i><br>Tecnologia
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-palette"></i><br>Artes
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-burger"></i><br>Gastronomia
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-user-tie"></i><br>Negócios
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-school"></i><br>Educação
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-heart"></i><br>Saúde
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-shirt"></i><br>Moda
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-champagne-glasses"></i><br>Festas e Shows
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-laugh"></i><br>Stand up Comedy
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-child"></i><br>Infantil
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-people-group"></i><br>Passeios para toda família
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-globe"></i><br>Festas Típicas
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-ellipsis"></i><br>Outros
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-handshake"></i><br>Convenções
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-gamepad"></i><br>Games
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-dumbbell"></i><br>Fitness
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-users"></i><br>Encontros Sociais
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-mug-hot"></i><br>Cafés e Networking
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-calendar-days"></i><br>Workshops
-                </button>
-              </div>
-              <div class="swiper-slide">
-                <button class="btn-categoria">
-                  <i class="fa-solid fa-music"></i><br>Festivais
-                </button>
-              </div>
-            </div>
-            <!-- Botões de navegação do carrossel botos (setas) -->
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+    <!-- Explorar eventos (SwiperJS) -->
+    <section class="explorer" aria-label="Explorar eventos">
+      <h2>Explorar nossos eventos</h2>
+      <div class="eventos-categoria">
+        <div class="swiper categoria-swiper">
+          <div class="swiper-wrapper">
+            <!-- Categorias -->
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-headphones"></i><br>Música</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-volleyball"></i><br>Esportes</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-masks-theater"></i><br>Teatro e Espetáculos</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-microchip"></i><br>Tecnologia</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-palette"></i><br>Artes</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-burger"></i><br>Gastronomia</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-user-tie"></i><br>Negócios</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-school"></i><br>Educação</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-heart"></i><br>Saúde</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-shirt"></i><br>Moda</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-champagne-glasses"></i><br>Festas e Shows</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-laugh"></i><br>Stand up Comedy</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-child"></i><br>Infantil</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-people-group"></i><br>Passeios para toda família</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-globe"></i><br>Festas Típicas</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-handshake"></i><br>Convenções</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-gamepad"></i><br>Games</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-dumbbell"></i><br>Fitness</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-users"></i><br>Encontros Sociais</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-mug-hot"></i><br>Cafés e Networking</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-calendar-days"></i><br>Workshops</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-music"></i><br>Festivais</button></div>
           </div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
         </div>
+      </div>
+    </section>
 
-      </section>
+    <!-- Favoritos da semana -->
+    <section class="favoritos-da-semana" aria-label="Favoritos da semana">
+      <h2>Favoritos da semana</h2>
+      <div class="card-glass">
+        <a href="evento.html">
+          <img src="../img/evento3.jpeg" alt="Evento 3">
+          <div class="card-content">
+            <h3>Festival de Música</h3>
+            <p>Data: 15/10/2023</p>
+            <p>Local: Parque Central</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
 
-      <section class="favoritos-da-semana" aria-label="Favoritos da semana">
-        <h2>Favoritos da semana</h2>
-        <div class="card-glass">
-          <a class="../img/card1.jpg" href="evento.html">
-            <img src="../img/evento3.jpeg" alt="Evento 3">
-            <div class="card-content">
-              <h3>Festival de Música</h3>
-              <p>Data: 15/10/2023</p>
-              <p>Local: Parque Central</p>
-            </div>
-          
-         
+  <!-- Botão de logout -->
+  <button id="logoutBtn" type="button" class="btn btn-logout">Sair</button>
 
-        </div>
-      </section>
-    </main>
-
-    <!-- Botão para logout -->
-    <button id="logoutBtn" type="button" class="btn btn-logout">Sair</button>
-
-  <!-- Firebase -->
+  <!-- Firebase e Auth modularizados -->
   <script type="module">
-    // Importa as funções necessárias do Firebase para iniciar o app, autenticação e logout
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { auth, db } from "../javaScript/firebaseConfig.js";
+    import { logoutUsuario } from "../javaScript/auth.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // Configuração do Firebase do seu projeto
-    const firebaseConfig = {
-      apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
-      authDomain: "eventflow-87d51.firebaseapp.com",
-      databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
-      projectId: "eventflow-87d51",
-      storageBucket: "eventflow-87d51.appspot.com",
-      messagingSenderId: "1060995756519",
-      appId: "1:1060995756519:web:1963ecc800497812630d42"
-    };
-
-    // Inicializa o app Firebase com as configurações
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // Verifica se o usuário está logado e busca o nome no Firestore
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "../login.html";
         return;
       }
-      // Busca o nome do usuário no Firestore usando o UID
       try {
         const userDoc = await getDoc(doc(db, "Usuario", user.uid));
         if (userDoc.exists()) {
@@ -303,78 +174,83 @@
       }
     });
 
-    // Logout pelo botão principal
     document.getElementById("logoutBtn").addEventListener("click", async () => {
-      await signOut(auth);
+      await logoutUsuario();
       window.location.href = "../login.html";
     });
 
-    // Logout pelo dropdown
     document.getElementById("dropdownLogout").addEventListener("click", async (e) => {
       e.preventDefault();
-      await signOut(auth);
+      await logoutUsuario();
       window.location.href = "../login.html";
     });
 
-    // Menu responsivo
     document.getElementById("menu-icon").addEventListener("click", () => {
       document.querySelector("header nav ul").classList.toggle("show");
     });
   </script>
 
   <script>
-    // Função para abrir/fechar o dropdown do usuário
     function toggleDropdown() {
       const menu = document.getElementById("dropdown");
       menu.style.display = menu.style.display === "flex" ? "none" : "flex";
     }
-
-    // Fecha o dropdown se clicar fora
     window.addEventListener("click", function (e) {
       const dropdown = document.getElementById("dropdown");
       const account = document.querySelector(".user-account");
-      if (!account.contains(e.target)) {
-        dropdown.style.display = "none";
-      }
+      if (!account.contains(e.target)) dropdown.style.display = "none";
     });
   </script>
 
-  <!-- SwiperJS JS -->
+  <!-- SwiperJS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
-    // Cria uma nova instância do Swiper para o carrossel de categorias
     new Swiper('.categoria-swiper', {
-      slidesPerView: 'auto', // Mostra vários slides ao mesmo tempo, conforme o espaço disponível
-      spaceBetween: 16,      // Espaçamento entre os slides (em pixels)
-      navigation: {
-        nextEl: '.swiper-button-next', // Elemento para avançar o carrossel
-        prevEl: '.swiper-button-prev'  // Elemento para retroceder o carrossel
-      },
-      freeMode: true,        // Permite rolagem livre (não trava em cada slide)
-      grabCursor: true,      // Mostra cursor de "pegar" ao passar o mouse
-      breakpoints: {         // Responsividade: ajusta slides visíveis conforme largura da tela
-        0: { slidesPerView: 2 },
-        480: { slidesPerView: 3 },
-        768: { slidesPerView: 5 },
-        1024: { slidesPerView: 7 }
-      }
+      slidesPerView: 'auto',
+      spaceBetween: 16,
+      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+      freeMode: true,
+      grabCursor: true,
+      breakpoints: { 0: { slidesPerView: 2 }, 480: { slidesPerView: 3 }, 768: { slidesPerView: 5 }, 1024: { slidesPerView: 7 } }
     });
   </script>
-    
-  <!-- ======= RODAPÉ ======= -->
+
+  <!-- Rodapé -->
+>
 <footer>
-  <ul>
-    <li><a href="#sobre">Sobre</a></li>
-    <li><a href="#política">Política de Privacidade</a></li>
-    <li><a href="#termos">Termos de Serviço</a></li>
-  </ul>
-  <div class="social-media">
-    <a href="#">Instagram</a>
-    <a href="#">Facebook</a>
-    <a href="#">LinkedIn</a>
+  <div class="footer-container">
+    <!-- Sobre -->
+    <div class="footer-section">
+      <h3>Sobre o EventFlow</h3>
+      <p>Facilitando e transformando a experiência de planejar e realizar eventos de forma prática e acessível.</p>
+    </div>
+
+    <!-- Links úteis -->
+    <div class="footer-section">
+      <h3>Links</h3>
+      <ul>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#politica">Política de Privacidade</a></li>
+        <li><a href="#termos">Termos de Serviço</a></li>
+      </ul>
+    </div>
+
+    <!-- Redes sociais -->
+    <div class="footer-section">
+      <h3>Siga-nos</h3>
+      <div class="social-media">
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
   </div>
-  <p>&copy; 2025 DevGeneration. Todos os direitos reservados.</p>
+
+  <!-- Direitos autorais -->
+  <p class="copyright">&copy; 2025 DevGeneration. Todos os direitos reservados.</p>
 </footer>
+
 
 </body>
 </html>
+
