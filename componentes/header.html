@@ -1,115 +1,33 @@
-<!DOCTYPE html>
-<html lang="pt-BR" charset="UTF-8"  >
-<head>
-  <link rel="stylesheet" href="../css/header.css">
-</head>
+<!-- componentes/header.html -->
 <header>
   <div class="header-container">
-    <div class="logo">
-      <img src="../img/logo_barra.png" alt="EventFlow Logo">
-    </div>
-    <nav>
-      <ul id="navList">
-        <li><a href="../home/home.html">Home</a></li>
-        <li><a href="../eventos/meusEventos.html">Meus Eventos</a></li>
-        <li class="user-dropdown">
-          <div class="user-account">
-            <img id="userPhoto" src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Usuário">
-            <span id="userName">Usuário</span>
-          </div>
-            <!-- Dropdown do usuário -->
-            <div class="user-dropdown">
-              <div class="user-account" onclick="toggleDropdown()">
-                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
-                <span class="user-name">Usuário</span>
-                <span class="arrow">▾</span>
-              </div>
-              <div class="dropdown-menu" id="dropdown" style="display:none;">
-                <a href="perfil.html">👤 Perfil</a>
-                <a href="config.html">⚙️ Configurações</a>
-                <a href="#" id="dropdownLogout">🚪 Sair</a>
-              </div>
+    <a href="../home/home.html" class="logo">
+      <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+    </a>
+    <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+      <i class="fas fa-bars"></i>
+    </button>
+    <nav class="nav-links" aria-label="Menu principal">
+      <ul>
+        <li><a href="../pages/criarEvento.html" class="btn">Criar eventos</a></li>
+        <li><a href="../pages/meusIngressos.html" class="btn">Meus ingressos</a></li>
+        <li><a href="../pages/meusEventos.html" class="btn">Meus eventos</a></li>
+        <li><a href="../home/home.html" class="btn">EventFlow</a></li>
+        <li>
+          <div class="user-dropdown">
+            <div class="user-account" id="userAccount">
+              <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+              <span class="user-name">Usuário</span>
+              <span class="arrow">▾</span>
             </div>
-          </li>
-        </ul>
-      </nav>
-    </div>
+            <div class="dropdown-menu" id="dropdown">
+              <a href="../pages/perfil.html">👤 Perfil</a>
+              <a href="../pages/config.html">⚙️ Configurações</a>
+              <a href="#" id="dropdownLogout">🚪 Sair</a>
+            </div>
+          </div>
         </li>
       </ul>
     </nav>
-    <button class="menu-icon" id="menuToggle">&#9776;</button>
   </div>
 </header>
-  <script type="module">
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-    import { inserirDadosComOrganizador } from "../js/inserirDados.js";
-    import { db } from "../firebaseConfig.js";
-    import { toggleDropdown } from "../js/dropdown.js";
-
-    const auth = getAuth();
-    const storage = getStorage();
-    const userNameEl = document.getElementById("userName");
-    const userPhotoEl = document.getElementById("userPhoto");
-    const dropdownLogout = document.getElementById("dropdownLogout");
-
-    // Monitora o estado de autenticação do usuário
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const uid = user.uid;
-        const userDocRef = doc(db, "users", uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          userNameEl.textContent = userData.nome || "Usuário";
-
-          if (userData.fotoPerfil) {
-            try {
-              const photoURL = await getDownloadURL(ref(storage, userData.fotoPerfil));
-              userPhotoEl.src = photoURL;
-            } catch (error) {
-              console.error("Erro ao carregar a foto de perfil:", error);
-              userPhotoEl.src = "https://cdn-icons-png.flaticon.com/512/747/747376.png";
-            }
-          } else {
-            userPhotoEl.src = "https://cdn-icons-png.flaticon.com/512/747/747376.png";
-          }
-        } else {
-          console.log("Nenhum documento encontrado para o usuário:", uid);
-        }
-      } else {
-        window.location.href = "../home/home.html"; // Redireciona para a home se não estiver logado
-      }
-    });
-
-    // Função de logout
-    dropdownLogout.addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        window.location.href = "../home/home.html"; // Redireciona para a home após logout
-      } catch (error) {
-        console.error("Erro ao sair:", error);
-      }
-    });
-
-    // Menu responsivo
-    const menuToggle = document.getElementById("menuToggle");
-    const navList = document.getElementById("navList");
-
-    menuToggle.addEventListener("click", () => {
-      if (navList.style.display === "flex") {
-        navList.style.display = "none";
-      } else {
-        navList.style.display = "flex";
-      }
-    });
-
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 768) {
-        navList.style.display = "flex";
-      } else {
-        navList.style.display = "none";
-      }
-    });

@@ -1,22 +1,20 @@
+:root {
+  --header-height: 85px;
+}
+
 /* =========================
-   Header Global - Glassmorphism
-   ========================= */
-
-/* Fonte padrão */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
+   Header - Glassmorphism
+========================= */
 header {
   position: fixed;
   top: 0;
-  left: 0;
   width: 100%;
-  z-index: 100;
-  background: linear-gradient(135deg, rgba(156, 140, 235, 0.7), rgba(47, 120, 227, 0.7));
+  z-index: 10;
+  background: linear-gradient(135deg, rgba(47,120,227,0.7), rgba(156,140,235,0.7));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   border-bottom: 1px solid rgba(255,255,255,0.2);
-  font-family: 'Poppins', sans-serif;
 }
 
 .header-container {
@@ -24,153 +22,112 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 10px 30px;
-  max-width: 1200px;
-  margin: auto;
 }
 
 .logo img {
   width: 160px;
-  height: auto;
 }
 
-nav ul {
+/* =========================
+   Navegação
+========================= */
+header nav ul {
   list-style: none;
   display: flex;
   gap: 20px;
   align-items: center;
-  margin: 0;
-  padding: 0;
 }
 
-nav ul li {
-  position: relative;
-}
-
-nav a {
+header nav a {
   text-decoration: none;
   color: #fff;
   font-weight: 600;
   padding: 8px 14px;
-  border-radius: 6px;
-  transition: background 0.3s;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
-nav a:hover {
-  background: rgba(22, 115, 255, 0.18);
+header nav a:hover {
+  background-color: rgba(0,86,210,0.8);
 }
 
-.menu-icon {
-  display: none;
-  font-size: 2rem;
-  color: #fff;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* Dropdown do usuário */
+/* =========================
+   Dropdown Usuário
+========================= */
 .user-dropdown {
   position: relative;
-  display: flex;
-  align-items: center;
 }
 
 .user-account {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: 30px;
-  background: rgba(255,255,255,0.08);
+  gap: 6px;
   cursor: pointer;
-  transition: background 0.3s;
-}
-
-.user-account:hover {
-  background: rgba(255,255,255,0.18);
+  color: #fff;
 }
 
 .user-account img {
   width: 32px;
-  height: 32px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #fff;
-}
-
-#userName {
-  color: #fff;
-  font-weight: 500;
-  font-size: 15px;
 }
 
 .dropdown-menu {
+  display: none;
   position: absolute;
-  top: 110%;
   right: 0;
+  top: 50px;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.2);
   border-radius: 12px;
-  display: none;
-  flex-direction: column;
-  min-width: 140px;
-  z-index: 1000;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
-}
-
-.user-dropdown.active .dropdown-menu {
-  display: flex;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  min-width: 160px;
+  overflow: hidden;
 }
 
 .dropdown-menu a {
-  color: #1673ff;
+  display: block;
+  padding: 10px 15px;
+  color: #1f1f1f;
   text-decoration: none;
-  padding: 10px 16px;
-  font-size: 15px;
-  border-radius: 8px;
-  transition: background 0.2s;
+  font-weight: 500;
+  transition: background 0.3s ease;
 }
 
 .dropdown-menu a:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(22,115,255,0.2);
 }
 
 /* =========================
    Responsividade
-   ========================= */
-@media (max-width: 900px) {
-  .header-container {
-    padding: 10px 12px;
-  }
-  .logo img {
-    width: 120px;
-  }
-}
-
+========================= */
 @media (max-width: 768px) {
   .header-container {
     flex-direction: column;
     align-items: flex-start;
     padding: 10px 8px;
   }
-  nav ul {
-    flex-direction: column;
-    gap: 10px;
-    background: rgba(22, 115, 255, 0.95);
-    position: absolute;
-    top: 60px;
-    right: 10px;
-    padding: 14px;
-    border-radius: 8px;
-    min-width: 160px;
-    display: none;
+
+  .logo img {
+    width: 120px;
   }
-  nav ul.show {
+
+  header nav ul {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: var(--header-height);
+    right: 10px;
+    background: rgba(22,115,255,0.95);
+    padding: 12px;
+    border-radius: 8px;
+    gap: 8px;
+    min-width: 160px;
+  }
+
+  header nav ul.show {
     display: flex !important;
   }
-  .menu-icon {
-    display: block;
-    margin-left: auto;
-  }
+}
+.dropdown-menu a:hover {
+  background: rgba(22,115,255,0.2);
 }

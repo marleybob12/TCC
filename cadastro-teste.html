@@ -4,10 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cadastro Teste - EventFlow</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../css/header.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-  <h1>Cadastro de Teste Firebase</h1>
+  <!-- Header Global -->
+  <div id="header-global"></div>
+  <script type="module">
+    fetch("../componentes/header.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("header-global").innerHTML = html;
 
+        // Só depois de injetar o header, carregamos o JS
+        import("../javaScript/header.js")
+          .catch(err => console.error("Erro ao carregar header.js:", err));
+      })
+      .catch(err => console.error("Erro ao carregar header.html:", err));
+  </script>
+
+  <h1>Cadastro de Teste Firebase</h1>
   <form id="cadastroForm">
     <input type="email" id="email" placeholder="Email" required><br><br>
     <input type="password" id="senha" placeholder="Senha" required minlength="6"><br><br>
@@ -15,7 +33,6 @@
   </form>
 
   <h1>Login de Teste Firebase</h1>
-
   <form id="loginForm">
     <input type="email" id="loginEmail" placeholder="Email" required><br><br>
     <input type="password" id="loginSenha" placeholder="Senha" required><br><br>
@@ -26,11 +43,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { 
-      getAuth, 
-      createUserWithEmailAndPassword, 
-      signInWithEmailAndPassword 
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
@@ -49,7 +63,6 @@
       e.preventDefault();
       const email = document.getElementById("email").value;
       const senha = document.getElementById("senha").value;
-
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
         document.getElementById("mensagem").innerText = "✅ Usuário criado com sucesso: " + userCredential.user.email;
@@ -63,7 +76,6 @@
       e.preventDefault();
       const email = document.getElementById("loginEmail").value;
       const senha = document.getElementById("loginSenha").value;
-
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, senha);
         document.getElementById("mensagem").innerText = "✅ Login realizado: " + userCredential.user.email;
