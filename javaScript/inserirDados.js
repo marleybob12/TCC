@@ -16,10 +16,10 @@ export async function inserirDadosUsuario(db, usuarioID, nome, email, telefone, 
       cpf,
       dataNascimento,
       tipo: "participante", // todo novo usuário é participante
-      dataCriacao: serverTimestamp() // padronizado
+      dataCriacao: serverTimestamp()
     });
 
-    console.log(" Usuário participante cadastrado com sucesso!");
+    console.log("✅ Usuário participante cadastrado com sucesso!");
   } catch (error) {
     console.error("❌ Erro ao inserir dados do usuário:", error);
     throw error;
@@ -27,7 +27,7 @@ export async function inserirDadosUsuario(db, usuarioID, nome, email, telefone, 
 }
 
 /**
- * Função para cadastrar usuário como organizador e criar evento completo
+ * Função para criar evento e garantir que o usuário seja organizador
  */
 export async function inserirDadosComOrganizador(
   db,
@@ -40,26 +40,40 @@ export async function inserirDadosComOrganizador(
   eventoData
 ) {
   try {
-    // 1. Criar/atualizar documento do usuário
-    await setDoc(doc(db, "Usuario", usuarioID), {
-      nome,
-      email,
-      telefone: telefone || null,
-      cpf,
-      dataNascimento,
-      tipo: "organizador",
-      dataCriacao: serverTimestamp() // padronizado
-    });
+    const userRef = doc(db, "Usuario", usuarioID);
+    const userSnap = await getDoc(userRef);
+    let userData = userSnap.exists() ? userSnap.data() : null;
 
-    // 2. Criar documento em Organizador
+    // Se o usuário existe e não é organizador, promove a organizador
+    if (userData && userData.tipo !== "organizador") {
+      await setDoc(userRef, { tipo: "organizador" }, { merge: true });
+      userData.tipo = "organizador";
+      console.log("✅ Usuário promovido a organizador automaticamente.");
+    }
+
+    // Se não existe usuário, cria como organizador
+    if (!userData) {
+      await setDoc(userRef, {
+        nome,
+        email,
+        telefone: telefone || null,
+        cpf,
+        dataNascimento,
+        tipo: "organizador",
+        dataCriacao: serverTimestamp()
+      });
+      console.log("✅ Usuário organizador criado com sucesso!");
+    }
+
+    // Criar documento em Organizador
     const organizadorRef = await addDoc(collection(db, "Organizador"), {
       usuarioID,
       nomeOrganizacao: "Organização do " + nome,
       cnpj: eventoData.cnpj || null,
-      dataCriacao: serverTimestamp() // padronizado
+      dataCriacao: serverTimestamp()
     });
 
-    // 3. Verificar se Categoria já existe
+    // Verificar se Categoria já existe
     let categoriaRef;
     const q = query(
       collection(db, "Categoria"),
@@ -68,24 +82,27 @@ export async function inserirDadosComOrganizador(
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
-      categoriaRef = querySnapshot.docs[0].ref; // pega a já existente
+      categoriaRef = querySnapshot.docs[0].ref;
+      console.log("✅ Categoria existente utilizada.");
     } else {
       categoriaRef = await addDoc(collection(db, "Categoria"), {
         nome: eventoData.tipo,
         descricao: "Categoria vinculada ao evento",
-        dataCriacao: serverTimestamp() //  padronizado
+        dataCriacao: serverTimestamp()
       });
+      console.log("✅ Nova categoria criada.");
     }
 
-    // 4. Criar Local
+    // Criar Local
     const localRef = await addDoc(collection(db, "Local"), {
       nome: eventoData.local,
       endereco: eventoData.endereco,
       cep: eventoData.cep,
-      dataCriacao: serverTimestamp() // padronizado
+      dataCriacao: serverTimestamp()
     });
+    console.log("✅ Local criado com sucesso.");
 
-    // 5. Criar Evento
+    // Criar Evento
     const dataEvento = new Date(`${eventoData.data}T${eventoData.hora}`);
     const eventoRef = await addDoc(collection(db, "Evento"), {
       titulo: eventoData.nome,
@@ -93,14 +110,15 @@ export async function inserirDadosComOrganizador(
       dataInicio: dataEvento,
       dataFim: dataEvento,
       imagemBanner: eventoData.bannerUrl || "",
-      organizadorID: organizadorRef.id,
+      organizadorID: usuarioID, // usa o UID do usuário atual
       categoriaID: categoriaRef.id,
       localID: localRef.id,
       status: "ativo",
-      dataCriacao: serverTimestamp() //  padronizado
+      dataCriacao: serverTimestamp()
     });
+    console.log("✅ Evento criado com sucesso.");
 
-    // 6. Criar Lote vinculado ao Evento
+    // Criar Lote vinculado ao Evento
     await addDoc(collection(db, "Lote"), {
       eventoID: eventoRef.id,
       nome: "Lote Único",
@@ -109,10 +127,10 @@ export async function inserirDadosComOrganizador(
       dataInicio: serverTimestamp(),
       dataFim: dataEvento
     });
+    console.log("✅ Lote do evento criado com sucesso.");
 
-    console.log("Evento criado com sucesso!");
   } catch (error) {
-    console.error(" Erro ao inserir dados:", error.message);
+    console.error("❌ Erro ao inserir dados:", error.message);
     throw error;
   }
 }

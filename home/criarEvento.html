@@ -12,15 +12,19 @@
       margin-top: 10px;
       border-radius: 10px;
     }
+    .mensagem {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- ===== HEADER ===== -->
   <header>
     <div class="header-container">
       <div class="logo">
-        <img src="../logo_colorida_cortada.png" alt="EventFlow Logo">
+        <img src="../img/logo_barra.png" alt="EventFlow Logo">
       </div>
       <nav>
         <ul id="navList">
@@ -45,26 +49,19 @@
   <h1 style="text-align:center; margin-top:20px; color:#1673ff;">Criar Evento</h1>
 
   <form id="formCriarEvento">
-    <!-- Dados do Organizador -->
     <h2>Dados do Organizador</h2>
     <div class="form-group">
       <label>Nome:</label>
-      <input type="text" id="nomeUsuario" class="form-control" disabled />
+      <input type="text" id="nomeUsuario" class="form-control" required/>
     </div>
     <div class="form-group">
-      <label>CPF:</label>
-      <input type="text" id="cpfUsuario" class="form-control" disabled />
+      <label>CPF :</label>
+      <input type="text" id="cpfUsuario" class="form-control" required />
     </div>
     <div class="form-group">
       <label>Telefone:</label>
-      <input type="text" id="telefoneUsuario" class="form-control" disabled />
+      <input type="text" id="telefoneUsuario" class="form-control" required />
     </div>
-    <div class="form-group">
-      <label>Data de Nascimento:</label>
-      <input type="date" id="dataNascimentoUsuario" class="form-control" disabled />
-    </div>
-
-    <!-- Dados do Evento -->
     <h2>Dados do Evento</h2>
     <div class="form-group">
       <label>Nome do Evento:</label>
@@ -75,6 +72,7 @@
       <textarea id="descricaoEvento" class="form-control" required></textarea>
     </div>
     <div class="form-group">
+      <h2>Data e hora do evento</h2>
       <label>Data:</label>
       <input type="date" id="dataEvento" class="form-control" required />
     </div>
@@ -82,18 +80,16 @@
       <label>Hora:</label>
       <input type="time" id="horaEvento" class="form-control" required />
     </div>
+    <h2>Ingressos</h2>
     <div class="form-group">
       <label>Preço:</label>
-      <input type="number" id="precoEvento" class="form-control" required />
+      <input type="number" id="precoEvento" class="form-control" min="0" required />
     </div>
     <div class="form-group">
       <label>Quantidade de Ingressos:</label>
-      <input type="number" id="quantidadeEvento" class="form-control" required />
+      <input type="number" id="quantidadeEvento" class="form-control" min="1" required />
     </div>
-    <div class="form-group">
-      <label>Local:</label>
-      <input type="text" id="localEvento" class="form-control" required />
-    </div>
+    <h2>Local do Evento</h2>
     <div class="form-group">
       <label>Endereço:</label>
       <input type="text" id="enderecoEvento" class="form-control" required />
@@ -107,38 +103,41 @@
       <input type="text" id="tipoEvento" class="form-control" required />
     </div>
     <div class="form-group">
+      <label>CNPJ (Opcional):</label>
+      <input type="text" id="cnpjEvento" class="form-control" placeholder="00.000.000/0000-00" />
+    </div>
+    <div class="form-group">
       <label>Banner (arquivo):</label>
       <input type="file" id="bannerArquivo" class="form-control" accept="image/*" />
       <img id="previewBanner" alt="Pré-visualização do Banner" />
     </div>
 
     <button type="submit" class="btn">Criar Evento</button>
+    <p id="mensagem" class="mensagem"></p>
   </form>
 
   <script type="module">
-    import { db } from "../firebaseConfig.js";
-    import { inserirDadosComOrganizador } from "../js/inserirDados.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+    import { inserirDadosComOrganizador } from "../js/inserirDados.js";
+    import { db } from "../firebaseConfig.js";
 
     const auth = getAuth();
     const storage = getStorage();
     const form = document.getElementById("formCriarEvento");
     const bannerInput = document.getElementById("bannerArquivo");
     const previewBanner = document.getElementById("previewBanner");
+    const mensagemEl = document.getElementById("mensagem");
 
     // Menu responsivo
-    const menuToggle = document.getElementById("menuToggle");
-    const navList = document.getElementById("navList");
-    menuToggle.addEventListener("click", () => {
-      navList.classList.toggle("show");
+    document.getElementById("menuToggle").addEventListener("click", () => {
+      document.getElementById("navList").classList.toggle("show");
     });
 
     // Dropdown usuário
-    const userDropdown = document.querySelector(".user-dropdown");
-    userDropdown.addEventListener("click", () => {
-      userDropdown.classList.toggle("active");
+    document.querySelector(".user-dropdown").addEventListener("click", () => {
+      document.querySelector(".user-dropdown").classList.toggle("active");
     });
 
     // Logout
@@ -162,6 +161,7 @@
       }
     });
 
+    // Preencher dados do organizador e promover participante
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         alert("Você precisa estar logado para criar eventos.");
@@ -169,62 +169,76 @@
         return;
       }
 
-      const userDoc = await getDoc(doc(db, "Usuario", user.uid));
-      const userData = userDoc.exists() ? userDoc.data() : {};
+      const userRef = doc(db, "Usuario", user.uid);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.exists() ? userSnap.data() : {};
 
-      // Preencher dados do organizador
       document.getElementById("nomeUsuario").value = userData.nome || "Organizador";
       document.getElementById("cpfUsuario").value = userData.cpf || "00000000000";
       document.getElementById("telefoneUsuario").value = userData.telefone || "";
       document.getElementById("dataNascimentoUsuario").value = userData.dataNascimento || "1990-01-01";
       document.getElementById("userName").textContent = userData.nome || "Usuário";
       document.getElementById("userPhoto").src = user.photoURL || "https://cdn-icons-png.flaticon.com/512/747/747376.png";
+    });
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+    // Submit do formulário
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      mensagemEl.textContent = "";
 
-        let bannerUrl = "";
+      const eventoData = {
+        nome: document.getElementById("nomeEvento").value.trim(),
+        descricao: document.getElementById("descricaoEvento").value.trim(),
+        data: document.getElementById("dataEvento").value,
+        hora: document.getElementById("horaEvento").value,
+        preco: parseFloat(document.getElementById("precoEvento").value),
+        quantidade: parseInt(document.getElementById("quantidadeEvento").value, 10),
+        endereco: document.getElementById("enderecoEvento").value.trim(),
+        cep: document.getElementById("cepEvento").value.trim(),
+        tipo: document.getElementById("tipoEvento").value.trim(),
+        cnpj: document.getElementById("cnpjEvento").value.trim() || null,
+        bannerUrl: ""
+      };
+
+      if (eventoData.preco < 0 || eventoData.quantidade < 1) {
+        mensagemEl.textContent = "❌ Preço ou quantidade inválidos!";
+        mensagemEl.style.color = "red";
+        return;
+      }
+
+      try {
+        // Upload banner
         const bannerArquivo = bannerInput.files[0];
         if (bannerArquivo) {
-          const storageRef = ref(storage, `banners/${user.uid}_${Date.now()}_${bannerArquivo.name}`);
+          const storageRef = ref(storage, `banners/${auth.currentUser.uid}_${Date.now()}_${bannerArquivo.name}`);
           await uploadBytes(storageRef, bannerArquivo);
-          bannerUrl = await getDownloadURL(storageRef);
+          eventoData.bannerUrl = await getDownloadURL(storageRef);
         }
 
-        const eventoData = {
-          nome: document.getElementById("nomeEvento").value,
-          descricao: document.getElementById("descricaoEvento").value,
-          data: document.getElementById("dataEvento").value,
-          hora: document.getElementById("horaEvento").value,
-          preco: parseFloat(document.getElementById("precoEvento").value),
-          quantidade: parseInt(document.getElementById("quantidadeEvento").value),
-          local: document.getElementById("localEvento").value,
-          endereco: document.getElementById("enderecoEvento").value,
-          cep: document.getElementById("cepEvento").value,
-          tipo: document.getElementById("tipoEvento").value,
-          bannerUrl
-        };
+        // Inserir dados no Firestore
+        await inserirDadosComOrganizador(
+          db,
+          auth.currentUser.uid,
+          document.getElementById("nomeUsuario").value,
+          auth.currentUser.email,
+          document.getElementById("telefoneUsuario").value,
+          document.getElementById("cpfUsuario").value,
+          document.getElementById("dataNascimentoUsuario").value,
+          eventoData
+        );
 
-        try {
-          await inserirDadosComOrganizador(
-            db,
-            user.uid,
-            userData.nome || "Organizador",
-            user.email,
-            userData.telefone || null,
-            userData.cpf || "00000000000",
-            userData.dataNascimento || "1990-01-01",
-            eventoData
-          );
-          alert("✅ Evento criado com sucesso!");
-          form.reset();
-          previewBanner.style.display = "none";
-        } catch (error) {
-          alert("❌ Erro ao criar evento. Veja o console.");
-          console.error(error);
-        }
-      });
+        mensagemEl.textContent = "✅ Evento criado com sucesso!";
+        mensagemEl.style.color = "#2F78E3";
+        form.reset();
+        previewBanner.style.display = "none";
+
+      } catch (error) {
+        console.error(error);
+        mensagemEl.textContent = "❌ Erro ao criar evento. Veja o console.";
+        mensagemEl.style.color = "red";
+      }
     });
   </script>
+
 </body>
 </html>

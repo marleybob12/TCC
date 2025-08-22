@@ -6,6 +6,7 @@
   <title>EventFlow - Cadastro</title>
   <link rel="stylesheet" href="css/cadastro.css" />
   <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="login-container">
@@ -41,6 +42,7 @@
         <p class="voltar-login">
           <a href="login.html">← Já tem conta? Fazer Login</a>
         </p>
+        <p id="mensagem" style="text-align:center; margin-top:10px; font-weight:bold;"></p>
       </form>
     </div>
   </div>
@@ -48,8 +50,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { inserirDadosUsuario } from "./inserirDados.js"; <!-- ✅ corrigido caminho -->
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
@@ -64,24 +65,39 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
+    async function inserirDadosUsuario(uid, nome, email, telefone, cpf, dataNascimento) {
+      await setDoc(doc(db, "Usuario", uid), {
+        nome,
+        email,
+        telefone,
+        cpf,
+        dataNascimento
+      });
+    }
+
+    const cadastroForm = document.getElementById("cadastroForm");
+    const mensagemEl = document.getElementById("mensagem");
+
+    cadastroForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const nome = document.getElementById("nome").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const telefone = document.getElementById("telefone").value.trim();
-      const cpf = document.getElementById("cpf").value.trim();
-      const dataNascimento = document.getElementById("dataNascimento").value;
-      const senha = document.getElementById("senha").value;
-      const confirmarSenha = document.getElementById("confirmarSenha").value;
+      const nome = String(document.getElementById("nome").value.trim());
+      const email = String(document.getElementById("email").value.trim());
+      const telefone = String(document.getElementById("telefone").value.trim());
+      const cpf = String(document.getElementById("cpf").value.trim());
+      const dataNascimento = String(document.getElementById("dataNascimento").value);
+      const senha = String(document.getElementById("senha").value);
+      const confirmarSenha = String(document.getElementById("confirmarSenha").value);
 
       if (!/^\d{11}$/.test(cpf)) {
-        alert("CPF deve conter 11 dígitos numéricos.");
+        mensagemEl.innerText = "❌ CPF deve conter 11 dígitos numéricos.";
+        mensagemEl.style.color = "red";
         return;
       }
 
       if (senha !== confirmarSenha) {
-        alert("As senhas não coincidem!");
+        mensagemEl.innerText = "❌ As senhas não coincidem!";
+        mensagemEl.style.color = "red";
         return;
       }
 
@@ -89,10 +105,15 @@
         const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
         const user = userCredential.user;
 
-        await inserirDadosUsuario(db, user.uid, nome, email, telefone, cpf, dataNascimento);
+        await inserirDadosUsuario(user.uid, nome, email, telefone, cpf, dataNascimento);
 
-        alert("Conta criada com sucesso!");
-        window.location.href = "home/home.html";
+        mensagemEl.innerText = "✅ Conta criada com sucesso! Redirecionando...";
+        mensagemEl.style.color = "#2F78E3";
+
+        setTimeout(() => {
+          window.location.href = "home/home.html";
+        }, 2000);
+
       } catch (error) {
         let mensagem;
         switch (error.code) {
@@ -111,7 +132,8 @@
           default:
             mensagem = "Erro ao criar conta: " + error.message;
         }
-        alert(mensagem);
+        mensagemEl.innerText = "❌ " + mensagem;
+        mensagemEl.style.color = "red";
       }
     });
   </script>

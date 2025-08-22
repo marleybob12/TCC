@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>EventFlow - Login</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
@@ -19,10 +18,10 @@
 
       <form id="loginForm" autocomplete="off">
         <div class="input-group">
-          <input type="email" id="email" placeholder="Email" required>
+          <input type="email" id="loginEmail" placeholder="Email" required>
         </div>
         <div class="input-group">
-          <input type="password" id="senha" placeholder="Senha" required minlength="6">
+          <input type="password" id="loginSenha" placeholder="Senha" required minlength="6">
         </div>
         <button type="submit" class="login-btn">LOGIN</button>
 
@@ -40,6 +39,8 @@
             <i class="fa-brands fa-google"></i> Entrar com Google
           </button>
         </p>
+
+        <p id="mensagem" style="text-align:center; margin-top:10px; font-weight:bold;"></p>
       </form>
     </div>
   </div>
@@ -49,79 +50,56 @@
     import {
       getAuth,
       signInWithEmailAndPassword,
-      onAuthStateChanged,
       GoogleAuthProvider,
       signInWithPopup
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      setDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    // Configurações do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
       authDomain: "eventflow-87d51.firebaseapp.com",
-      databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
       projectId: "eventflow-87d51",
       storageBucket: "eventflow-87d51.appspot.com",
       messagingSenderId: "1060995756519",
       appId: "1:1060995756519:web:1963ecc800497812630d42"
     };
 
-    // Inicialização
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // Redireciona baseado no tipo de usuário
     async function redirecionarUsuario(user) {
-      try {
-        const userDocRef = doc(db, "Usuario", user.uid);
-        const userDocSnap = await getDoc(userDocRef);
+      const userDocRef = doc(db, "Usuario", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
 
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          const tipo = userData.tipo || "participante"; // fallback
+      if (userDocSnap.exists()) {
+        const tipo = userDocSnap.data().tipo || "participante";
 
-          switch (tipo) {
-            case "organizador":
-              window.location.href = "organizador/painelOrganizador.html";
-              break;
-            case "admin":
-              window.location.href = "admin/dashboard.html";
-              break;
-            case "participante":
-            default:
-              window.location.href = "home/home.html";
-              break;
-          }
-        } else {
-          alert("Usuário não encontrado no banco de dados.");
-        }
-      } catch (error) {
-        console.error("Erro ao buscar dados do usuário:", error);
-        alert("Erro ao carregar os dados do usuário.");
+        if (tipo === "organizador") window.location.href = "organizador/painelOrganizador.html";
+        else if (tipo === "admin") window.location.href = "admin/dashboard.html";
+        else window.location.href = "home/home.html";
+      } else {
+        alert("Usuário não encontrado no banco de dados.");
       }
     }
 
-    // Login com email/senha
+    // Login com email e senha
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = document.getElementById("email").value.trim();
-      const senha = document.getElementById("senha").value;
+      const email = document.getElementById("loginEmail").value.trim();
+      const senha = document.getElementById("loginSenha").value;
+
+      if (!email || !senha) {
+        document.getElementById("mensagem").innerText = "Preencha todos os campos!";
+        return;
+      }
 
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, senha);
-        await redirecionarUsuario(userCredential.user);
+        redirecionarUsuario(userCredential.user);
       } catch (error) {
-        alert("Erro ao fazer login: " + error.message);
-        console.error("Login error:", error);
+        document.getElementById("mensagem").innerText = "❌ " + error.message;
       }
     });
 
@@ -137,24 +115,13 @@
             usuarioID: result.user.uid,
             nome: result.user.displayName || "",
             email: result.user.email || "",
-            telefone: null,
-            cpf: null,
-            dataNascimento: null,
             tipo: "participante",
-            dataCriacao: serverTimestamp() // ✅ padronizado
+            dataCriacao: serverTimestamp()
           });
         }
-        await redirecionarUsuario(result.user);
+        redirecionarUsuario(result.user);
       } catch (error) {
-        console.error("Google login error:", error);
-        alert("Erro no login com Google: " + error.message);
-      }
-    });
-
-    // Se já estiver logado, redireciona automaticamente
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await redirecionarUsuario(user);
+        document.getElementById("mensagem").innerText = "❌ Erro Google: " + error.message;
       }
     });
   </script>
