@@ -1,97 +1,112 @@
-/* Importa a fonte Poppins do Google Fonts */
+/* ==================== FONTE ==================== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-/* Reset básico: remove margens/padding e define box-sizing para facilitar layout */
+/* ==================== RESET ==================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth; /* Rolagem suave */
+  scroll-behavior: smooth;
 }
 
-/* Estilo base do body */
 body {
-  font-family: 'Poppins', sans-serif; /* Usa fonte Poppins */
+  font-family: 'Poppins', sans-serif;
   line-height: 1.6;
   color: #333;
-  background-color: #f5f9ff; /* Fundo claro */
+  background-color: #f5f9ff;
 }
 
-/* ===== Header fixo com fundo escuro translúcido ===== */
+/* ==================== HEADER ==================== */
 header {
-  position: fixed; /* Fixa no topo da página */
+  position: fixed;
   top: 0;
   width: 100%;
-  z-index: 10; /* Sobrepõe o restante da página */
-  display: flex; /* Layout flexível para alinhar itens */
+  z-index: 1000;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 30px;
-  backdrop-filter: blur(6px); /* Blur para efeito glass */
-  background-color: rgba(0, 0, 0, 0.7); /* Fundo preto transparente */
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.7);
   color: white;
-  transition: background-color 0.3s ease; /* Transição suave */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, padding 0.3s ease;
 }
 
-/* Logo com altura fixa para manter proporção */
 header .logo img {
   height: 50px;
 }
 
-/* Menu de navegação */
-header nav ul {
-  list-style: none; /* Remove bullets */
-  display: flex; /* Itens em linha */
-  gap: 20px; /* Espaçamento entre links */
+.nav-links {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-/* Links do menu */
-header nav a {
-  text-decoration: none; /* Remove sublinhado */
+.nav-links a {
+  text-decoration: none;
   color: white;
   font-weight: 600;
   padding: 8px 12px;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-/* Efeito hover nos links, usando a paleta azul do projeto */
-header nav a:hover {
+.nav-links a:hover,
+.nav-links a.active {
   background-color: rgba(25, 155, 217, 0.3);
 }
 
-/* ===== Hero (seção principal de boas-vindas) ===== */
-.hero {
-  background: linear-gradient(135deg, #09B3CF, #7D2AE7); /* Gradiente azul */
+.nav-links .login {
+  background: linear-gradient(to right, rgb(18, 69, 255), rgb(65, 214, 255));
+  padding: 8px 15px;
+  border-radius: 20px;
+  transition: 0.5s linear;
+}
+
+.nav-links .login:hover {
+  background: linear-gradient(to bottom, rgb(65, 214, 255), rgb(18, 69, 255));
+}
+
+/* Ícone hamburguer */
+.menu-icon {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  background: none;
+  border: none;
   color: white;
-  padding: 100px 20px;
+}
+
+/* ==================== HERO ==================== */
+.hero {
+  background: linear-gradient(135deg, #09B3CF, #7D2AE7);
+  color: white;
+  padding: 120px 20px 100px;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
-  box-shadow: inset 0 0 0 1000px rgba(0,0,0,0.2); /* Sombra interna para escurecer */
+  min-height: 450px;
+  position: relative;
 }
 
-/* Container interno com efeito glass */
 .hero-content {
   max-width: 800px;
-  padding: 20px;
+  padding: 30px;
   background-color: rgba(255,255,255,0.1);
   border-radius: 16px;
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.25);
 }
 
-/* Título do Hero */
 .hero h1 {
   font-size: 3rem;
   margin-bottom: 20px;
   font-weight: 700;
-  text-shadow: 1px 1px 6px rgba(0,0,0,0.3); /* Sombra para destacar texto */
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.3);
 }
 
-/* Parágrafo no Hero */
 .hero p {
   font-size: 1.3rem;
   margin-bottom: 40px;
@@ -99,15 +114,13 @@ header nav a:hover {
   text-shadow: 1px 1px 4px rgba(0,0,0,0.25);
 }
 
-/* Botões dentro do Hero */
 .hero-buttons {
   display: flex;
   justify-content: center;
   gap: 20px;
-  flex-wrap: wrap; /* Para quebrar linha em telas menores */
+  flex-wrap: wrap;
 }
 
-/* Botão principal */
 .btn-primary, .btn-secondary {
   padding: 15px 35px;
   border-radius: 30px;
@@ -115,25 +128,23 @@ header nav a:hover {
   text-decoration: none;
   transition: all 0.3s ease;
   cursor: pointer;
-  user-select: none;
   display: inline-block;
   text-align: center;
   border: none;
 }
 
-/* Estilo botão principal (claro) */
 .btn-primary {
   background-color: white;
   color: #09B3CF;
-  box-shadow: 0 8px 15px rgba(9, 179, 207, 0.3);
+  box-shadow: 0 8px 15px rgba(9,179,207,0.3);
 }
 
 .btn-primary:hover {
   background-color: #e6e6e6;
-  box-shadow: 0 10px 20px rgba(9, 179, 207, 0.4);
+  box-shadow: 0 10px 20px rgba(9,179,207,0.4);
+  transform: translateY(-2px);
 }
 
-/* Estilo botão secundário (borda branca) */
 .btn-secondary {
   background-color: transparent;
   border: 2px solid white;
@@ -141,11 +152,12 @@ header nav a:hover {
 }
 
 .btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255,255,255,0.2);
   border-color: #199BD9;
+  transform: translateY(-2px);
 }
 
-/* ===== Seção Sobre ===== */
+/* ==================== SOBRE ==================== */
 #sobre {
   padding: 80px 20px;
   background: #f7f9fc;
@@ -153,13 +165,11 @@ header nav a:hover {
   color: #333;
 }
 
-/* Container centralizado com largura máxima */
 .sobre-container {
   max-width: 800px;
   margin: 0 auto;
 }
 
-/* Título da seção Sobre */
 #sobre h2 {
   font-size: 2.5rem;
   margin-bottom: 30px;
@@ -169,7 +179,6 @@ header nav a:hover {
   position: relative;
 }
 
-/* Linha decorativa abaixo do título */
 #sobre h2::after {
   content: '';
   display: block;
@@ -180,7 +189,6 @@ header nav a:hover {
   border-radius: 2px;
 }
 
-/* Texto da descrição */
 #sobre .descricao {
   font-size: 1.2rem;
   line-height: 1.8;
@@ -188,7 +196,6 @@ header nav a:hover {
   color: #555;
 }
 
-/* Texto de impacto */
 #sobre .impacto {
   font-size: 1.3rem;
   color: #222;
@@ -196,19 +203,13 @@ header nav a:hover {
   font-weight: 600;
 }
 
-/* Destaque em strong com cor azul */
-#sobre p strong {
-  color: #199BD9;
-}
-
-/* ===== Missão e Valores ===== */
+/* ==================== ACORDEÃO ==================== */
 #missao-valores {
   padding: 50px 20px;
   background-color: #e6f2f1;
   text-align: center;
 }
 
-/* Container do acordeão */
 .acordeao-container {
   max-width: 900px;
   margin: 0 auto;
@@ -217,16 +218,14 @@ header nav a:hover {
   gap: 10px;
 }
 
-/* Itens individuais do acordeão */
 .acordeao-item {
   background-color: white;
-  border: 1px solid #ccc;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #ccc;
 }
 
-/* Título do acordeão como botão */
 .acordeao-titulo {
   width: 100%;
   background: none;
@@ -237,6 +236,9 @@ header nav a:hover {
   font-weight: bold;
   cursor: pointer;
   color: #199BD9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   transition: background-color 0.3s ease;
 }
 
@@ -244,7 +246,6 @@ header nav a:hover {
   background-color: rgba(25, 155, 217, 0.1);
 }
 
-/* Conteúdo do acordeão escondido por padrão */
 .acordeao-conteudo {
   max-height: 0;
   overflow: hidden;
@@ -252,55 +253,58 @@ header nav a:hover {
   transition: max-height 0.4s ease, padding 0.4s ease;
 }
 
-/* Conteúdo mostrado quando ativo */
 .acordeao-item.ativo .acordeao-conteudo {
   padding: 15px 20px;
-  max-height: 500px; /* Ajuste conforme o conteúdo */
+  max-height: 1000px;
 }
 
-/* ===== Funcionalidades ===== */
+/* ==================== FUNCIONALIDADES ==================== */
 #funcionalidades {
   padding: 60px 20px;
   background-color: #f4f4f4;
   text-align: center;
 }
 
-/* Título funcionalidades */
 #funcionalidades h2 {
   font-size: 2.5rem;
   margin-bottom: 30px;
   color: #2F78E3;
   text-transform: uppercase;
   letter-spacing: 1px;
-  position: relative;
 }
 
-/* Container flexível para as funcionalidades */
 .funcionalidades {
   display: flex;
   justify-content: center;
   gap: 30px;
   flex-wrap: wrap;
+  
 }
 
-/* Card funcionalidade */
 .funcao {
+    box-shadow: 0px 0px 8px 0px black;
   width: 300px;
   border-radius: 20px;
   padding: 20px;
-  box-shadow: 0px 0px 8px 0px black;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Imagem dentro do card */
+.funcao:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0px 0px 8px 0px black;
+}
+
 .funcao img {
   width: 100%;
-  max-width: 300px;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
 }
 
-/* ===== CTA Final ===== */
+/* ==================== CTA FINAL ==================== */
 #cta-final {
   background: linear-gradient(135deg, #5251E8, #9C8CEB);
   color: white;
@@ -322,18 +326,19 @@ header nav a:hover {
 #cta-final .cta {
   background-color: #09B3CF;
   color: white;
-  padding: 15px 30px;
+  padding: 15px 35px;
   border-radius: 30px;
   font-weight: bold;
   text-decoration: none;
-  transition: background-color 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 #cta-final .cta:hover {
   background-color: #199BD9;
+  transform: translateY(-3px);
 }
 
-/* ===== Footer ===== */
+/* ==================== FOOTER ==================== */
 footer {
   background-color: #2F78E3;
   color: white;
@@ -341,7 +346,6 @@ footer {
   text-align: center;
 }
 
-/* Lista horizontal no footer */
 footer ul {
   list-style: none;
   display: flex;
@@ -351,112 +355,70 @@ footer ul {
   margin-bottom: 20px;
 }
 
-/* Links do footer */
 footer a {
   color: white;
   text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 footer a:hover {
-  text-decoration: underline;
+  color: #e6e6e6;
+  transform: translateY(-2px);
 }
 
-/* Ícones de redes sociais alinhados no footer */
 .social-media {
   display: flex;
   justify-content: center;
   gap: 15px;
 }
 
-/* ===== Responsividade ===== */
+.social-media a {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-media a:hover {
+  transform: scale(1.2);
+  color: #09B3CF;
+}
+
+/* ==================== RESPONSIVIDADE ==================== */
 @media (max-width: 768px) {
-  /* Ajusta título do hero para telas menores */
   .hero h1 {
     font-size: 2rem;
   }
 
-  /* Menu de navegação vira coluna */
-  header nav ul {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  /* Funcionalidades em coluna e centralizadas */
   .funcionalidades {
     flex-direction: column;
     align-items: center;
   }
-}
 
-/* ------ MENU RESPONSIVO COM JAVASCRIPT ------ */
-
-/* Container dos links do menu */
-.nav-links {
-  display: flex;
-  gap: 20px;
-  transition: opacity 0.3s ease;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Link de login com estilo gradiente */
-.nav-links .login {
-  background: linear-gradient(to right, rgb(18, 69, 255), rgb(65, 214, 255));
-  width: 100%;
-  border-radius: 20px;
-  text-align: center;
-  transition: .5s linear;
-}
-
-.nav-links .login:hover {
-  background: linear-gradient(to bottom, rgb(65, 214, 255), rgb(18, 69, 255));
-}
-
-/* Links normais do menu */
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-/* Ícone hamburguer - escondido por padrão */
-.menu-icon {
-  display: none;
-  font-size: 28px;
-  color: white;
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
-  transition: .3s linear;
-}
-
-/* Menu responsivo */
-@media (max-width: 768px) {
-  /* Menu escondido inicialmente */
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    background-color: #34495e;
+  header nav {
     position: absolute;
     top: 60px;
     right: 0;
-    width: 200px;
+    width: 220px;
+    flex-direction: column;
+    background-color: rgba(52,73,94,0.95);
     padding: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    z-index: 10;
+    border-radius: 10px;
     opacity: 0;
     pointer-events: none;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
   }
 
-  /* Quando ativo, mostra o menu */
-  .nav-links.active {
-    display: flex;
+  header nav.active {
     opacity: 1;
     pointer-events: auto;
+    transform: translateY(0);
   }
 
-  /* Ícone hamburguer aparece no mobile */
   .menu-icon {
     display: block;
+  }
+
+  .nav-links a {
+    padding: 10px;
   }
 }

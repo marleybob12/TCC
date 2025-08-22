@@ -5,50 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Eventflow - Gerenciamento de Eventos</title>
-  <!-- Link para o arquivo CSS com estilo moderno -->
+  <!-- CSS completo integrado -->
   <link rel="stylesheet" href="css/estilo-moderno.css" />
-  <!-- Ícone da aba do navegador -->
-  <link rel="icon" href="img/logo_colorida_cortada.png" type="image/png" />
   <!-- FontAwesome para ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Ícone da aba -->
+  <link rel="icon" href="img/logo_colorida_cortada.png" type="image/png" />
 </head>
 <body>
 
-  <!-- Header: barra superior fixa com logo, menu hamburguer e links -->
+  <!-- HEADER -->
   <header>
     <div class="logo">
       <img src="img/logo_barra.png" alt="Eventflow Logo" />
     </div>
-
-    <!-- Botão do menu hamburguer para abrir menu em telas pequenas -->
-    <button class="menu-icon" id="menu-icon" aria-label="Abrir menu">
+    <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" aria-expanded="false">
       <i class="fas fa-bars"></i>
     </button>
-
-    <!-- Menu de navegação principal -->
-    <nav class="nav-links" id="nav-links" aria-label="Menu principal">
+    <nav class="nav-links" id="nav-links">
       <a href="#sobre">Sobre</a>
       <a href="#funcionalidades">Funcionalidades</a>
       <a href="#contato">Contato</a>
-      <!-- Link para página de login/cadastro -->
       <a href="login.html" class="login">Login/Cadastro</a>
     </nav>
   </header>
 
-  <!-- Seção Hero: destaque principal da página -->
+  <!-- HERO -->
   <section class="hero" role="banner">
     <div class="hero-content">
       <h1>Gerencie seus eventos de forma simples e eficiente</h1>
       <p>Com o Eventflow, você organiza, gerencia e executa eventos com facilidade, em qualquer lugar.</p>
       <div class="hero-buttons">
-        <!-- Botões de chamada para ação -->
         <a href="#cadastro" class="btn-primary">Experimente agora</a>
         <a href="#sobre" class="btn-secondary">Saiba mais</a>
       </div>
     </div>
   </section>
 
-  <!-- Seção Sobre: explicação sobre o Eventflow -->
+  <!-- SOBRE -->
   <section id="sobre" tabindex="-1">
     <div class="sobre-container">
       <h2>Sobre o Eventflow</h2>
@@ -63,54 +57,51 @@
     </div>
   </section>
 
-  <!-- Seção Missão, Meta e Valores: usando acordeão para conteúdo expandível -->
+  <!-- MISSÃO, META E VALORES -->
   <section id="missao-valores" tabindex="-1">
     <h2>Nossa Meta, Missão e Valores</h2>
-
     <div class="acordeao-container">
-      <!-- Item Meta -->
       <div class="acordeao-item">
         <button class="acordeao-titulo" aria-expanded="false" aria-controls="meta-content" id="meta-btn">
           <i class="fas fa-bullseye"></i> Meta
         </button>
         <div class="acordeao-conteudo" id="meta-content" role="region" aria-labelledby="meta-btn" hidden>
-          <p>
-            Tornar o EventFlow a plataforma líder no Brasil em soluções para gerenciamento de eventos, sendo referência em inovação tecnológica, usabilidade e impacto social.
-          </p>
+          <p>Nossa meta é tornar o EventFlow a plataforma líder no Brasil para soluções completas de gerenciamento de eventos, sendo reconhecida como referência em inovação tecnológica, excelência na usabilidade e capacidade de gerar impacto social positivo, oferecendo ferramentas que simplificam o planejamento, fortalecem a organização e promovem experiências memoráveis para todos os envolvidos.</p>
         </div>
       </div>
-
-      <!-- Item Missão -->
       <div class="acordeao-item">
         <button class="acordeao-titulo" aria-expanded="false" aria-controls="missao-content" id="missao-btn">
           <i class="fas fa-rocket"></i> Missão
         </button>
         <div class="acordeao-conteudo" id="missao-content" role="region" aria-labelledby="missao-btn" hidden>
-          <p>
-            Facilitar e transformar a experiência de planejar e realizar eventos por meio de uma plataforma intuitiva, prática e acessível.
-          </p>
+          <p>Nosso objetivo é facilitar e transformar toda a experiência de planejar, organizar e executar eventos, oferecendo uma plataforma intuitiva, prática e acessível, que permite gerenciar convidados, personalizar convites, acompanhar confirmações e analisar relatórios em tempo real, garantindo que cada evento seja planejado de forma eficiente, sem complicações e com total controle.</p>
         </div>
       </div>
-
-      <!-- Item Valores -->
       <div class="acordeao-item">
         <button class="acordeao-titulo" aria-expanded="false" aria-controls="valores-content" id="valores-btn">
           <i class="fas fa-lightbulb"></i> Valores
         </button>
         <div class="acordeao-conteudo" id="valores-content" role="region" aria-labelledby="valores-btn" hidden>
-          <ul>
-            <li><strong>Inovação:</strong> Estamos em constante evolução...</li>
-            <li><strong>Praticidade:</strong> Valorizamos a simplicidade...</li>
-            <li><strong>Comprometimento:</strong> Foco total no sucesso do usuário.</li>
-            <li><strong>Acessibilidade:</strong> Ferramentas para todos.</li>
-            <li><strong>Responsabilidade:</strong> Compromisso ético com a privacidade.</li>
-          </ul>
+        <p>
+            <strong>Inovação:</strong> Estamos em constante evolução...<br>
+            <strong>Usabilidade:</strong> Foco na experiência do usuário...<br>
+            <strong>Praticidade:</strong> Valorizamos a simplicidade...<br>
+            <strong>Impacto Social:</strong> Compromisso com a comunidade...<br>
+            <strong>Transparência:</strong> Comunicação clara e aberta...<br> 
+            <strong>Comprometimento:</strong> Foco total no sucesso do usuário.<br>
+            <strong>Segurança:</strong> Proteção de dados e privacidade.<br>
+            <strong>Colaboração:</strong> Valorizamos o trabalho em equipe.<br>
+            <strong>Acessibilidade:</strong> Ferramentas para todos.<br>
+            <strong>Empatia:</strong> Entendemos as necessidades do usuário.<br>
+            <strong>Responsabilidade:</strong> Compromisso ético com a privacidade.<br>
+            <strong>Excelência:</strong> Busca constante pela qualidade.<br>
+        </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Seção Funcionalidades com cards explicativos -->
+  <!-- FUNCIONALIDADES -->
   <section id="funcionalidades" tabindex="-1">
     <h2>Funcionalidades do Eventflow</h2>
     <div class="funcionalidades">
@@ -132,14 +123,14 @@
     </div>
   </section>
 
-  <!-- Call to Action final para download do app -->
+  <!-- CTA FINAL -->
   <section id="cta-final" tabindex="-1">
     <h2>Pronto para gerenciar seus eventos?</h2>
     <p>Baixe o aplicativo agora e comece a criar eventos incríveis.</p>
     <a href="#cadastro" class="cta">Baixe o App</a>
   </section>
 
-  <!-- Rodapé com links importantes e redes sociais -->
+  <!-- FOOTER -->
   <footer>
     <ul>
       <li><a href="#sobre">Sobre</a></li>
@@ -147,41 +138,35 @@
       <li><a href="#termos">Termos de Serviço</a></li>
     </ul>
     <div id="contato" class="social-media">
-      <a href="#" aria-label="Instagram">Instagram</a>
-      <a href="#" aria-label="Facebook">Facebook</a>
-      <a href="#" aria-label="LinkedIn">LinkedIn</a>
+      <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
     </div>
   </footer>
 
-  <!-- Script JavaScript para interatividade -->
+  <!-- JS INTERATIVO -->
   <script>
-    // Seleciona todos os botões do acordeão
+    // ===== ACORDEÃO =====
     const botoes = document.querySelectorAll('.acordeao-titulo');
-
-    // Para cada botão, adiciona um evento de clique
     botoes.forEach(botao => {
       botao.addEventListener('click', () => {
-        const item = botao.parentElement; // pai do botão: o acordeão item
-        const conteudo = botao.nextElementSibling; // o conteúdo a mostrar/ocultar
-        const ativo = item.classList.toggle('ativo'); // alterna classe ativo
-        conteudo.hidden = !ativo; // esconde se não ativo, mostra se ativo
-        botao.setAttribute('aria-expanded', ativo); // atualiza atributo aria para acessibilidade
+        const item = botao.parentElement;
+        const conteudo = botao.nextElementSibling;
+        const ativo = item.classList.toggle('ativo');
+        conteudo.hidden = !ativo;
+        botao.setAttribute('aria-expanded', ativo);
       });
     });
 
-    // Menu responsivo: seleciona botão e menu
+    // ===== MENU RESPONSIVO =====
     const menuIcon = document.getElementById('menu-icon');
     const navLinks = document.getElementById('nav-links');
 
-    // Quando clicar no ícone do menu hamburguer, alterna a classe active no menu
     menuIcon.addEventListener('click', () => {
       navLinks.classList.toggle('active');
-
-      // Alterna aria-expanded para informar o estado do menu para leitores de tela
       const expanded = menuIcon.getAttribute('aria-expanded') === 'true' || false;
       menuIcon.setAttribute('aria-expanded', !expanded);
     });
   </script>
-
 </body>
 </html>
