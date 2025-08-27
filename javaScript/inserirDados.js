@@ -94,13 +94,14 @@ export async function inserirDadosComOrganizador(
     }
 
     // Criar Local
-    const localRef = await addDoc(collection(db, "Local"), {
-      nome: eventoData.local,
-      endereco: eventoData.endereco,
-      cep: eventoData.cep,
-      dataCriacao: serverTimestamp()
-    });
-    console.log("✅ Local criado com sucesso.");
+const localRef = await addDoc(collection(db, "Local"), {
+  nome: eventoData.nomeLocal,
+  endereco: eventoData.endereco,
+  cep: eventoData.cep,
+  dataCriacao: serverTimestamp()
+});
+console.log("✅ Local criado com sucesso.");
+
 
     // Criar Evento
     const dataEvento = new Date(`${eventoData.data}T${eventoData.hora}`);

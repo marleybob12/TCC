@@ -62,6 +62,10 @@
       <label>Telefone:</label>
       <input type="text" id="telefoneUsuario" class="form-control" required />
     </div>
+    <div class="form-group">
+  <label>Data de Nascimento:</label>
+  <input type="date" id="dataNascimentoUsuario" class="form-control" required />
+</div>
     <h2>Dados do Evento</h2>
     <div class="form-group">
       <label>Nome do Evento:</label>
@@ -89,19 +93,53 @@
       <label>Quantidade de Ingressos:</label>
       <input type="number" id="quantidadeEvento" class="form-control" min="1" required />
     </div>
-    <h2>Local do Evento</h2>
-    <div class="form-group">
-      <label>Endereço:</label>
-      <input type="text" id="enderecoEvento" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label>CEP:</label>
-      <input type="text" id="cepEvento" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label>Categoria (Tipo de Evento):</label>
-      <input type="text" id="tipoEvento" class="form-control" required />
-    </div>
+  <h2>Local do Evento</h2>
+<div class="form-group">
+  <label>Nome do Local:</label>
+  <input type="text" id="nomeLocalEvento" class="form-control" required />
+</div>
+<div class="form-group">
+  <label>CEP:</label>
+  <input type="text" id="cepEvento" class="form-control" required />
+</div>
+<div class="form-group">
+  <label>Endereço:</label>
+  <input type="text" id="enderecoEvento" class="form-control" required />
+</div>
+
+   
+   <div class="form-group">
+  <label for="tipoEvento">Categoria (Tipo de Evento):</label>
+  <select id="tipoEvento" class="form-control" required>
+    <option value="">Selecione uma categoria</option>
+    <option value="Musica">Música</option>
+    <option value="Palestra">Palestra</option>
+    <option value="Seminario">Seminário</option>
+    <option value="Esportes">Esportes</option>
+    <option value="Teatro_e_Espetaculos">Teatro e Espetáculos</option>
+    <option value="Tecnologia">Tecnologia</option>
+    <option value="Artes">Artes</option>
+    <option value="Gastronomia">Gastronomia</option>
+    <option value="Negocios">Negócios</option>
+    <option value="Educacao">Educação</option>
+    <option value="Saude">Saúde</option>
+    <option value="Moda">Moda</option>
+    <option value="Festas_e_Shows">Festas e Shows</option>
+    <option value="Stand_up_Comedy">Stand up Comedy</option>
+    <option value="Infantil">Infantil</option>
+    <option value="Passeios_para_toda_familia">Passeios para toda família</option>
+    <option value="Festas_Tipicas">Festas Típicas</option>
+    <option value="Convencoes">Convenções</option>
+    <option value="Games">Games</option>
+    <option value="Fitness">Fitness</option>
+    <option value="Encontros_Sociais">Encontros Sociais</option>
+    <option value="Cafes_e_Network">Cafés e Networking</option>
+    <option value="Workshops">Workshops</option>
+    <option value="Festivais">Festivais</option>
+    <option value="Outros">Outros</option>
+  </select>
+</div>
+
     <div class="form-group">
       <label>CNPJ (Opcional):</label>
       <input type="text" id="cnpjEvento" class="form-control" placeholder="00.000.000/0000-00" />
@@ -186,19 +224,23 @@
       e.preventDefault();
       mensagemEl.textContent = "";
 
-      const eventoData = {
-        nome: document.getElementById("nomeEvento").value.trim(),
-        descricao: document.getElementById("descricaoEvento").value.trim(),
-        data: document.getElementById("dataEvento").value,
-        hora: document.getElementById("horaEvento").value,
-        preco: parseFloat(document.getElementById("precoEvento").value),
-        quantidade: parseInt(document.getElementById("quantidadeEvento").value, 10),
-        endereco: document.getElementById("enderecoEvento").value.trim(),
-        cep: document.getElementById("cepEvento").value.trim(),
-        tipo: document.getElementById("tipoEvento").value.trim(),
-        cnpj: document.getElementById("cnpjEvento").value.trim() || null,
-        bannerUrl: ""
-      };
+     const eventoData = {
+  nome: document.getElementById("nomeEvento").value.trim(),
+  descricao: document.getElementById("descricaoEvento").value.trim(),
+  data: document.getElementById("dataEvento").value,
+  hora: document.getElementById("horaEvento").value,
+  preco: parseFloat(document.getElementById("precoEvento").value),
+  quantidade: parseInt(document.getElementById("quantidadeEvento").value, 10),
+  endereco: document.getElementById("enderecoEvento").value.trim(),
+  cep: document.getElementById("cepEvento").value.trim(),
+  tipo: document.getElementById("tipoEvento").value.trim(),
+  cnpj: document.getElementById("cnpjEvento").value.trim() || null,
+  bannerUrl: "",
+  nomeLocal: document.getElementById("nomeLocalEvento").value.trim()
+};
+
+const dataNascimento = document.getElementById("dataNascimentoUsuario").value;
+
 
       if (eventoData.preco < 0 || eventoData.quantidade < 1) {
         mensagemEl.textContent = "❌ Preço ou quantidade inválidos!";
@@ -216,16 +258,20 @@
         }
 
         // Inserir dados no Firestore
-        await inserirDadosComOrganizador(
-          db,
-          auth.currentUser.uid,
-          document.getElementById("nomeUsuario").value,
-          auth.currentUser.email,
-          document.getElementById("telefoneUsuario").value,
-          document.getElementById("cpfUsuario").value,
-          document.getElementById("dataNascimentoUsuario").value,
-          eventoData
-        );
+        console.log("Dados do evento recebidos:", eventoData);
+console.log("Dados do usuário:", { usuarioID: usuarioID, nome, email, telefone, cpf, dataNascimento });
+
+       await inserirDadosComOrganizador(
+  db,
+  auth.currentUser.uid,
+  document.getElementById("nomeUsuario").value,
+  auth.currentUser.email,
+  document.getElementById("telefoneUsuario").value,
+  document.getElementById("cpfUsuario").value,
+  dataNascimento,
+  eventoData
+);
+
 
         mensagemEl.textContent = "✅ Evento criado com sucesso!";
         mensagemEl.style.color = "#2F78E3";
