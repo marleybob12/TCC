@@ -5,186 +5,219 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Criar Evento</title>
   <link rel="stylesheet" href="../css/criarEvento.css" />
+  <link rel="stylesheet" href="../css/stylesHome.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     #previewBanner {
       display: none;
       max-width: 300px;
       margin-top: 10px;
-      border-radius: 10px;
-    }
-    .mensagem {
-      text-align: center;
-      font-weight: bold;
-      margin-top: 10px;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
-
+  <!-- Header igual ao home.html -->
   <header>
     <div class="header-container">
-      <div class="logo">
-        <img src="../img/logo_barra.png" alt="EventFlow Logo">
-      </div>
-      <nav>
-        <ul id="navList">
-          <li><a href="../home/home.html">Home</a></li>
-          <li><a href="../eventos/meusEventos.html">Meus Eventos</a></li>
-          <li class="user-dropdown">
-            <div class="user-account">
-              <img id="userPhoto" src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Usuário">
-              <span id="userName">Usuário</span>
-            </div>
-            <div class="dropdown-menu">
-              <a href="../perfil/perfil.html">Perfil</a>
-              <a href="#" id="logoutBtn">Sair</a>
+      <a href="../home/home.html" class="logo">
+        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+      </a>
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="nav-links" aria-label="Menu principal">
+        <ul>
+          <li><a href="criarEvento.html" class="btn active">Criar eventos</a></li>
+          <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
+          <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
+          <li><a href="home.html" class="btn">EventFlow</a></li>
+          <li>
+            <div class="user-dropdown">
+              <div class="user-account" onclick="toggleDropdown()">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+                <span class="user-name">Usuário</span>
+                <span class="arrow">▾</span>
+              </div>
+              <div class="dropdown-menu" id="dropdown" style="display:none;">
+                <a href="perfil.html">👤 Perfil</a>
+                <a href="config.html">⚙️ Configurações</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
+              </div>
             </div>
           </li>
         </ul>
       </nav>
-      <button class="menu-icon" id="menuToggle">&#9776;</button>
     </div>
   </header>
 
-  <h1 style="text-align:center; margin-top:20px; color:#1673ff;">Criar Evento</h1>
+  <main>
+    <h1 style="text-align:center; margin-top:20px; color:#1673ff;">Criar Evento</h1>
+    <!-- Teste de sistema: Formulário deve validar todos os campos obrigatórios (CT-007) -->
+    <form id="formCriarEvento">
+      <h2>Dados do Organizador</h2>
+      <div class="form-group">
+        <label>Nome:</label>
+        <input type="text" id="nomeUsuario" class="form-control" required readonly />
+      </div>
+      <div class="form-group">
+        <label>CPF :</label>
+        <input type="text" id="cpfUsuario" class="form-control" required readonly />
+      </div>
+      <div class="form-group">
+        <label>Telefone:</label>
+        <input type="text" id="telefoneUsuario" class="form-control" required readonly />
+      </div>
+      <div class="form-group">
+        <label>Data de Nascimento:</label>
+        <input type="date" id="dataNascimentoUsuario" class="form-control" required readonly />
+      </div>
 
-  <form id="formCriarEvento">
-    <h2>Dados do Organizador</h2>
-    <div class="form-group">
-      <label>Nome:</label>
-      <input type="text" id="nomeUsuario" class="form-control" required/>
-    </div>
-    <div class="form-group">
-      <label>CPF :</label>
-      <input type="text" id="cpfUsuario" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label>Telefone:</label>
-      <input type="text" id="telefoneUsuario" class="form-control" required />
-    </div>
-    <div class="form-group">
-  <label>Data de Nascimento:</label>
-  <input type="date" id="dataNascimentoUsuario" class="form-control" required />
-</div>
-    <h2>Dados do Evento</h2>
-    <div class="form-group">
-      <label>Nome do Evento:</label>
-      <input type="text" id="nomeEvento" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label>Descrição:</label>
-      <textarea id="descricaoEvento" class="form-control" required></textarea>
-    </div>
-    <div class="form-group">
-      <h2>Data e hora do evento</h2>
-      <label>Data:</label>
-      <input type="date" id="dataEvento" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label>Hora:</label>
-      <input type="time" id="horaEvento" class="form-control" required />
-    </div>
-    <h2>Ingressos</h2>
-    <div class="form-group">
-      <label>Preço:</label>
-      <input type="number" id="precoEvento" class="form-control" min="0" required />
-    </div>
-    <div class="form-group">
-      <label>Quantidade de Ingressos:</label>
-      <input type="number" id="quantidadeEvento" class="form-control" min="1" required />
-    </div>
-  <h2>Local do Evento</h2>
-<div class="form-group">
-  <label>Nome do Local:</label>
-  <input type="text" id="nomeLocalEvento" class="form-control" required />
-</div>
-<div class="form-group">
-  <label>CEP:</label>
-  <input type="text" id="cepEvento" class="form-control" required />
-</div>
-<div class="form-group">
-  <label>Endereço:</label>
-  <input type="text" id="enderecoEvento" class="form-control" required />
-</div>
+      <h2>Dados do Evento</h2>
+      <div class="form-group">
+        <label>Nome do Evento:</label>
+        <input type="text" id="nomeEvento" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label>Descrição:</label>
+        <textarea id="descricaoEvento" class="form-control" required></textarea>
+      </div>
+      <div class="form-group">
+        <h2>Data e hora do evento</h2>
+        <label>Data:</label>
+        <input type="date" id="dataEvento" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label>Hora:</label>
+        <input type="time" id="horaEvento" class="form-control" required />
+      </div>
 
-   
-   <div class="form-group">
-  <label for="tipoEvento">Categoria (Tipo de Evento):</label>
-  <select id="tipoEvento" class="form-control" required>
-    <option value="">Selecione uma categoria</option>
-    <option value="Musica">Música</option>
-    <option value="Palestra">Palestra</option>
-    <option value="Seminario">Seminário</option>
-    <option value="Esportes">Esportes</option>
-    <option value="Teatro_e_Espetaculos">Teatro e Espetáculos</option>
-    <option value="Tecnologia">Tecnologia</option>
-    <option value="Artes">Artes</option>
-    <option value="Gastronomia">Gastronomia</option>
-    <option value="Negocios">Negócios</option>
-    <option value="Educacao">Educação</option>
-    <option value="Saude">Saúde</option>
-    <option value="Moda">Moda</option>
-    <option value="Festas_e_Shows">Festas e Shows</option>
-    <option value="Stand_up_Comedy">Stand up Comedy</option>
-    <option value="Infantil">Infantil</option>
-    <option value="Passeios_para_toda_familia">Passeios para toda família</option>
-    <option value="Festas_Tipicas">Festas Típicas</option>
-    <option value="Convencoes">Convenções</option>
-    <option value="Games">Games</option>
-    <option value="Fitness">Fitness</option>
-    <option value="Encontros_Sociais">Encontros Sociais</option>
-    <option value="Cafes_e_Network">Cafés e Networking</option>
-    <option value="Workshops">Workshops</option>
-    <option value="Festivais">Festivais</option>
-    <option value="Outros">Outros</option>
-  </select>
-</div>
+      <h2>Ingressos</h2>
+      <div class="form-group">
+        <label>Preço:</label>
+        <input type="number" id="precoEvento" class="form-control" min="0" required />
+      </div>
+      <div class="form-group">
+        <label>Quantidade de Ingressos:</label>
+        <input type="number" id="quantidadeEvento" class="form-control" min="1" required />
+      </div>
 
-    <div class="form-group">
-      <label>CNPJ (Opcional):</label>
-      <input type="text" id="cnpjEvento" class="form-control" placeholder="00.000.000/0000-00" />
-    </div>
-    <div class="form-group">
-      <label>Banner (arquivo):</label>
-      <input type="file" id="bannerArquivo" class="form-control" accept="image/*" />
-      <img id="previewBanner" alt="Pré-visualização do Banner" />
-    </div>
+      <h2>Local do Evento</h2>
+      <div class="form-group">
+        <label>CEP:</label>
+        <input type="text" id="cepEvento" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label>Endereço:</label>
+        <input type="text" id="enderecoEvento" class="form-control" required />
+      </div>
 
-    <button type="submit" class="btn">Criar Evento</button>
-    <p id="mensagem" class="mensagem"></p>
-  </form>
+      <div class="form-group">
+        <label for="tipoEvento">Categoria (Tipo de Evento):</label>
+        <select id="tipoEvento" class="form-control" required>
+          <option value="">Selecione uma categoria</option>
+          <option value="Musica">Música</option>
+          <option value="Palestra">Palestra</option>
+          <option value="Seminario">Seminário</option>
+          <option value="Esportes">Esportes</option>
+          <option value="Teatro_e_Espetaculos">Teatro e Espetáculos</option>
+          <option value="Tecnologia">Tecnologia</option>
+          <option value="Artes">Artes</option>
+          <option value="Gastronomia">Gastronomia</option>
+          <option value="Negocios">Negócios</option>
+          <option value="Educacao">Educação</option>
+          <option value="Saude">Saúde</option>
+          <option value="Moda">Moda</option>
+          <option value="Festas_e_Shows">Festas e Shows</option>
+          <option value="Stand_up_Comedy">Stand up Comedy</option>
+          <option value="Infantil">Infantil</option>
+          <option value="Passeios_para_toda_familia">Passeios para toda família</option>
+          <option value="Festas_Tipicas">Festas Típicas</option>
+          <option value="Convencoes">Convenções</option>
+          <option value="Games">Games</option>
+          <option value="Fitness">Fitness</option>
+          <option value="Encontros_Sociais">Encontros Sociais</option>
+          <option value="Cafes_e_Network">Cafés e Networking</option>
+          <option value="Workshops">Workshops</option>
+          <option value="Festivais">Festivais</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
 
+      <div class="form-group">
+        <label>CNPJ (Opcional):</label>
+        <input type="text" id="cnpjEvento" class="form-control" placeholder="00.000.000/0000-00" />
+      </div>
+
+      <div class="form-group">
+        <label>Banner (arquivo):</label>
+        <input type="file" id="bannerArquivo" class="form-control" accept="image/*" />
+        <img id="previewBanner" alt="Pré-visualização do Banner" />
+      </div>
+
+      <button type="submit" class="btn">Criar Evento</button>
+      <p id="mensagem" class="mensagem"></p>
+    </form>
+  </main>
+
+  <!-- Scripts do header e dropdown -->
+  <script>
+    function toggleDropdown() {
+      const menu = document.getElementById("dropdown");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+    window.addEventListener("click", function (e) {
+      const dropdown = document.getElementById("dropdown");
+      const account = document.querySelector(".user-account");
+      if (!account.contains(e.target)) dropdown.style.display = "none";
+    });
+    document.getElementById("menu-icon").addEventListener("click", () => {
+      document.querySelector("header nav ul").classList.toggle("show");
+    });
+  </script>
   <script type="module">
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-    import { inserirDadosComOrganizador } from "../js/inserirDados.js";
-    import { db } from "../firebaseConfig.js";
+    import { auth, db } from "../javaScript/firebaseConfig.js";
+    import { logoutUsuario } from "../javaScript/auth.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const auth = getAuth();
-    const storage = getStorage();
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "../login.html";
+        return;
+      }
+      try {
+        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
+        if (userDoc.exists()) {
+          const dados = userDoc.data();
+          document.querySelector(".user-name").textContent = dados.nome;
+        }
+      } catch (e) {
+        console.error("Erro ao buscar dados do usuário:", e);
+      }
+    });
+
+    document.getElementById("dropdownLogout").addEventListener("click", async (e) => {
+      e.preventDefault();
+      await logoutUsuario();
+      window.location.href = "../login.html";
+    });
+  </script>
+  <script type="module">
+    // Teste de integração: Firebase deve ser inicializado corretamente (CT-006)
+    import { auth, db, storage } from "../javaScript/firebaseConfig.js";
+    import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+    import { inserirDadosComOrganizador } from "../javaScript/inserirDados.js";
+
+
     const form = document.getElementById("formCriarEvento");
     const bannerInput = document.getElementById("bannerArquivo");
     const previewBanner = document.getElementById("previewBanner");
     const mensagemEl = document.getElementById("mensagem");
 
-    // Menu responsivo
-    document.getElementById("menuToggle").addEventListener("click", () => {
-      document.getElementById("navList").classList.toggle("show");
-    });
-
-    // Dropdown usuário
-    document.querySelector(".user-dropdown").addEventListener("click", () => {
-      document.querySelector(".user-dropdown").classList.toggle("active");
-    });
-
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-      await signOut(auth);
-      window.location.href = "../login.html";
-    });
-
-    // Preview do banner
+    // Teste de unidade: Pré-visualização do banner (CT-009)
     bannerInput.addEventListener("change", () => {
       const file = bannerInput.files[0];
       if (file) {
@@ -199,7 +232,25 @@
       }
     });
 
-    // Preencher dados do organizador e promover participante
+    // Teste de unidade: Buscar dados pelo CNPJ (CT-008)
+    async function buscarCNPJ(cnpj) {
+      try {
+        const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`);
+        if (!response.ok) throw new Error("Erro ao consultar CNPJ");
+        const data = await response.json();
+        document.getElementById("enderecoEvento").value =
+          `${data.logradouro || ""}, ${data.numero || "S/N"} - ${data.bairro || ""}, ${data.municipio || ""} - ${data.uf || ""}`;
+      } catch (error) {
+        console.error(error);
+        alert("❌ Não foi possível buscar o CNPJ.");
+      }
+    }
+    document.getElementById("cnpjEvento").addEventListener("blur", () => {
+      const cnpj = document.getElementById("cnpjEvento").value.replace(/\D/g, "");
+      if (cnpj.length === 14) buscarCNPJ(cnpj);
+    });
+
+    // Teste de sistema: Usuário não autenticado deve ser redirecionado (CT-004)
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         alert("Você precisa estar logado para criar eventos.");
@@ -209,38 +260,78 @@
 
       const userRef = doc(db, "Usuario", user.uid);
       const userSnap = await getDoc(userRef);
-      const userData = userSnap.exists() ? userSnap.data() : {};
 
+      let userData;
+      if (!userSnap.exists()) {
+        // Cria doc básico caso não exista
+        userData = {
+          nome: user.displayName || "Usuário",
+          email: user.email || "",
+          cpf: "",
+          telefone: "",
+          dataNascimento: "",
+          photoURL: user.photoURL || "https://cdn-icons-png.flaticon.com/512/747/747376.png",
+          criadoEm: new Date()
+        };
+        await setDoc(userRef, userData);
+      } else {
+        userData = userSnap.data();
+      }
+
+      // Preenche campos do organizador
       document.getElementById("nomeUsuario").value = userData.nome || "Organizador";
-      document.getElementById("cpfUsuario").value = userData.cpf || "00000000000";
+      document.getElementById("cpfUsuario").value = userData.cpf || "";
       document.getElementById("telefoneUsuario").value = userData.telefone || "";
-      document.getElementById("dataNascimentoUsuario").value = userData.dataNascimento || "1990-01-01";
-      document.getElementById("userName").textContent = userData.nome || "Usuário";
-      document.getElementById("userPhoto").src = user.photoURL || "https://cdn-icons-png.flaticon.com/512/747/747376.png";
+      document.getElementById("dataNascimentoUsuario").value = userData.dataNascimento || "";
     });
 
-    // Submit do formulário
+    // Teste de sistema: Submissão do formulário e criação do evento (CT-010)
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       mensagemEl.textContent = "";
 
-     const eventoData = {
-  nome: document.getElementById("nomeEvento").value.trim(),
-  descricao: document.getElementById("descricaoEvento").value.trim(),
-  data: document.getElementById("dataEvento").value,
-  hora: document.getElementById("horaEvento").value,
-  preco: parseFloat(document.getElementById("precoEvento").value),
-  quantidade: parseInt(document.getElementById("quantidadeEvento").value, 10),
-  endereco: document.getElementById("enderecoEvento").value.trim(),
-  cep: document.getElementById("cepEvento").value.trim(),
-  tipo: document.getElementById("tipoEvento").value.trim(),
-  cnpj: document.getElementById("cnpjEvento").value.trim() || null,
-  bannerUrl: "",
-  nomeLocal: document.getElementById("nomeLocalEvento").value.trim()
-};
+      // Validação dos campos obrigatórios (CT-007)
+      if (!document.getElementById("nomeEvento").value.trim()) {
+        mensagemEl.textContent = "Nome do evento é obrigatório.";
+        mensagemEl.style.color = "red";
+        return;
+      }
+      if (!document.getElementById("descricaoEvento").value.trim()) {
+        mensagemEl.textContent = "Descrição do evento é obrigatória.";
+        mensagemEl.style.color = "red";
+        return;
+      }
+      if (!document.getElementById("dataEvento").value) {
+        mensagemEl.textContent = "Data do evento é obrigatória.";
+        mensagemEl.style.color = "red";
+        return;
+      }
+      if (!document.getElementById("horaEvento").value) {
+        mensagemEl.textContent = "Hora do evento é obrigatória.";
+        mensagemEl.style.color = "red";
+        return;
+      }
+      if (!document.getElementById("enderecoEvento").value.trim()) {
+        mensagemEl.textContent = "Endereço do evento é obrigatório.";
+        mensagemEl.style.color = "red";
+        return;
+      }
 
-const dataNascimento = document.getElementById("dataNascimentoUsuario").value;
+      const eventoData = {
+        nome: document.getElementById("nomeEvento").value.trim(),
+        descricao: document.getElementById("descricaoEvento").value.trim(),
+        data: document.getElementById("dataEvento").value,
+        hora: document.getElementById("horaEvento").value,
+        preco: parseFloat(document.getElementById("precoEvento").value),
+        quantidade: parseInt(document.getElementById("quantidadeEvento").value, 10),
+        endereco: document.getElementById("enderecoEvento").value.trim(),
+        cep: document.getElementById("cepEvento").value.trim(),
+        tipo: document.getElementById("tipoEvento").value.trim(),
+        cnpj: document.getElementById("cnpjEvento").value.trim() || null,
+        bannerUrl: ""
+      };
 
+      const dataNascimento = document.getElementById("dataNascimentoUsuario").value;
 
       if (eventoData.preco < 0 || eventoData.quantidade < 1) {
         mensagemEl.textContent = "❌ Preço ou quantidade inválidos!";
@@ -249,7 +340,7 @@ const dataNascimento = document.getElementById("dataNascimentoUsuario").value;
       }
 
       try {
-        // Upload banner
+        // Upload do banner
         const bannerArquivo = bannerInput.files[0];
         if (bannerArquivo) {
           const storageRef = ref(storage, `banners/${auth.currentUser.uid}_${Date.now()}_${bannerArquivo.name}`);
@@ -257,26 +348,27 @@ const dataNascimento = document.getElementById("dataNascimentoUsuario").value;
           eventoData.bannerUrl = await getDownloadURL(storageRef);
         }
 
-        // Inserir dados no Firestore
-        console.log("Dados do evento recebidos:", eventoData);
-console.log("Dados do usuário:", { usuarioID: usuarioID, nome, email, telefone, cpf, dataNascimento });
-
-       await inserirDadosComOrganizador(
-  db,
-  auth.currentUser.uid,
-  document.getElementById("nomeUsuario").value,
-  auth.currentUser.email,
-  document.getElementById("telefoneUsuario").value,
-  document.getElementById("cpfUsuario").value,
-  dataNascimento,
-  eventoData
-);
-
+        // Insere evento no Firestore
+        await inserirDadosComOrganizador(
+          db,
+          auth.currentUser.uid,
+          document.getElementById("nomeUsuario").value,
+          auth.currentUser.email,
+          document.getElementById("telefoneUsuario").value,
+          document.getElementById("cpfUsuario").value,
+          dataNascimento,
+          eventoData
+        );
 
         mensagemEl.textContent = "✅ Evento criado com sucesso!";
         mensagemEl.style.color = "#2F78E3";
         form.reset();
         previewBanner.style.display = "none";
+
+        // Redireciona para a página de Meus Eventos
+        setTimeout(() => {
+          window.location.href = "meusEventos.html";
+        }, 1200); // tempo para mostrar a mensagem antes de redirecionar
 
       } catch (error) {
         console.error(error);
@@ -285,6 +377,5 @@ console.log("Dados do usuário:", { usuarioID: usuarioID, nome, email, telefone,
       }
     });
   </script>
-
 </body>
 </html>

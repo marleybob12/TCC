@@ -40,20 +40,12 @@ header {
   border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 30px;
+header .logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
 }
 
-.logo img {
-  width: 160px;
-}
-
-/* =========================
-   Navegação
-========================= */
 header nav ul {
   list-style: none;
   display: flex;
@@ -70,7 +62,8 @@ header nav a {
   transition: background-color 0.3s ease;
 }
 
-header nav a:hover {
+header nav a:hover,
+header nav a.active {
   background-color: rgba(0,86,210,0.8);
 }
 
@@ -87,16 +80,9 @@ header nav a:hover {
 }
 
 @media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 8px;
+  header {
+    padding: 10px;
   }
-
-  header .logo img {
-    width: 120px;
-  }
-
   header nav ul {
     flex-direction: column;
     gap: 10px;
@@ -109,11 +95,9 @@ header nav a:hover {
     min-width: 160px;
     display: none;
   }
-
   header nav ul.show {
     display: flex !important;
   }
-
   .menu-icon {
     display: block;
     margin-left: auto;
@@ -121,58 +105,15 @@ header nav a:hover {
 }
 
 /* =========================
-   Dropdown Usuário
-========================= */
-.user-dropdown {
-  position: relative;
-}
-
-.user-account {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  color: #fff;
-}
-
-.user-account img {
-  width: 32px;
-  border-radius: 50%;
-}
-
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 50px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-  min-width: 160px;
-  overflow: hidden;
-}
-
-.dropdown-menu a {
-  display: block;
-  padding: 10px 15px;
-  color: #1f1f1f;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background 0.3s ease;
-}
-
-.dropdown-menu a:hover {
-  background: rgba(22,115,255,0.2);
-}
-
-.user-dropdown.active .dropdown-menu {
-  display: block;
-}
-
-/* =========================
    Formulário
 ========================= */
+main h1 {
+  text-align: center;
+  color: #1673ff;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 form {
   max-width: 700px;
   margin: 30px auto 50px auto;
@@ -183,13 +124,16 @@ form {
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
-h2 {
-  color: #1673ff;
-  margin-bottom: 15px;
+fieldset {
+  border: none;
+  margin-bottom: 20px;
 }
 
-.form-group {
-  margin-bottom: 18px;
+legend {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1673ff;
+  margin-bottom: 10px;
 }
 
 label {
@@ -225,6 +169,8 @@ button[type="submit"] {
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 10px;
 }
 
 button[type="submit"]:hover {
@@ -242,6 +188,15 @@ button[type="submit"]:hover {
   border-radius: 10px;
 }
 
+/* =========================
+   Mensagem
+========================= */
+.mensagem {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #1673ff;
+}
 
 /* =========================
    Responsividade Form
