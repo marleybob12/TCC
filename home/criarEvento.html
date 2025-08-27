@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Criar Evento</title>
+  <title>Criar Evento - EventFlow</title>
   <link rel="stylesheet" href="../css/criarEvento.css" />
   <link rel="stylesheet" href="../css/stylesHome.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -14,10 +14,55 @@
       margin-top: 10px;
       border-radius: 8px;
     }
+    .mensagem {
+      margin-top: 10px;
+      font-weight: 600;
+      text-align: center;
+    }
+    form {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 20px;
+      color: #1673ff;
+      font-size: 1.2rem;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    button.btn {
+      background-color: #1673ff;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 15px;
+    }
+    button.btn:hover {
+      background-color: #105fd1;
+    }
   </style>
 </head>
 <body>
-  <!-- Header igual ao home.html -->
   <header>
     <div class="header-container">
       <a href="../home/home.html" class="logo">
@@ -53,7 +98,6 @@
 
   <main>
     <h1 style="text-align:center; margin-top:20px; color:#1673ff;">Criar Evento</h1>
-    <!-- Teste de sistema: Formulário deve validar todos os campos obrigatórios (CT-007) -->
     <form id="formCriarEvento">
       <h2>Dados do Organizador</h2>
       <div class="form-group">
@@ -61,7 +105,7 @@
         <input type="text" id="nomeUsuario" class="form-control" required readonly />
       </div>
       <div class="form-group">
-        <label>CPF :</label>
+        <label>CPF:</label>
         <input type="text" id="cpfUsuario" class="form-control" required readonly />
       </div>
       <div class="form-group">
@@ -83,12 +127,11 @@
         <textarea id="descricaoEvento" class="form-control" required></textarea>
       </div>
       <div class="form-group">
-        <h2>Data e hora do evento</h2>
-        <label>Data:</label>
+        <label>Data do Evento:</label>
         <input type="date" id="dataEvento" class="form-control" required />
       </div>
       <div class="form-group">
-        <label>Hora:</label>
+        <label>Hora do Evento:</label>
         <input type="time" id="horaEvento" class="form-control" required />
       </div>
 
@@ -113,7 +156,7 @@
       </div>
 
       <div class="form-group">
-        <label for="tipoEvento">Categoria (Tipo de Evento):</label>
+        <label>Categoria:</label>
         <select id="tipoEvento" class="form-control" required>
           <option value="">Selecione uma categoria</option>
           <option value="Musica">Música</option>
@@ -150,7 +193,7 @@
       </div>
 
       <div class="form-group">
-        <label>Banner (arquivo):</label>
+        <label>Banner do Evento:</label>
         <input type="file" id="bannerArquivo" class="form-control" accept="image/*" />
         <img id="previewBanner" alt="Pré-visualização do Banner" />
       </div>
@@ -160,7 +203,6 @@
     </form>
   </main>
 
-  <!-- Scripts do header e dropdown -->
   <script>
     function toggleDropdown() {
       const menu = document.getElementById("dropdown");
@@ -175,205 +217,131 @@
       document.querySelector("header nav ul").classList.toggle("show");
     });
   </script>
-  <script type="module">
-    import { auth, db } from "../javaScript/firebaseConfig.js";
-    import { logoutUsuario } from "../javaScript/auth.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "../login.html";
-        return;
-      }
-      try {
-        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
-        if (userDoc.exists()) {
-          const dados = userDoc.data();
-          document.querySelector(".user-name").textContent = dados.nome;
-        }
-      } catch (e) {
-        console.error("Erro ao buscar dados do usuário:", e);
-      }
-    });
-
-    document.getElementById("dropdownLogout").addEventListener("click", async (e) => {
-      e.preventDefault();
-      await logoutUsuario();
-      window.location.href = "../login.html";
-    });
-  </script>
   <script type="module">
-    // Teste de integração: Firebase deve ser inicializado corretamente (CT-006)
     import { auth, db, storage } from "../javaScript/firebaseConfig.js";
-    import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { inserirDadosComOrganizador } from "../javaScript/inserirDados.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-    import { inserirDadosComOrganizador } from "../javaScript/inserirDados.js";
-
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const form = document.getElementById("formCriarEvento");
     const bannerInput = document.getElementById("bannerArquivo");
     const previewBanner = document.getElementById("previewBanner");
     const mensagemEl = document.getElementById("mensagem");
 
-    // Teste de unidade: Pré-visualização do banner (CT-009)
-    bannerInput.addEventListener("change", () => {
-      const file = bannerInput.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          previewBanner.src = reader.result;
-          previewBanner.style.display = "block";
-        };
-        reader.readAsDataURL(file);
-      } else {
-        previewBanner.style.display = "none";
-      }
-    });
-
-    // Teste de unidade: Buscar dados pelo CNPJ (CT-008)
-    async function buscarCNPJ(cnpj) {
-      try {
-        const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`);
-        if (!response.ok) throw new Error("Erro ao consultar CNPJ");
-        const data = await response.json();
-        document.getElementById("enderecoEvento").value =
-          `${data.logradouro || ""}, ${data.numero || "S/N"} - ${data.bairro || ""}, ${data.municipio || ""} - ${data.uf || ""}`;
-      } catch (error) {
-        console.error(error);
-        alert("❌ Não foi possível buscar o CNPJ.");
-      }
+    // Preview do banner
+    if (bannerInput) {
+      bannerInput.addEventListener("change", () => {
+        const file = bannerInput.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            previewBanner.src = reader.result;
+            previewBanner.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        } else {
+          previewBanner.style.display = "none";
+        }
+      });
     }
-    document.getElementById("cnpjEvento").addEventListener("blur", () => {
-      const cnpj = document.getElementById("cnpjEvento").value.replace(/\D/g, "");
-      if (cnpj.length === 14) buscarCNPJ(cnpj);
-    });
 
-    // Teste de sistema: Usuário não autenticado deve ser redirecionado (CT-004)
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        alert("Você precisa estar logado para criar eventos.");
         window.location.href = "../login.html";
         return;
       }
 
-      const userRef = doc(db, "Usuario", user.uid);
-      const userSnap = await getDoc(userRef);
-
-      let userData;
-      if (!userSnap.exists()) {
-        // Cria doc básico caso não exista
-        userData = {
-          nome: user.displayName || "Usuário",
-          email: user.email || "",
-          cpf: "",
-          telefone: "",
-          dataNascimento: "",
-          photoURL: user.photoURL || "https://cdn-icons-png.flaticon.com/512/747/747376.png",
-          criadoEm: new Date()
-        };
-        await setDoc(userRef, userData);
-      } else {
-        userData = userSnap.data();
-      }
-
-      // Preenche campos do organizador
-      document.getElementById("nomeUsuario").value = userData.nome || "Organizador";
-      document.getElementById("cpfUsuario").value = userData.cpf || "";
-      document.getElementById("telefoneUsuario").value = userData.telefone || "";
-      document.getElementById("dataNascimentoUsuario").value = userData.dataNascimento || "";
-    });
-
-    // Teste de sistema: Submissão do formulário e criação do evento (CT-010)
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      mensagemEl.textContent = "";
-
-      // Validação dos campos obrigatórios (CT-007)
-      if (!document.getElementById("nomeEvento").value.trim()) {
-        mensagemEl.textContent = "Nome do evento é obrigatório.";
-        mensagemEl.style.color = "red";
-        return;
-      }
-      if (!document.getElementById("descricaoEvento").value.trim()) {
-        mensagemEl.textContent = "Descrição do evento é obrigatória.";
-        mensagemEl.style.color = "red";
-        return;
-      }
-      if (!document.getElementById("dataEvento").value) {
-        mensagemEl.textContent = "Data do evento é obrigatória.";
-        mensagemEl.style.color = "red";
-        return;
-      }
-      if (!document.getElementById("horaEvento").value) {
-        mensagemEl.textContent = "Hora do evento é obrigatória.";
-        mensagemEl.style.color = "red";
-        return;
-      }
-      if (!document.getElementById("enderecoEvento").value.trim()) {
-        mensagemEl.textContent = "Endereço do evento é obrigatório.";
-        mensagemEl.style.color = "red";
-        return;
-      }
-
-      const eventoData = {
-        nome: document.getElementById("nomeEvento").value.trim(),
-        descricao: document.getElementById("descricaoEvento").value.trim(),
-        data: document.getElementById("dataEvento").value,
-        hora: document.getElementById("horaEvento").value,
-        preco: parseFloat(document.getElementById("precoEvento").value),
-        quantidade: parseInt(document.getElementById("quantidadeEvento").value, 10),
-        endereco: document.getElementById("enderecoEvento").value.trim(),
-        cep: document.getElementById("cepEvento").value.trim(),
-        tipo: document.getElementById("tipoEvento").value.trim(),
-        cnpj: document.getElementById("cnpjEvento").value.trim() || null,
-        bannerUrl: ""
-      };
-
-      const dataNascimento = document.getElementById("dataNascimentoUsuario").value;
-
-      if (eventoData.preco < 0 || eventoData.quantidade < 1) {
-        mensagemEl.textContent = "❌ Preço ou quantidade inválidos!";
-        mensagemEl.style.color = "red";
-        return;
-      }
-
       try {
-        // Upload do banner
-        const bannerArquivo = bannerInput.files[0];
-        if (bannerArquivo) {
-          const storageRef = ref(storage, `banners/${auth.currentUser.uid}_${Date.now()}_${bannerArquivo.name}`);
-          await uploadBytes(storageRef, bannerArquivo);
-          eventoData.bannerUrl = await getDownloadURL(storageRef);
+        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
+        if (userDoc.exists()) {
+          const dados = userDoc.data();
+          const userNameEl = document.querySelector(".user-name");
+          if (userNameEl) userNameEl.textContent = dados.nome || "Usuário";
+          document.getElementById("nomeUsuario").value = dados.nome || "";
+          document.getElementById("cpfUsuario").value = dados.cpf || "";
+          document.getElementById("telefoneUsuario").value = dados.telefone || "";
+          document.getElementById("dataNascimentoUsuario").value = dados.dataNascimento || "";
         }
+      } catch (e) {
+        console.error("Erro ao buscar dados do usuário:", e);
+      }
 
-        // Insere evento no Firestore
-        await inserirDadosComOrganizador(
-          db,
-          auth.currentUser.uid,
-          document.getElementById("nomeUsuario").value,
-          auth.currentUser.email,
-          document.getElementById("telefoneUsuario").value,
-          document.getElementById("cpfUsuario").value,
-          dataNascimento,
-          eventoData
-        );
+      if (form) {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          mensagemEl.textContent = "";
 
-        mensagemEl.textContent = "✅ Evento criado com sucesso!";
-        mensagemEl.style.color = "#2F78E3";
-        form.reset();
-        previewBanner.style.display = "none";
+          // Validação dos campos obrigatórios
+          const camposObrigatorios = [
+            { id: "nomeEvento", msg: "Nome do evento é obrigatório." },
+            { id: "descricaoEvento", msg: "Descrição do evento é obrigatória." },
+            { id: "dataEvento", msg: "Data do evento é obrigatória." },
+            { id: "horaEvento", msg: "Hora do evento é obrigatória." },
+            { id: "enderecoEvento", msg: "Endereço do evento é obrigatório." },
+            { id: "tipoEvento", msg: "Categoria do evento é obrigatória." },
+          ];
 
-        // Redireciona para a página de Meus Eventos
-        setTimeout(() => {
-          window.location.href = "meusEventos.html";
-        }, 1200); // tempo para mostrar a mensagem antes de redirecionar
+          for (const campo of camposObrigatorios) {
+            const el = document.getElementById(campo.id);
+            if (!el || !el.value.trim()) {
+              mensagemEl.textContent = campo.msg;
+              mensagemEl.style.color = "red";
+              return;
+            }
+          }
 
-      } catch (error) {
-        console.error(error);
-        mensagemEl.textContent = "❌ Erro ao criar evento. Veja o console.";
-        mensagemEl.style.color = "red";
+          try {
+            // Upload do banner (se houver)
+            let bannerUrl = "";
+            if (bannerInput && bannerInput.files[0]) {
+              const bannerArquivo = bannerInput.files[0];
+              const storageRef = ref(storage, `banners/${auth.currentUser.uid}_${Date.now()}_${bannerArquivo.name}`);
+              await uploadBytes(storageRef, bannerArquivo);
+              bannerUrl = await getDownloadURL(storageRef);
+            }
+
+            // Monta objeto eventoData
+            const eventoData = {
+              nome: document.getElementById("nomeEvento").value.trim(),
+              descricao: document.getElementById("descricaoEvento").value.trim(),
+              data: document.getElementById("dataEvento").value,
+              hora: document.getElementById("horaEvento").value,
+              preco: parseFloat(document.getElementById("precoEvento").value) || 0,
+              quantidade: parseInt(document.getElementById("quantidadeEvento").value, 10) || 1,
+              endereco: document.getElementById("enderecoEvento").value.trim(),
+              cep: document.getElementById("cepEvento").value.trim(),
+              tipo: document.getElementById("tipoEvento").value.trim(),
+              cnpj: document.getElementById("cnpjEvento").value.trim() || null,
+              bannerUrl,
+              nomeLocal: document.getElementById("nomeEvento").value.trim() // usa o nome do evento como nome do local
+            };
+
+            await inserirDadosComOrganizador(
+              db,
+              auth.currentUser.uid,
+              document.getElementById("nomeUsuario").value,
+              auth.currentUser.email,
+              document.getElementById("telefoneUsuario").value,
+              document.getElementById("cpfUsuario").value,
+              document.getElementById("dataNascimentoUsuario").value,
+              eventoData
+            );
+
+            mensagemEl.textContent = "✅ Evento criado com sucesso!";
+            mensagemEl.style.color = "#2F78E3";
+            form.reset();
+            previewBanner.style.display = "none";
+
+            setTimeout(() => window.location.href = "meusEventos.html", 1200);
+
+          } catch (error) {
+            console.error(error);
+            mensagemEl.textContent = "❌ Erro ao criar evento. Veja o console.";
+            mensagemEl.style.color = "red";
+          }
+        });
       }
     });
   </script>
