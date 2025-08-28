@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+
+/* Reset e fontes */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: #fff;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #e0f7fa;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+video {
+  border-radius: 15px;
+  border: 3px solid #00ff99;
+  margin-bottom: 20px;
+}
+
+#status {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  min-width: 250px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Histórico */
+#historico {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 350px;
+  text-align: left;
+}
+
+#historico h2 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #e0f7fa;
+}
+
+#historico ul {
+  list-style: none;
+}
+
+#historico li {
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* cores por status */
+.valido { background-color: rgba(0, 255, 128, 0.2); color: #00ff80; }
+.usado { background-color: rgba(255, 165, 0, 0.2); color: #ff9900; }
+.invalido { background-color: rgba(255, 0, 0, 0.2); color: #ff4d4d; }
+
+@media (max-width: 500px) {
+  main { padding: 20px; }
+  video { width: 250px; height: 250px; }
+}

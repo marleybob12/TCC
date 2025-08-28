@@ -105,16 +105,19 @@ if (userData && userData.tipo !== "organizador") {
     });
     console.log("✅ Evento criado com sucesso.");
 
-    // Criar Lote vinculado ao Evento
-    await addDoc(collection(db, "Lote"), {
-      eventoID: eventoRef.id,
-      nome: "Lote Único",
-      preco: parseFloat(eventoData.preco),
-      quantidade: parseInt(eventoData.quantidade, 10),
-      dataInicio: serverTimestamp(),
-      dataFim: dataEvento
-    });
-    console.log("✅ Lote do evento criado com sucesso.");
+   // Criar Lotes (vários ingressos)
+for (const ingresso of eventoData.ingressos) {
+  await addDoc(collection(db, "Lote"), {
+    eventoID: eventoRef.id,
+    nome: ingresso.nome,
+    preco: parseFloat(ingresso.preco),
+    quantidade: parseInt(ingresso.quantidade, 10),
+    dataInicio: serverTimestamp(),
+    dataFim: dataEvento
+  });
+}
+console.log("✅ Lotes do evento criados com sucesso.");
+    console.log("✅ Todos os dados foram inseridos com sucesso.");
 
   } catch (error) {
     console.error("❌ Erro ao inserir dados:", error.message);

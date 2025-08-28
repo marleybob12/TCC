@@ -5,42 +5,29 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase
 
 // Elementos do DOM
 const form = document.getElementById("formCriarEvento");
-const bannerUrlInput = document.getElementById("bannerUrlEvento");
-const previewBannerUrl = document.getElementById("previewBannerUrl");
+const listaIngressos = document.getElementById("listaIngressos");
+const addIngressoBtn = document.getElementById("addIngressoBtn");
 const mensagemEl = document.getElementById("mensagem");
 const btnCriarEvento = document.getElementById("btnCriarEvento");
 const loader = document.getElementById("loader");
 
-// Preview da URL do banner
-if (bannerUrlInput) {
-  bannerUrlInput.addEventListener("input", () => {
-    const url = bannerUrlInput.value.trim();
-    if (url) {
-      previewBannerUrl.src = url;
-      previewBannerUrl.style.display = "block";
-    } else {
-      previewBannerUrl.style.display = "none";
-    }
-  });
+// Função para adicionar ingresso dinamicamente
+function adicionarIngresso(nome = "", preco = "", quantidade = "") {
+  const div = document.createElement("div");
+  div.classList.add("ingresso-item");
+  div.style.marginBottom = "10px";
+  div.innerHTML = `
+    <input type="text" placeholder="Nome do Ingresso (ex: Pista, VIP)" class="ingresso-nome" value="${nome}" required>
+    <input type="number" placeholder="Preço" class="ingresso-preco" min="0" value="${preco}" required>
+    <input type="number" placeholder="Quantidade" class="ingresso-quantidade" min="1" value="${quantidade}" required>
+    <button type="button" class="remover-btn">❌</button>
+  `;
+  div.querySelector(".remover-btn").addEventListener("click", () => div.remove());
+  listaIngressos.appendChild(div);
 }
 
-// Função para alternar dropdown
-window.toggleDropdown = function() {
-  const menu = document.getElementById("dropdown");
-  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-};
-
-// Fechar dropdown ao clicar fora
-window.addEventListener("click", function (e) {
-  const dropdown = document.getElementById("dropdown");
-  const account = document.querySelector(".user-account");
-  if (!account.contains(e.target)) dropdown.style.display = "none";
-});
-
-// Menu mobile
-document.getElementById("menu-icon").addEventListener("click", () => {
-  document.querySelector("header nav ul").classList.toggle("show");
-});
+// Botão para adicionar ingresso
+addIngressoBtn.addEventListener("click", () => adicionarIngresso());
 
 // Verifica login do usuário
 onAuthStateChanged(auth, async (user) => {
@@ -69,46 +56,33 @@ onAuthStateChanged(auth, async (user) => {
       btnCriarEvento.disabled = true;
       loader.style.display = "block";
 
-      // Valida campos obrigatórios
-      const camposObrigatorios = [
-        { id: "nomeEvento", msg: "Nome do evento é obrigatório." },
-        { id: "descricaoEvento", msg: "Descrição do evento é obrigatória." },
-        { id: "dataEvento", msg: "Data do evento é obrigatória." },
-        { id: "horaEvento", msg: "Hora do evento é obrigatória." },
-        { id: "enderecoEvento", msg: "Endereço do evento é obrigatório." },
-        { id: "tipoEvento", msg: "Categoria do evento é obrigatória." },
-      ];
-      for (const campo of camposObrigatorios) {
-        const el = document.getElementById(campo.id);
-        if (!el || !el.value.trim()) {
-          mostrarErro(campo.msg);
-          return;
-        }
-      }
-
-      // Validar CEP, quantidade e preço
-      const cep = document.getElementById("cepEvento").value.trim();
-      if (!cep) return mostrarErro("CEP é obrigatório.");
-      const quantidade = parseInt(document.getElementById("quantidadeEvento").value, 10);
-      if (isNaN(quantidade) || quantidade < 1) return mostrarErro("A quantidade de ingressos deve ser pelo menos 1.");
-      const preco = parseFloat(document.getElementById("precoEvento").value);
-      if (isNaN(preco) || preco < 0) return mostrarErro("O preço do ingresso não pode ser negativo.");
-
       try {
-        const bannerUrl = bannerUrlInput.value.trim() || ""; // pega a URL do input
+        // Captura todos os ingressos criados
+        const ingressos = [];
+        listaIngressos.querySelectorAll(".ingresso-item").forEach(div => {
+          const nome = div.querySelector(".ingresso-nome").value.trim();
+          const preco = parseFloat(div.querySelector(".ingresso-preco").value);
+          const quantidade = parseInt(div.querySelector(".ingresso-quantidade").value, 10);
+          if (nome && !isNaN(preco) && preco >= 0 && !isNaN(quantidade) && quantidade > 0) {
+            ingressos.push({ nome, preco, quantidade });
+          }
+        });
+
+        if (ingressos.length === 0) {
+          throw new Error("Adicione pelo menos um tipo de ingresso.");
+        }
 
         const eventoData = {
           nome: document.getElementById("nomeEvento").value.trim(),
           descricao: document.getElementById("descricaoEvento").value.trim(),
           data: document.getElementById("dataEvento").value,
           hora: document.getElementById("horaEvento").value,
-          preco,
-          quantidade,
           endereco: document.getElementById("enderecoEvento").value.trim(),
-          cep,
+          cep: document.getElementById("cepEvento").value.trim(),
           tipo: document.getElementById("tipoEvento").value.trim(),
           cnpj: document.getElementById("cnpjEvento").value.trim() || null,
-          bannerUrl,
+          bannerUrl: document.getElementById("bannerUrlEvento").value.trim() || "",
+          ingressos,
           dataCriacao: new Date()
         };
 
@@ -126,13 +100,12 @@ onAuthStateChanged(auth, async (user) => {
         mensagemEl.textContent = "✅ Evento criado com sucesso!";
         mensagemEl.style.color = "#2F78E3";
         form.reset();
-        previewBannerUrl.style.display = "none";
-        setTimeout(() => window.location.href = "meusEventos.html", 1200);
+        listaIngressos.innerHTML = "";
+        setTimeout(() => window.location.href = "meusEventos.html", 1500);
       } catch (error) {
         console.error("Erro ao criar evento:", error);
-        mostrarErro(error.message.includes("PERMISSION_DENIED")
-          ? "❌ Permissão negada no Firestore. Verifique suas regras."
-          : "❌ Erro ao criar evento.");
+        mensagemEl.textContent = "❌ " + error.message;
+        mensagemEl.style.color = "red";
       } finally {
         btnCriarEvento.disabled = false;
         loader.style.display = "none";
@@ -140,11 +113,3 @@ onAuthStateChanged(auth, async (user) => {
     });
   }
 });
-
-// Função de erro
-function mostrarErro(msg) {
-  mensagemEl.textContent = msg;
-  mensagemEl.style.color = "red";
-  btnCriarEvento.disabled = false;
-  loader.style.display = "none";
-}

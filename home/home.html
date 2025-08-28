@@ -156,7 +156,8 @@
     import { auth, db } from "../javaScript/firebaseConfig.js";
     import { logoutUsuario } from "../javaScript/auth.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { doc, getDoc, collection, getDocs  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -188,6 +189,46 @@
     document.getElementById("menu-icon").addEventListener("click", () => {
       document.querySelector("header nav ul").classList.toggle("show");
     });
+ 
+  
+
+  const container = document.querySelector(".favoritos-da-semana");
+
+  async function carregarEventos() {
+    try {
+      const querySnap = await getDocs(collection(db, "Evento"));
+
+      if (querySnap.empty) {
+        container.innerHTML += "<p>Nenhum evento disponível.</p>";
+        return;
+      }
+
+      querySnap.forEach((docEvento) => {
+        const evento = docEvento.data();
+        const eventoID = docEvento.id;
+//exibir eventos 
+        container.innerHTML += `
+          <div class="card-glass" style="margin:10px; padding:15px;">
+            <a href="evento.html?id=${eventoID}">
+              <img src="${evento.imagemBanner || "../img/evento.jpg"}" alt="${evento.titulo}" style="max-height:200px; border-radius:12px;">
+              <div class="card-content">
+                <h3>${evento.titulo}</h3>
+                <p><b>Data:</b> ${new Date(evento.dataInicio.seconds * 1000).toLocaleDateString()}</p>
+                <p><b>Local:</b> ${evento.local || "A definir"}</p>
+              </div>
+            </a>
+          </div>
+        `;
+      });
+    } catch (err) {
+      console.error("Erro ao carregar eventos:", err);
+      container.innerHTML += "<p>Erro ao carregar eventos.</p>";
+    }
+  }
+
+  carregarEventos();
+</script>
+
   </script>
 
   <script>
