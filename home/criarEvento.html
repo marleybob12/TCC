@@ -7,60 +7,7 @@
   <link rel="stylesheet" href="../css/criarEvento.css" />
   <link rel="stylesheet" href="../css/stylesHome.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <style>
-    #previewBanner {
-      display: none;
-      max-width: 300px;
-      margin-top: 10px;
-      border-radius: 8px;
-    }
-    .mensagem {
-      margin-top: 10px;
-      font-weight: 600;
-      text-align: center;
-    }
-    form {
-      max-width: 700px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #f9f9f9;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    h2 {
-      margin-top: 20px;
-      color: #1673ff;
-      font-size: 1.2rem;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-    input, textarea, select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1rem;
-    }
-    button.btn {
-      background-color: #1673ff;
-      color: #fff;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 15px;
-    }
-    button.btn:hover {
-      background-color: #105fd1;
-    }
-  </style>
+  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
 </head>
 <body>
   <header>
@@ -99,6 +46,7 @@
   <main>
     <h1 style="text-align:center; margin-top:20px; color:#1673ff;">Criar Evento</h1>
     <form id="formCriarEvento">
+      <!-- Dados do Organizador -->
       <h2>Dados do Organizador</h2>
       <div class="form-group">
         <label>Nome:</label>
@@ -117,6 +65,7 @@
         <input type="date" id="dataNascimentoUsuario" class="form-control" required readonly />
       </div>
 
+      <!-- Dados do Evento -->
       <h2>Dados do Evento</h2>
       <div class="form-group">
         <label>Nome do Evento:</label>
@@ -135,6 +84,7 @@
         <input type="time" id="horaEvento" class="form-control" required />
       </div>
 
+      <!-- Ingressos -->
       <h2>Ingressos</h2>
       <div class="form-group">
         <label>Preço:</label>
@@ -145,6 +95,7 @@
         <input type="number" id="quantidadeEvento" class="form-control" min="1" required />
       </div>
 
+      <!-- Local -->
       <h2>Local do Evento</h2>
       <div class="form-group">
         <label>CEP:</label>
@@ -155,6 +106,7 @@
         <input type="text" id="enderecoEvento" class="form-control" required />
       </div>
 
+      <!-- Categoria e Banner -->
       <div class="form-group">
         <label>Categoria:</label>
         <select id="tipoEvento" class="form-control" required>
@@ -192,158 +144,23 @@
         <input type="text" id="cnpjEvento" class="form-control" placeholder="00.000.000/0000-00" />
       </div>
 
-      <div class="form-group">
-        <label>Banner do Evento:</label>
-        <input type="file" id="bannerArquivo" class="form-control" accept="image/*" />
-        <img id="previewBanner" alt="Pré-visualização do Banner" />
-      </div>
+   <div class="form-group">
+  <label for="bannerUrlEvento">URL do Banner:</label>
+  <input type="text" id="bannerUrlEvento" placeholder="Cole a URL da imagem aqui" />
+  <img id="previewBannerUrl" style="display:none; max-width:300px; margin-top:10px; border-radius:10px;" />
+</div>
 
-      <button type="submit" class="btn">Criar Evento</button>
+
+
+      <button type="submit" class="btn" id="btnCriarEvento">Criar Evento</button>
       <p id="mensagem" class="mensagem"></p>
+      <div id="loader" style="display:none; text-align:center; margin-top:10px;">
+        <i class="fas fa-spinner fa-spin" style="font-size:24px;"></i> Criando evento...
+      </div>
     </form>
   </main>
 
-  <script>
-    function toggleDropdown() {
-      const menu = document.getElementById("dropdown");
-      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-    }
-    window.addEventListener("click", function (e) {
-      const dropdown = document.getElementById("dropdown");
-      const account = document.querySelector(".user-account");
-      if (!account.contains(e.target)) dropdown.style.display = "none";
-    });
-    document.getElementById("menu-icon").addEventListener("click", () => {
-      document.querySelector("header nav ul").classList.toggle("show");
-    });
-  </script>
-
-  <script type="module">
-    import { auth, db, storage } from "../javaScript/firebaseConfig.js";
-    import { inserirDadosComOrganizador } from "../javaScript/inserirDados.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const form = document.getElementById("formCriarEvento");
-    const bannerInput = document.getElementById("bannerArquivo");
-    const previewBanner = document.getElementById("previewBanner");
-    const mensagemEl = document.getElementById("mensagem");
-
-    // Preview do banner
-    if (bannerInput) {
-      bannerInput.addEventListener("change", () => {
-        const file = bannerInput.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            previewBanner.src = reader.result;
-            previewBanner.style.display = "block";
-          };
-          reader.readAsDataURL(file);
-        } else {
-          previewBanner.style.display = "none";
-        }
-      });
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "../login.html";
-        return;
-      }
-
-      try {
-        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
-        if (userDoc.exists()) {
-          const dados = userDoc.data();
-          const userNameEl = document.querySelector(".user-name");
-          if (userNameEl) userNameEl.textContent = dados.nome || "Usuário";
-          document.getElementById("nomeUsuario").value = dados.nome || "";
-          document.getElementById("cpfUsuario").value = dados.cpf || "";
-          document.getElementById("telefoneUsuario").value = dados.telefone || "";
-          document.getElementById("dataNascimentoUsuario").value = dados.dataNascimento || "";
-        }
-      } catch (e) {
-        console.error("Erro ao buscar dados do usuário:", e);
-      }
-
-      if (form) {
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          mensagemEl.textContent = "";
-
-          // Validação dos campos obrigatórios
-          const camposObrigatorios = [
-            { id: "nomeEvento", msg: "Nome do evento é obrigatório." },
-            { id: "descricaoEvento", msg: "Descrição do evento é obrigatória." },
-            { id: "dataEvento", msg: "Data do evento é obrigatória." },
-            { id: "horaEvento", msg: "Hora do evento é obrigatória." },
-            { id: "enderecoEvento", msg: "Endereço do evento é obrigatório." },
-            { id: "tipoEvento", msg: "Categoria do evento é obrigatória." },
-          ];
-
-          for (const campo of camposObrigatorios) {
-            const el = document.getElementById(campo.id);
-            if (!el || !el.value.trim()) {
-              mensagemEl.textContent = campo.msg;
-              mensagemEl.style.color = "red";
-              return;
-            }
-          }
-
-          try {
-            // Upload do banner (se houver)
-            let bannerUrl = "";
-            if (bannerInput && bannerInput.files[0]) {
-              const bannerArquivo = bannerInput.files[0];
-              const storageRef = ref(storage, `banners/${auth.currentUser.uid}_${Date.now()}_${bannerArquivo.name}`);
-              await uploadBytes(storageRef, bannerArquivo);
-              bannerUrl = await getDownloadURL(storageRef);
-            }
-
-            // Monta objeto eventoData
-            const eventoData = {
-              nome: document.getElementById("nomeEvento").value.trim(),
-              descricao: document.getElementById("descricaoEvento").value.trim(),
-              data: document.getElementById("dataEvento").value,
-              hora: document.getElementById("horaEvento").value,
-              preco: parseFloat(document.getElementById("precoEvento").value) || 0,
-              quantidade: parseInt(document.getElementById("quantidadeEvento").value, 10) || 1,
-              endereco: document.getElementById("enderecoEvento").value.trim(),
-              cep: document.getElementById("cepEvento").value.trim(),
-              tipo: document.getElementById("tipoEvento").value.trim(),
-              cnpj: document.getElementById("cnpjEvento").value.trim() || null,
-              bannerUrl,
-              nomeLocal: document.getElementById("nomeEvento").value.trim() // usa o nome do evento como nome do local
-            };
-
-            await inserirDadosComOrganizador(
-              db,
-              auth.currentUser.uid,
-              document.getElementById("nomeUsuario").value,
-              auth.currentUser.email,
-              document.getElementById("telefoneUsuario").value,
-              document.getElementById("cpfUsuario").value,
-              document.getElementById("dataNascimentoUsuario").value,
-              eventoData
-            );
-
-            mensagemEl.textContent = "✅ Evento criado com sucesso!";
-            mensagemEl.style.color = "#2F78E3";
-            form.reset();
-            previewBanner.style.display = "none";
-
-            setTimeout(() => window.location.href = "meusEventos.html", 1200);
-
-          } catch (error) {
-            console.error(error);
-            mensagemEl.textContent = "❌ Erro ao criar evento. Veja o console.";
-            mensagemEl.style.color = "red";
-          }
-        });
-      }
-    });
-  </script>
+  <!-- Scripts -->
+  <script src="../javaScript/criarEvento.js" type="module"></script>
 </body>
 </html>

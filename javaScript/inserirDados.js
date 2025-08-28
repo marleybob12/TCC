@@ -45,25 +45,12 @@ export async function inserirDadosComOrganizador(
     let userData = userSnap.exists() ? userSnap.data() : null;
 
     // Se o usuário existe e não é organizador, promove a organizador
-    if (userData && userData.tipo !== "organizador") {
-      await setDoc(userRef, { tipo: "organizador" }, { merge: true });
-      userData.tipo = "organizador";
-      console.log("✅ Usuário promovido a organizador automaticamente.");
-    }
+if (userData && userData.tipo !== "organizador") {
+  await setDoc(userRef, { tipo: "organizador" }, { merge: true });
+  userData = { ...userData, tipo: "organizador" }; // garante consistência
+  console.log("✅ Usuário promovido a organizador automaticamente.");
+}
 
-    // Se não existe usuário, cria como organizador
-    if (!userData) {
-      await setDoc(userRef, {
-        nome,
-        email,
-        telefone: telefone || null,
-        cpf,
-        dataNascimento,
-        tipo: "organizador",
-        dataCriacao: serverTimestamp()
-      });
-      console.log("✅ Usuário organizador criado com sucesso!");
-    }
 
     // Criar documento em Organizador
     const organizadorRef = await addDoc(collection(db, "Organizador"), {
@@ -94,13 +81,12 @@ export async function inserirDadosComOrganizador(
     }
 
     // Criar Local
-const localRef = await addDoc(collection(db, "Local"), {
-  nome: eventoData.nomeLocal,
-  endereco: eventoData.endereco,
-  cep: eventoData.cep,
-  dataCriacao: serverTimestamp()
-});
-console.log("✅ Local criado com sucesso.");
+    const localRef = await addDoc(collection(db, "Local"), {
+      endereco: eventoData.endereco,
+      cep: eventoData.cep,
+      dataCriacao: serverTimestamp()
+    });
+    console.log("✅ Local criado com sucesso.");
 
 
     // Criar Evento

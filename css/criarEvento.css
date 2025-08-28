@@ -197,6 +197,26 @@ button[type="submit"]:hover {
   margin-top: 10px;
   color: #1673ff;
 }
+/* =========================
+   Banner URL
+========================= */
+#bannerUrlEvento {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d0d7e2;
+  font-size: 1rem;
+  background: #f5f9ff;
+  margin-bottom: 4px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+#bannerUrlEvento:focus {
+  border-color: #1673ff;
+  background: #fff;
+  outline: none;
+}
+
 
 /* =========================
    Responsividade Form
