@@ -45,7 +45,7 @@
 
   <main>
     <h1 style="text-align:center; margin-top:20px; color:#1673ff;">Criar Evento</h1>
-    <form id="formCriarEvento">
+    <form id="formCriarEvento"  method="get" action=".">
       <!-- Dados do Organizador -->
       <h2>Dados do Organizador</h2>
       <div class="form-group">
@@ -94,39 +94,40 @@
       <h2>Local do Evento</h2>
       <div class="form-group">
         <label>CEP:</label>
-        <input type="text" id="cepEvento" class="form-control" required />
+       <input type="text" id="cepEvento" class="form-control" required onblur="pesquisacep(this.value)" />
+
       </div>
       <div class="form-group">
         <label>Estado</label>
-        <select id="tipoEstado" class="form-control" required>
+        <select id="uf" class="form-control" required>
           <option value="">Selecione o estado</option> 
-          <option value="Acre">AC</option>
-          <option value="Alagoas">AL</option> 
-          <option value="Amapa">AP</option>  
-          <option value="Amazonas">AM</option> 
-          <option value="Bahia">BA</option> 
-          <option value="Ceara">CE</option> 
-          <option value="Espirito_Santo">SE</option> 
-          <option value="Goias">GO</option> 
-          <option value="Distrito_Federal">DF</option> 
-          <option value="Maranhao">MA</option> 
-          <option value="Mato_Grosso">MT</option> 
-          <option value="Mato_Grosso_do_Sul">MS</option>
-          <option value="Minas_Gerais">MG</option>
-          <option value="Para">PA</option>
-          <option value="Paraiba">PB</option>
-          <option value="Parana">PR</option>
-          <option value="Pernambuco">PE</option>
-          <option value="Piaui">PI</option>
-          <option value="Rio_de_Janeiro">RJ</option>
-          <option value="Rio_Grande_do_Norte">RN</option> 
-          <option value="Rio_Grande_do_Sul">RS</option> 
-          <option value="Rondonia">RO</option> 
-          <option value="Roraima">RR</option>
-          <option value="Santa_Catarina">SC</option>
-          <option value="Sao_Paulo">SP</option>
-          <option value="Sergipe">SE</option> 
-          <option value="Tocatins">TO</option>            
+          <option value="AC">AC</option>
+          <option value="AL">AL</option> 
+          <option value="AP">AP</option>  
+          <option value="AM">AM</option> 
+          <option value="BA">BA</option> 
+          <option value="CE">CE</option> 
+          <option value="ES">ES</option> 
+          <option value="GO">GO</option> 
+          <option value="DF">DF</option> 
+          <option value="MA">MA</option> 
+          <option value="MT">MT</option> 
+          <option value="MS">MS</option>
+          <option value="MG">MG</option>
+          <option value="PA">PA</option>
+          <option value="PB">PB</option>
+          <option value="PR">PR</option>
+          <option value="PE">PE</option>
+          <option value="PI">PI</option>
+          <option value="RJ">RJ</option>
+          <option value="RN">RN</option> 
+          <option value="RS">RS</option> 
+          <option value="RO">RO</option> 
+          <option value="RR">RR</option>
+          <option value="SC">SC</option>
+          <option value="SP">SP</option>
+          <option value="SE">SE</option> 
+          <option value="TO">TO</option>            
           
         </select>
       </div>
@@ -134,10 +135,14 @@
         <label>Cidade</label>
           <input type="text" id="cidade" class="form-control" required/>
       </div>
+      <div class="form-group">
+        <label>Bairro:</label>
+        <input type="text" id="bairro" class="form-control" required />
+      </div>
 
       <div class="form-group">
         <label>logradouro/Endereço:</label>
-        <input type="text" id="logradouro/Endereço" class="form-control" required />
+        <input type="text" id="rua" class="form-control" required />
       </div>
       <div class="form-group">
         <label>N°:</label>
@@ -198,8 +203,24 @@
       </div>
     </form>
   </main>
-
+  <footer>
+    <p>&copy; 2025 EventFlow. Todos os direitos reservados.</p>
+  </footer>
   <!-- Scripts -->
   <script src="../javaScript/criarEvento.js" type="module"></script>
+  <script src="../javaScript/viacep.js" ></script>
+  <script >
+    document.getElementById("bannerUrlEvento").addEventListener("input", function () {
+  const url = this.value.trim();
+  const img = document.getElementById("previewBannerUrl");
+  if (url) {
+    img.src = url;
+    img.style.display = "block";
+  } else {
+    img.style.display = "none";
+  }
+});
+
+  </script>
 </body>
 </html>
