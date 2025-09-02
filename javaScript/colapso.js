@@ -1,5 +1,4 @@
-  <!-- Script do Acordeão -->
-  <script>
+
     const botoes = document.querySelectorAll('.acordeao-titulo');
     botoes.forEach(botao => {
       botao.addEventListener('click', () => {
@@ -7,4 +6,3 @@
         item.classList.toggle('ativo');
       });
     });
-  </script>
