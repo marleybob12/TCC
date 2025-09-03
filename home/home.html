@@ -135,15 +135,8 @@
     <!-- Favoritos da semana -->
     <section class="favoritos-da-semana" aria-label="Favoritos da semana">
       <h2>Favoritos da semana</h2>
-      <div class="card-glass">
-        <a href="evento.html">
-          <img src="../img/evento3.jpeg" alt="Evento 3">
-          <div class="card-content">
-            <h3>Festival de Música</h3>
-            <p>Data: 15/10/2023</p>
-            <p>Local: Parque Central</p>
-          </div>
-        </a>
+      <div class="cards-container">
+        <!-- Cards do Firestore serão carregados aqui -->
       </div>
     </section>
   </main>
@@ -151,14 +144,14 @@
   <!-- Botão de logout -->
   <button id="logoutBtn" type="button" class="btn btn-logout">Sair</button>
 
-  <!-- Firebase e Auth modularizados -->
+  <!-- Firebase e JS -->
   <script type="module">
     import { auth, db } from "../javaScript/firebaseConfig.js";
     import { logoutUsuario } from "../javaScript/auth.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { doc, getDoc, collection, getDocs  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     
-
+    // Autenticação e exibir nome do usuário
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "../login.html";
@@ -167,19 +160,18 @@
       try {
         const userDoc = await getDoc(doc(db, "Usuario", user.uid));
         if (userDoc.exists()) {
-          const dados = userDoc.data();
-          document.querySelector(".user-name").textContent = dados.nome;
+          document.querySelector(".user-name").textContent = userDoc.data().nome;
         }
       } catch (e) {
         console.error("Erro ao buscar dados do usuário:", e);
       }
     });
 
+    // Logout
     document.getElementById("logoutBtn").addEventListener("click", async () => {
       await logoutUsuario();
       window.location.href = "../login.html";
     });
-
     document.getElementById("dropdownLogout").addEventListener("click", async (e) => {
       e.preventDefault();
       await logoutUsuario();
@@ -189,46 +181,55 @@
     document.getElementById("menu-icon").addEventListener("click", () => {
       document.querySelector("header nav ul").classList.toggle("show");
     });
- 
-  
 
-  const container = document.querySelector(".favoritos-da-semana");
+    // Seleciona o container de favoritos
+    const favoritosSection = document.querySelector(".favoritos-da-semana");
+    let cardsContainer = favoritosSection.querySelector(".cards-container");
+    if (!cardsContainer) {
+      cardsContainer = document.createElement("div");
+      cardsContainer.classList.add("cards-container");
+      favoritosSection.appendChild(cardsContainer);
+    }
 
-  async function carregarEventos() {
-    try {
-      const querySnap = await getDocs(collection(db, "Evento"));
+    // Carregar eventos do Firestore
+    async function carregarEventos() {
+      try {
+        const querySnap = await getDocs(collection(db, "Evento"));
 
-      if (querySnap.empty) {
-        container.innerHTML += "<p>Nenhum evento disponível.</p>";
-        return;
-      }
+        if (querySnap.empty) {
+          cardsContainer.innerHTML = "<p>Nenhum evento disponível.</p>";
+          return;
+        }
 
-      querySnap.forEach((docEvento) => {
-        const evento = docEvento.data();
-        const eventoID = docEvento.id;
-//exibir eventos 
-        container.innerHTML += `
-          <div class="card-glass" style="margin:10px; padding:15px;">
+        querySnap.forEach((docEvento) => {
+          const evento = docEvento.data();
+          const eventoID = docEvento.id;
+
+          const card = document.createElement("div");
+          card.classList.add("card-glass");
+          card.innerHTML = `
             <a href="evento.html?id=${eventoID}">
-              <img src="${evento.imagemBanner || "../img/evento.jpg"}" alt="${evento.titulo}" style="max-height:200px; border-radius:12px;">
+              <img src="${evento.imagemBanner || "../img/evento.jpg"}" 
+                   alt="${evento.titulo}" style="max-height:200px; border-radius:12px;">
               <div class="card-content">
                 <h3>${evento.titulo}</h3>
-                <p><b>Data:</b> ${new Date(evento.dataInicio.seconds * 1000).toLocaleDateString()}</p>
+                <p><b>Data:</b> ${evento.dataInicio ? new Date(evento.dataInicio.seconds * 1000).toLocaleDateString() : "A definir"}</p>
                 <p><b>Local:</b> ${evento.local || "A definir"}</p>
               </div>
             </a>
-          </div>
-        `;
-      });
-    } catch (err) {
-      console.error("Erro ao carregar eventos:", err);
-      container.innerHTML += "<p>Erro ao carregar eventos.</p>";
+          `;
+          cardsContainer.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Erro ao carregar eventos:", err);
+        cardsContainer.innerHTML = "<p>Erro ao carregar eventos.</p>";
+      }
     }
-  }
 
-  carregarEventos();
-</script>
+    carregarEventos();
+  </script>
 
+  <!-- Dropdown -->
   <script>
     function toggleDropdown() {
       const menu = document.getElementById("dropdown");
@@ -250,46 +251,41 @@
       navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
       freeMode: true,
       grabCursor: true,
-      breakpoints: { 0: { slidesPerView: 2 }, 480: { slidesPerView: 3 }, 768: { slidesPerView: 5 }, 1024: { slidesPerView: 7 } }
+      breakpoints: { 
+        0: { slidesPerView: 2 }, 
+        480: { slidesPerView: 3 }, 
+        768: { slidesPerView: 5 }, 
+        1024: { slidesPerView: 7 } 
+      }
     });
   </script>
 
   <!-- Rodapé -->
->
-<footer>
-  <div class="footer-container">
-    <!-- Sobre -->
-    <div class="footer-section">
-      <h3>Sobre o EventFlow</h3>
-      <p>Facilitando e transformando a experiência de planejar e realizar eventos de forma prática e acessível.</p>
-    </div>
-
-    <!-- Links úteis -->
-    <div class="footer-section">
-      <h3>Links</h3>
-      <ul>
-        <li><a href="#sobre">Sobre</a></li>
-        <li><a href="#politica">Política de Privacidade</a></li>
-        <li><a href="#termos">Termos de Serviço</a></li>
-      </ul>
-    </div>
-
-    <!-- Redes sociais -->
-    <div class="footer-section">
-      <h3>Siga-nos</h3>
-      <div class="social-media">
-        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>Sobre o EventFlow</h3>
+        <p>Facilitando e transformando a experiência de planejar e realizar eventos de forma prática e acessível.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Links</h3>
+        <ul>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#politica">Política de Privacidade</a></li>
+          <li><a href="#termos">Termos de Serviço</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Siga-nos</h3>
+        <div class="social-media">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Direitos autorais -->
-  <p class="copyright">&copy; 2025 DevGeneration. Todos os direitos reservados.</p>
-</footer>
-
+    <p class="copyright">&copy; 2025 DevGeneration. Todos os direitos reservados.</p>
+  </footer>
 
 </body>
 </html>
-
