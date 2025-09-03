@@ -1,5 +1,4 @@
 
-
     const botoes = document.querySelectorAll('.acordeao-titulo');
     botoes.forEach(botao => {
       botao.addEventListener('click', () => {
