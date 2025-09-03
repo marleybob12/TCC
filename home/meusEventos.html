@@ -5,6 +5,7 @@
   <title>Meus Eventos - EventFlow</title>
   <link rel="stylesheet" href="../css/stylesMeusEventos.css" />
   <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
   <header>
@@ -12,18 +13,72 @@
       <a href="../home/home.html" class="logo">
         <img src="../img/logo_barra.png" alt="Logo EventFlow" />
       </a>
-      <h1>Meus Eventos</h1>
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="nav-links" aria-label="Menu principal">
+        <ul>
+          <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
+          <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
+          <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
+          <li><a href="home.html" class="btn">EventFlow</a></li>
+          <li>
+            <div class="user-dropdown">
+              <div class="user-account" onclick="toggleDropdown()">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+                <span class="user-name">Usuário</span>
+                <span class="arrow">▾</span>
+              </div>
+              <div class="dropdown-menu" id="dropdown" style="display:none;">
+                <a href="perfil.html">👤 Perfil</a>
+                <a href="config.html">⚙️ Configurações</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
     </div>
   </header>
 
   <main>
+    <h1>Meus Eventos</h1>
     <div id="listaEventos" class="eventos-lista"></div>
   </main>
 
+  <button id="logoutBtn" type="button" class="btn btn-logout">Sair</button>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>Sobre o EventFlow</h3>
+        <p>Facilitando e transformando a experiência de planejar e realizar eventos de forma prática e acessível.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Links</h3>
+        <ul>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#politica">Política de Privacidade</a></li>
+          <li><a href="#termos">Termos de Serviço</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Siga-nos</h3>
+        <div class="social-media">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    <p class="copyright">&copy; 2025 DevGeneration. Todos os direitos reservados.</p>
+  </footer>
+
   <script type="module">
     import { auth, db } from "../javaScript/firebaseConfig.js";
+    import { logoutUsuario } from "../javaScript/auth.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const lista = document.getElementById("listaEventos");
 
@@ -31,6 +86,13 @@
       if (!user) return window.location.href = "../login.html";
 
       try {
+        // Atualiza nome do usuário no menu
+        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
+        if (userDoc.exists()) {
+          const dados = userDoc.data();
+          document.querySelector(".user-name").textContent = dados.nome || "Usuário";
+        }
+
         // Busca eventos onde o organizador é o usuário logado
         const q = query(collection(db, "Evento"), where("organizadorID", "==", user.uid));
         const querySnap = await getDocs(q);
@@ -47,8 +109,8 @@
           lista.innerHTML += `
             <div class="card-glass" style="margin:10px; padding:15px;">
               <h3>${evento.titulo}</h3>
-              <p><b>Data:</b> ${new Date(evento.dataInicio.seconds * 1000).toLocaleDateString()}</p>
-              <p><b>Status:</b> ${evento.status}</p>
+              <p><b>Data:</b> ${evento.dataInicio ? new Date(evento.dataInicio.seconds * 1000).toLocaleDateString() : "A definir"}</p>
+              <p><b>Status:</b> ${evento.status || "A definir"}</p>
               <a class="btn" href="evento.html?id=${eventoID}">🔍 Ver Detalhes</a>
             </div>
           `;
@@ -57,6 +119,33 @@
         console.error("Erro ao buscar eventos:", err);
         lista.innerHTML = "<p>Erro ao carregar seus eventos.</p>";
       }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await logoutUsuario();
+      window.location.href = "../login.html";
+    });
+
+    document.getElementById("dropdownLogout").addEventListener("click", async (e) => {
+      e.preventDefault();
+      await logoutUsuario();
+      window.location.href = "../login.html";
+    });
+
+    document.getElementById("menu-icon").addEventListener("click", () => {
+      document.querySelector("header nav ul").classList.toggle("show");
+    });
+  </script>
+
+  <script>
+    function toggleDropdown() {
+      const menu = document.getElementById("dropdown");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+    window.addEventListener("click", function (e) {
+      const dropdown = document.getElementById("dropdown");
+      const account = document.querySelector(".user-account");
+      if (!account.contains(e.target)) dropdown.style.display = "none";
     });
   </script>
 </body>
