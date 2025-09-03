@@ -1,0 +1,190 @@
+/* Importação da fonte Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* Reset básico e fonte padrão para todo o documento */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Body configurado para ocupar toda a altura da tela, fundo com degradê e centralização do conteúdo com flexbox */
+body {
+  height: 100vh;
+  background: linear-gradient(135deg, #2F78E3, #5251E8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Container principal do formulário de login */
+/* Branco, largura máxima de 900px (95% em telas pequenas), arredondado e com sombra suave */
+/* Usa flexbox para dividir em duas partes e permite quebra para responsividade */
+.login-container {
+  background-color: white;
+  width: 900px;
+  max-width: 95%;
+  border-radius: 10px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+/* Divisão da área esquerda e direita do container */
+/* Flex 1 para ocuparem espaços iguais */
+/* Centralizam conteúdo com flexbox em coluna */
+/* Define largura mínima para evitar colapsar muito em telas pequenas */
+.login-esquerda,
+.login-direita {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+/* Estilo da imagem no lado esquerdo */
+/* Define largura máxima para manter proporção e limitar tamanho */
+.login-esquerda img {
+  width: 80%;
+  max-width: 250px;
+}
+
+/* Título da seção de login */
+/* Define tamanho, espaçamento e cor conforme paleta do EventFlow */
+.login-direita h2 {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  color: #2F78E3;
+}
+
+/* Grupo de inputs com espaçamento inferior para separar os campos */
+.input-group {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Inputs com largura total do container, padding confortável e bordas arredondadas */
+/* Fundo claro, fonte legível e transição suave para o foco */
+.input-group input {
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid #199BD9;
+  border-radius: 30px;
+  background-color: #F0F8FF;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s;
+}
+
+/* Efeito de foco nos inputs: borda e sombra azul para destacar o campo ativo */
+.input-group input:focus {
+  border-color: #09B3CF;
+  box-shadow: 0 0 8px rgba(9, 179, 207, 0.4);
+}
+
+/* Botão de login com largura total, padding confortável e bordas arredondadas */
+/* Degradê azul, texto branco, sombra e transição suave para hover */
+.login-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #09B3CF, #199BD9);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(9, 179, 207, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* Hover do botão de login */
+/* Inverte degradê, aumenta sombra e aplica leve movimento para cima */
+.login-btn:hover {
+  background: linear-gradient(135deg, #199BD9, #2F78E3);
+  box-shadow: 0 6px 18px rgba(9, 179, 207, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Textos abaixo dos campos, como links "Esqueceu senha?" e "Criar conta" */
+/* Tamanho menor e cor neutra para não competir com elementos principais */
+.esqueceu,
+.criar-conta {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Link "Esqueceu a senha?" com cor da paleta roxa e efeito hover sublinhado */
+.esqueceu a {
+  color: #7D2AE7;
+  text-decoration: none;
+}
+
+.esqueceu a:hover {
+  text-decoration: underline;
+}
+
+/* Botão "Criar conta" com estilo diferenciado */
+/* Degradê roxo/azul da paleta EventFlow, texto branco, arredondado e sombra */
+/* Transição suave para hover */
+.criar-conta-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #5251E8, #7D2AE7);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(82, 81, 232, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* Hover do botão "Criar conta" */
+/* Inverte degradê, aumenta sombra e aplica leve movimento para cima */
+.criar-conta-btn:hover {
+  background: linear-gradient(135deg, #2F78E3, #5251E8);
+  box-shadow: 0 6px 18px rgba(82, 81, 232, 0.4);
+  transform: translateY(-2px);
+}
+.google-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #5251E8, #7D2AE7);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(82, 81, 232, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* Responsividade para telas menores que 768px */
+/* Container vira coluna e padding reduzido */
+/* Esconde o lado esquerdo para otimizar espaço em telas pequenas */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .login-direita {
+    width: 100%;
+  }
+
+  .login-esquerda {
+    display: none;
+  }
+}

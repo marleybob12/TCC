@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Meus Eventos - EventFlow</title>
+  <link rel="stylesheet" href="../css/stylesMeusEventos.css" />
+  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="../home/home.html" class="logo">
+        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+      </a>
+      <h1>Meus Eventos</h1>
+    </div>
+  </header>
+
+  <main>
+    <div id="listaEventos" class="eventos-lista"></div>
+  </main>
+
+  <script type="module">
+    import { auth, db } from "../javaScript/firebaseConfig.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const lista = document.getElementById("listaEventos");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return window.location.href = "../login.html";
+
+      try {
+        // Busca eventos onde o organizador é o usuário logado
+        const q = query(collection(db, "Evento"), where("organizadorID", "==", user.uid));
+        const querySnap = await getDocs(q);
+
+        if (querySnap.empty) {
+          lista.innerHTML = "<p>Você ainda não criou nenhum evento.</p>";
+          return;
+        }
+
+        querySnap.forEach((docEvento) => {
+          const evento = docEvento.data();
+          const eventoID = docEvento.id;
+
+          lista.innerHTML += `
+            <div class="card-glass" style="margin:10px; padding:15px;">
+              <h3>${evento.titulo}</h3>
+              <p><b>Data:</b> ${new Date(evento.dataInicio.seconds * 1000).toLocaleDateString()}</p>
+              <p><b>Status:</b> ${evento.status}</p>
+              <a class="btn" href="evento.html?id=${eventoID}">🔍 Ver Detalhes</a>
+            </div>
+          `;
+        });
+      } catch (err) {
+        console.error("Erro ao buscar eventos:", err);
+        lista.innerHTML = "<p>Erro ao carregar seus eventos.</p>";
+      }
+    });
+  </script>
+</body>
+</html>

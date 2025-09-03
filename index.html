@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Eventflow - Gerenciamento de Eventos</title>
+  <!-- CSS completo integrado -->
+  <link rel="stylesheet" href="css/estilo-moderno.css" />
+  <!-- FontAwesome para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Ícone da aba -->
+  <link rel="icon" href="img/logo_colorida_cortada.png" type="image/png" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <img src="img/logo_barra.png" alt="Eventflow Logo" />
+    </div>
+    <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+    <nav class="nav-links" id="nav-links">
+      <a href="#sobre">Sobre</a>
+      <a href="#funcionalidades">Funcionalidades</a>
+      <a href="#contato">Contato</a>
+      <a href="login.html" class="login">Login/Cadastro</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" role="banner">
+    <div class="hero-content">
+      <h1>Gerencie seus eventos de forma simples e eficiente</h1>
+      <p>Com o Eventflow, você organiza, gerencia e executa eventos com facilidade, em qualquer lugar.</p>
+      <div class="hero-buttons">
+        <a href="#cadastro" class="btn-primary">Experimente agora</a>
+        <a href="#sobre" class="btn-secondary">Saiba mais</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section id="sobre" tabindex="-1">
+    <div class="sobre-container">
+      <h2>Sobre o Eventflow</h2>
+      <p class="descricao">
+        O <strong>Eventflow</strong> é uma plataforma moderna e intuitiva criada para simplificar o planejamento,
+        organização e gestão de eventos de todos os tamanhos.
+      </p>
+      <p class="descricao">
+        Com funcionalidades como gestão de convidados, controle de presença, personalização de convites, relatórios em tempo real e muito mais.
+      </p>
+      <p class="impacto"><strong>Sua jornada para eventos mais inteligentes e impactantes começa aqui!</strong></p>
+    </div>
+  </section>
+
+  <!-- MISSÃO, META E VALORES -->
+  <section id="missao-valores" tabindex="-1">
+    <h2>Nossa Meta, Missão e Valores</h2>
+    <div class="acordeao-container">
+      <div class="acordeao-item">
+        <button class="acordeao-titulo" aria-expanded="false" aria-controls="meta-content" id="meta-btn">
+          <i class="fas fa-bullseye"></i> Meta
+        </button>
+        <div class="acordeao-conteudo" id="meta-content" role="region" aria-labelledby="meta-btn" hidden>
+          <p>Nossa meta é tornar o EventFlow a plataforma líder no Brasil para soluções completas de gerenciamento de eventos, sendo reconhecida como referência em inovação tecnológica, excelência na usabilidade e capacidade de gerar impacto social positivo, oferecendo ferramentas que simplificam o planejamento, fortalecem a organização e promovem experiências memoráveis para todos os envolvidos.</p>
+        </div>
+      </div>
+      <div class="acordeao-item">
+        <button class="acordeao-titulo" aria-expanded="false" aria-controls="missao-content" id="missao-btn">
+          <i class="fas fa-rocket"></i> Missão
+        </button>
+        <div class="acordeao-conteudo" id="missao-content" role="region" aria-labelledby="missao-btn" hidden>
+          <p>Nosso objetivo é facilitar e transformar toda a experiência de planejar, organizar e executar eventos, oferecendo uma plataforma intuitiva, prática e acessível, que permite gerenciar convidados, personalizar convites, acompanhar confirmações e analisar relatórios em tempo real, garantindo que cada evento seja planejado de forma eficiente, sem complicações e com total controle.</p>
+        </div>
+      </div>
+      <div class="acordeao-item">
+        <button class="acordeao-titulo" aria-expanded="false" aria-controls="valores-content" id="valores-btn">
+          <i class="fas fa-lightbulb"></i> Valores
+        </button>
+        <div class="acordeao-conteudo" id="valores-content" role="region" aria-labelledby="valores-btn" hidden>
+        <p>
+            <strong>Inovação:</strong> Estamos em constante evolução...<br>
+            <strong>Usabilidade:</strong> Foco na experiência do usuário...<br>
+            <strong>Praticidade:</strong> Valorizamos a simplicidade...<br>
+            <strong>Impacto Social:</strong> Compromisso com a comunidade...<br>
+            <strong>Transparência:</strong> Comunicação clara e aberta...<br> 
+            <strong>Comprometimento:</strong> Foco total no sucesso do usuário.<br>
+            <strong>Segurança:</strong> Proteção de dados e privacidade.<br>
+            <strong>Colaboração:</strong> Valorizamos o trabalho em equipe.<br>
+            <strong>Acessibilidade:</strong> Ferramentas para todos.<br>
+            <strong>Empatia:</strong> Entendemos as necessidades do usuário.<br>
+            <strong>Responsabilidade:</strong> Compromisso ético com a privacidade.<br>
+            <strong>Excelência:</strong> Busca constante pela qualidade.<br>
+        </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUNCIONALIDADES -->
+  <section id="funcionalidades" tabindex="-1">
+    <h2>Funcionalidades do Eventflow</h2>
+    <div class="funcionalidades">
+      <div class="funcao">
+        <img src="img/Tela_participante_ampliada.png" alt="Convidados" />
+        <h3>Gestão de Convidados</h3>
+        <p>Controle de lista de convidados, confirmações e muito mais.</p>
+      </div>
+      <div class="funcao">
+        <img src="img/personalização.png" alt="Personalização" />
+        <h3>Personalização Completa</h3>
+        <p>Crie eventos personalizados para atender às suas necessidades.</p>
+      </div>
+      <div class="funcao">
+        <img src="img/relatorio (1).png" alt="Relatórios" />
+        <h3>Relatórios e Análises</h3>
+        <p>Acompanhe o desempenho do seu evento com relatórios detalhados.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section id="cta-final" tabindex="-1">
+    <h2>Pronto para gerenciar seus eventos?</h2>
+    <p>Baixe o aplicativo agora e comece a criar eventos incríveis.</p>
+    <a href="#cadastro" class="cta">Baixe o App</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <ul>
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#política">Política de Privacidade</a></li>
+      <li><a href="#termos">Termos de Serviço</a></li>
+    </ul>
+    <div id="contato" class="social-media">
+      <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </footer>
+
+  <!-- JS INTERATIVO -->
+  <script>
+    // ===== ACORDEÃO =====
+    const botoes = document.querySelectorAll('.acordeao-titulo');
+    botoes.forEach(botao => {
+      botao.addEventListener('click', () => {
+        const item = botao.parentElement;
+        const conteudo = botao.nextElementSibling;
+        const ativo = item.classList.toggle('ativo');
+        conteudo.hidden = !ativo;
+        botao.setAttribute('aria-expanded', ativo);
+      });
+    });
+
+    // ===== MENU RESPONSIVO =====
+    const menuIcon = document.getElementById('menu-icon');
+    const navLinks = document.getElementById('nav-links');
+
+    menuIcon.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      const expanded = menuIcon.getAttribute('aria-expanded') === 'true' || false;
+      menuIcon.setAttribute('aria-expanded', !expanded);
+    });
+  </script>
+</body>
+</html>

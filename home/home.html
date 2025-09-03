@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>EventFlow - Home</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/stylesHome.css" />
+  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Fonte Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- SwiperJS CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+</head>
+<body>
+  
+  <!-- Header com glassmorphism -->
+  <header>
+    <div class="header-container">
+      <a href="../home/home.html" class="logo">
+        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+      </a>
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="nav-links" aria-label="Menu principal">
+        <ul>
+          <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
+          <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
+          <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
+          <li><a href="home.html" class="btn">EventFlow</a></li>
+          <li>
+            <div class="user-dropdown">
+              <div class="user-account" onclick="toggleDropdown()">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+                <span class="user-name">Usuário</span>
+                <span class="arrow">▾</span>
+              </div>
+              <div class="dropdown-menu" id="dropdown" style="display:none;">
+                <a href="perfil.html">👤 Perfil</a>
+                <a href="config.html">⚙️ Configurações</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero (boas-vindas) -->
+    <section class="hero" aria-label="Boas-vindas">
+      <h1>Bem-vindo ao EventFlow 🎉</h1>
+      <p>Você está logado. Em breve seus eventos aparecerão aqui.</p>
+    </section>
+
+    <!-- Carrossel principal -->
+    <section class="carrosel">
+      <div id="demo" class="carousel slide" data-ride="carousel">
+        <ul class="carousel-indicators">
+          <li data-target="#demo" data-slide-to="0" class="active"></li>
+          <li data-target="#demo" data-slide-to="1"></li>
+          <li data-target="#demo" data-slide-to="2"></li>
+        </ul>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="../img/evento.jpg" alt="Evento 1">
+          </div>
+          <div class="carousel-item">
+            <img src="../img/evento1.png" alt="Evento 2">
+          </div>
+          <div class="carousel-item">
+            <img src="../img/evento2.jpeg" alt="Evento 3">
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#demo" data-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Explorar eventos (SwiperJS) -->
+    <section class="explorer" aria-label="Explorar eventos">
+      <h2>Explorar nossos eventos</h2>
+      <div class="eventos-categoria">
+        <div class="swiper categoria-swiper">
+          <div class="swiper-wrapper">
+            <!-- Categorias -->
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-headphones"></i><br>Música</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-volleyball"></i><br>Esportes</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-masks-theater"></i><br>Teatro e Espetáculos</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-microchip"></i><br>Tecnologia</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-palette"></i><br>Artes</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-burger"></i><br>Gastronomia</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-user-tie"></i><br>Negócios</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-school"></i><br>Educação</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-heart"></i><br>Saúde</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-shirt"></i><br>Moda</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-champagne-glasses"></i><br>Festas e Shows</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-laugh"></i><br>Stand up Comedy</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-child"></i><br>Infantil</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-people-group"></i><br>Passeios para toda família</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-globe"></i><br>Festas Típicas</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-handshake"></i><br>Convenções</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-gamepad"></i><br>Games</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-dumbbell"></i><br>Fitness</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-users"></i><br>Encontros Sociais</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-mug-hot"></i><br>Cafés e Networking</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-calendar-days"></i><br>Workshops</button></div>
+            <div class="swiper-slide"><button class="btn-categoria"><i class="fa-solid fa-music"></i><br>Festivais</button></div>
+          </div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Favoritos da semana -->
+    <section class="favoritos-da-semana" aria-label="Favoritos da semana">
+      <h2>Favoritos da semana</h2>
+      <div class="card-glass">
+        <a href="evento.html">
+          <img src="../img/evento3.jpeg" alt="Evento 3">
+          <div class="card-content">
+            <h3>Festival de Música</h3>
+            <p>Data: 15/10/2023</p>
+            <p>Local: Parque Central</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Botão de logout -->
+  <button id="logoutBtn" type="button" class="btn btn-logout">Sair</button>
+
+  <!-- Firebase e Auth modularizados -->
+  <script type="module">
+    import { auth, db } from "../javaScript/firebaseConfig.js";
+    import { logoutUsuario } from "../javaScript/auth.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, getDoc, collection, getDocs  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "../login.html";
+        return;
+      }
+      try {
+        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
+        if (userDoc.exists()) {
+          const dados = userDoc.data();
+          document.querySelector(".user-name").textContent = dados.nome;
+        }
+      } catch (e) {
+        console.error("Erro ao buscar dados do usuário:", e);
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await logoutUsuario();
+      window.location.href = "../login.html";
+    });
+
+    document.getElementById("dropdownLogout").addEventListener("click", async (e) => {
+      e.preventDefault();
+      await logoutUsuario();
+      window.location.href = "../login.html";
+    });
+
+    document.getElementById("menu-icon").addEventListener("click", () => {
+      document.querySelector("header nav ul").classList.toggle("show");
+    });
+ 
+  
+
+  const container = document.querySelector(".favoritos-da-semana");
+
+  async function carregarEventos() {
+    try {
+      const querySnap = await getDocs(collection(db, "Evento"));
+
+      if (querySnap.empty) {
+        container.innerHTML += "<p>Nenhum evento disponível.</p>";
+        return;
+      }
+
+      querySnap.forEach((docEvento) => {
+        const evento = docEvento.data();
+        const eventoID = docEvento.id;
+//exibir eventos 
+        container.innerHTML += `
+          <div class="card-glass" style="margin:10px; padding:15px;">
+            <a href="evento.html?id=${eventoID}">
+              <img src="${evento.imagemBanner || "../img/evento.jpg"}" alt="${evento.titulo}" style="max-height:200px; border-radius:12px;">
+              <div class="card-content">
+                <h3>${evento.titulo}</h3>
+                <p><b>Data:</b> ${new Date(evento.dataInicio.seconds * 1000).toLocaleDateString()}</p>
+                <p><b>Local:</b> ${evento.local || "A definir"}</p>
+              </div>
+            </a>
+          </div>
+        `;
+      });
+    } catch (err) {
+      console.error("Erro ao carregar eventos:", err);
+      container.innerHTML += "<p>Erro ao carregar eventos.</p>";
+    }
+  }
+
+  carregarEventos();
+</script>
+
+  </script>
+
+  <script>
+    function toggleDropdown() {
+      const menu = document.getElementById("dropdown");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+    window.addEventListener("click", function (e) {
+      const dropdown = document.getElementById("dropdown");
+      const account = document.querySelector(".user-account");
+      if (!account.contains(e.target)) dropdown.style.display = "none";
+    });
+  </script>
+
+  <!-- SwiperJS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    new Swiper('.categoria-swiper', {
+      slidesPerView: 'auto',
+      spaceBetween: 16,
+      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+      freeMode: true,
+      grabCursor: true,
+      breakpoints: { 0: { slidesPerView: 2 }, 480: { slidesPerView: 3 }, 768: { slidesPerView: 5 }, 1024: { slidesPerView: 7 } }
+    });
+  </script>
+
+  <!-- Rodapé -->
+>
+<footer>
+  <div class="footer-container">
+    <!-- Sobre -->
+    <div class="footer-section">
+      <h3>Sobre o EventFlow</h3>
+      <p>Facilitando e transformando a experiência de planejar e realizar eventos de forma prática e acessível.</p>
+    </div>
+
+    <!-- Links úteis -->
+    <div class="footer-section">
+      <h3>Links</h3>
+      <ul>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#politica">Política de Privacidade</a></li>
+        <li><a href="#termos">Termos de Serviço</a></li>
+      </ul>
+    </div>
+
+    <!-- Redes sociais -->
+    <div class="footer-section">
+      <h3>Siga-nos</h3>
+      <div class="social-media">
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Direitos autorais -->
+  <p class="copyright">&copy; 2025 DevGeneration. Todos os direitos reservados.</p>
+</footer>
+
+
+</body>
+</html>
+

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Criar Evento - EventFlow</title>
+  <link rel="stylesheet" href="../css/criarEvento.css" />
+  <link rel="stylesheet" href="../css/stylesHome.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="../home/home.html" class="logo">
+        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+      </a>
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="nav-links" aria-label="Menu principal">
+        <ul>
+          <li><a href="criarEvento.html" class="btn active">Criar eventos</a></li>
+          <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
+          <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
+          <li><a href="home.html" class="btn">EventFlow</a></li>
+          <li>
+            <div class="user-dropdown">
+              <div class="user-account" onclick="toggleDropdown()">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+                <span class="user-name">Usuário</span>
+                <span class="arrow">▾</span>
+              </div>
+              <div class="dropdown-menu" id="dropdown" style="display:none;">
+                <a href="perfil.html">👤 Perfil</a>
+                <a href="config.html">⚙️ Configurações</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1 style="text-align:center; margin-top:20px; color:#1673ff;">Criar Evento</h1>
+    <form id="formCriarEvento"  method="get" action=".">
+      <!-- Dados do Organizador -->
+      <h2>Dados do Organizador</h2>
+      <div class="form-group">
+        <label>Nome:</label>
+        <input type="text" id="nomeUsuario" class="form-control" required readonly />
+      </div>
+      <div class="form-group">
+        <label>CPF:</label>
+        <input type="text" id="cpfUsuario" class="form-control" required readonly />
+      </div>
+      <div class="form-group">
+        <label>Telefone:</label>
+        <input type="text" id="telefoneUsuario" class="form-control" required readonly />
+      </div>
+      <div class="form-group">
+        <label>Data de Nascimento:</label>
+        <input type="date" id="dataNascimentoUsuario" class="form-control" required readonly />
+      </div>
+
+      <!-- Dados do Evento -->
+      <h2>Dados do Evento</h2>
+      <div class="form-group">
+        <label>Nome do Evento:</label>
+        <input type="text" id="nomeEvento" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label>Descrição:</label>
+        <textarea id="descricaoEvento" class="form-control" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Data do Evento:</label>
+        <input type="date" id="dataEvento" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label>Hora do Evento:</label>
+        <input type="time" id="horaEvento" class="form-control" required />
+      </div>
+
+      <!-- Ingressos -->
+<h2>Ingressos</h2>
+<div id="listaIngressos" class="form-group"></div>
+<button type="button" id="addIngressoBtn" class="btn">+ Adicionar Ingresso</button>
+
+
+      <!-- Local -->
+      <h2>Local do Evento</h2>
+      <div class="form-group">
+        <label>CEP:</label>
+       <input type="text" id="cepEvento" class="form-control" required onblur="pesquisacep(this.value)" />
+
+      </div>
+      <div class="form-group">
+        <label>Estado</label>
+        <select id="uf" class="form-control" required>
+          <option value="">Selecione o estado</option> 
+          <option value="AC">AC</option>
+          <option value="AL">AL</option> 
+          <option value="AP">AP</option>  
+          <option value="AM">AM</option> 
+          <option value="BA">BA</option> 
+          <option value="CE">CE</option> 
+          <option value="ES">ES</option> 
+          <option value="GO">GO</option> 
+          <option value="DF">DF</option> 
+          <option value="MA">MA</option> 
+          <option value="MT">MT</option> 
+          <option value="MS">MS</option>
+          <option value="MG">MG</option>
+          <option value="PA">PA</option>
+          <option value="PB">PB</option>
+          <option value="PR">PR</option>
+          <option value="PE">PE</option>
+          <option value="PI">PI</option>
+          <option value="RJ">RJ</option>
+          <option value="RN">RN</option> 
+          <option value="RS">RS</option> 
+          <option value="RO">RO</option> 
+          <option value="RR">RR</option>
+          <option value="SC">SC</option>
+          <option value="SP">SP</option>
+          <option value="SE">SE</option> 
+          <option value="TO">TO</option>            
+          
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Cidade</label>
+          <input type="text" id="cidade" class="form-control" required/>
+      </div>
+      <div class="form-group">
+        <label>Bairro:</label>
+        <input type="text" id="bairro" class="form-control" required />
+      </div>
+
+      <div class="form-group">
+        <label>logradouro/Endereço:</label>
+        <input type="text" id="rua" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label>N°:</label>
+        <input type="text" id="numero" class="form-control" required />
+      </div>
+      
+      
+      <!-- Categoria e Banner -->
+      <div class="form-group">
+        <label>Categoria:</label>
+        <select id="tipoEvento" class="form-control" required>
+          <option value="">Selecione uma categoria</option>
+          <option value="Musica">Música</option>
+          <option value="Palestra">Palestra</option>
+          <option value="Seminario">Seminário</option>
+          <option value="Esportes">Esportes</option>
+          <option value="Teatro_e_Espetaculos">Teatro e Espetáculos</option>
+          <option value="Tecnologia">Tecnologia</option>
+          <option value="Artes">Artes</option>
+          <option value="Gastronomia">Gastronomia</option>
+          <option value="Negocios">Negócios</option>
+          <option value="Educacao">Educação</option>
+          <option value="Saude">Saúde</option>
+          <option value="Moda">Moda</option>
+          <option value="Festas_e_Shows">Festas e Shows</option>
+          <option value="Stand_up_Comedy">Stand up Comedy</option>
+          <option value="Infantil">Infantil</option>
+          <option value="Passeios_para_toda_familia">Passeios para toda família</option>
+          <option value="Festas_Tipicas">Festas Típicas</option>
+          <option value="Convencoes">Convenções</option>
+          <option value="Games">Games</option>
+          <option value="Fitness">Fitness</option>
+          <option value="Encontros_Sociais">Encontros Sociais</option>
+          <option value="Cafes_e_Network">Cafés e Networking</option>
+          <option value="Workshops">Workshops</option>
+          <option value="Festivais">Festivais</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>CNPJ (Opcional):</label>
+        <input type="text" id="cnpjEvento" class="form-control" placeholder="00.000.000/0000-00" />
+      </div>
+
+   <div class="form-group">
+  <label for="bannerUrlEvento">URL do Banner:</label>
+  <input type="text" id="bannerUrlEvento" placeholder="Cole a URL da imagem aqui" />
+  <img id="previewBannerUrl" style="display:none; max-width:300px; margin-top:10px; border-radius:10px;" />
+</div>
+
+
+
+      <button type="submit" class="btn" id="btnCriarEvento">Criar Evento</button>
+      <p id="mensagem" class="mensagem"></p>
+      <div id="loader" style="display:none; text-align:center; margin-top:10px;">
+        <i class="fas fa-spinner fa-spin" style="font-size:24px;"></i> Criando evento...
+      </div>
+    </form>
+  </main>
+  <footer>
+    <p>&copy; 2025 EventFlow. Todos os direitos reservados.</p>
+  </footer>
+  <!-- Scripts -->
+  <script src="../javaScript/criarEvento.js" type="module"></script>
+  <script src="../javaScript/viacep.js" ></script>
+  <script >
+    document.getElementById("bannerUrlEvento").addEventListener("input", function () {
+  const url = this.value.trim();
+  const img = document.getElementById("previewBannerUrl");
+  if (url) {
+    img.src = url;
+    img.style.display = "block";
+  } else {
+    img.style.display = "none";
+  }
+});
+
+  </script>
+</body>
+</html>

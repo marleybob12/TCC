@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>DevGeneration - Home</title>
+  <link rel="stylesheet" href="../css/styles_Dev.css">
+</head>
+<body>
+
+<!-- ======= CABEÇALHO ======= -->
+<header>
+  <div class="container">
+    <h1>DevGeneration</h1>
+    <nav>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#projetos">Projetos</a></li>
+        <li><a href="#contato">Contato</a></li>
+        <li><a href="../cadastro.html" class="btn">EventFlow</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- ======= HERO ======= -->
+<main>
+  <section class="hero">
+    <h2>Transformamos ideias em soluções inovadoras</h2>
+    <p>A DevGeneration cria softwares com tecnologia de ponta e design moderno.</p>
+    <a href="#projetos" class="btn">Conheça nossos Projetos</a>
+  </section>
+</main>
+
+<!-- ======= SOBRE NÓS ======= -->
+<section id="sobre" class="section-card">
+  <h2>Sobre Nós</h2>
+  <p>
+    A nossa empresa nasceu em 2025, a partir de um projeto inovador desenvolvido como
+    Trabalho de Conclusão de Curso (TCC). O objetivo sempre foi transformar ideias em
+    soluções reais e impactantes, com foco em inovação, qualidade e criatividade.
+  </p>
+</section>
+
+<!-- ======= NOSSOS PROJETOS ======= -->
+<section id="projetos" class="section-card">
+  <h2>Nossos Projetos</h2>
+  <p>
+    Nosso projeto mais recente é o <strong>EventFlow</strong>, uma solução inovadora de
+    gerenciamento de eventos que proporciona praticidade, organização e eficiência.
+    Ideal para ambientes corporativos, acadêmicos ou sociais.
+  </p>
+</section>
+
+<!-- ======= ENTRE EM CONTATO ======= -->
+<section id="contato" class="section-card">
+  <h2>Entre em Contato</h2>
+  <form id="formContato">
+    <input type="text" id="contatoNome" placeholder="Seu nome" required>
+    <input type="email" id="contatoEmail" placeholder="Seu e-mail" required>
+    <textarea id="mensagem" placeholder="Sua mensagem" rows="4" required></textarea>
+    <button type="submit" class="btn">Enviar Mensagem</button>
+    <p id="statusMsg"></p>
+  </form>
+</section>
+
+<!-- ======= SCRIPT FIREBASE ======= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
+    authDomain: "eventflow-87d51.firebaseapp.com",
+    projectId: "eventflow-87d51",
+    storageBucket: "eventflow-87d51.firebasestorage.app",
+    messagingSenderId: "1060995756519",
+    appId: "1:1060995756519:web:1963ecc800497812630d42"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const formContato = document.getElementById("formContato");
+  const statusMsg = document.getElementById("statusMsg");
+
+  formContato.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nome = document.getElementById("contatoNome").value;
+    const email = document.getElementById("contatoEmail").value;
+    const mensagem = document.getElementById("mensagem").value;
+
+    try {
+      console.log("Enviando contato:", { nome, email, mensagem });
+
+      await addDoc(collection(db, "contatos"), {
+        nome,
+        email,
+        mensagem,
+        dataEnvio: new Date()
+      });
+
+      console.log("Mensagem salva no Firestore");
+      statusMsg.style.color = "lightgreen";
+      statusMsg.textContent = "Mensagem enviada com sucesso!";
+      formContato.reset();
+
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+      statusMsg.style.color = "red";
+      statusMsg.textContent = "Erro ao enviar mensagem. Tente novamente.";
+    }
+  });
+  function validarCadastro(nome, email, senha, confirmarSenha) {
+  // Nome não pode ter caracteres suspeitos
+  const regexNome = /^[A-Za-zÀ-ÿ\s]{3,100}$/;
+  if (!regexNome.test(nome)) {
+    throw new Error("Nome inválido. Use apenas letras e espaços.");
+  }
+
+  // Email válido
+  const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!regexEmail.test(email)) {
+    throw new Error("Email inválido.");
+  }
+
+  // Senha segura
+  if (senha.length < 6) {
+    throw new Error("A senha deve ter pelo menos 6 caracteres.");
+  }
+  if (senha !== confirmarSenha) {
+    throw new Error("As senhas não coincidem.");
+  }
+}
+try {
+  validarCadastro(nome, email, senha, confirmarSenha);
+  // ... continua com createUserWithEmailAndPassword
+} catch (erroValidacao) {
+  statusCadastro.style.color = "red";
+  statusCadastro.textContent = erroValidacao.message;
+  return;
+}
+function validarContato(nome, email, mensagem) {
+  if (nome.trim().length < 3) {
+    throw new Error("Nome muito curto.");
+  }
+  const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!regexEmail.test(email)) {
+    throw new Error("Email inválido.");
+  }
+  if (mensagem.trim().length < 10) {
+    throw new Error("A mensagem deve ter pelo menos 10 caracteres.");
+  }
+}
+try {
+  validarContato(nome, email, mensagem);
+  // ... continua com addDoc
+} catch (erroValidacao) {
+  statusMsg.style.color = "red";
+  statusMsg.textContent = erroValidacao.message;
+  return;
+}
+
+</script>
+
+<!-- ======= RODAPÉ ======= -->
+<footer>
+  <ul>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#política">Política de Privacidade</a></li>
+    <li><a href="#termos">Termos de Serviço</a></li>
+  </ul>
+  <div class="social-media">
+    <a href="#">Instagram</a>
+    <a href="#">Facebook</a>
+    <a href="#">LinkedIn</a>
+  </div>
+  <p>&copy; 2025 DevGeneration. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>
