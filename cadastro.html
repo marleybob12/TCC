@@ -70,14 +70,14 @@
 
       // Valida CPF (11 dígitos numéricos)
       if (!/^\d{11}$/.test(cpf)) {
-        mensagemEl.innerText = "❌ CPF deve conter 11 dígitos numéricos.";
+      mensagemEl.innerHTML = '<i class="fa-whiteboard fa-semibold fa-xmark"></i> ' + "CPF deve conter 11 dígitos numéricos.";
         mensagemEl.style.color = "red";
         return;
       }
 
       // Valida se as senhas coincidem
       if (senha !== confirmarSenha) {
-        mensagemEl.innerText = "❌ As senhas não coincidem!";
+        mensagemEl.innerHTML = '<i class="fa-whiteboard fa-semibold fa-xmark"></i> ' + "As senhas não coincidem.";
         mensagemEl.style.color = "red";
         return;
       }
@@ -115,7 +115,7 @@
             mensagem = "Erro ao criar conta: " + error.message;
         }
 
-        mensagemEl.innerText = "❌ " + mensagem;
+        mensagemEl.innerHTML = '<i class="fa-whiteboard fa-semibold fa-xmark"></i> ' + mensagem;
         mensagemEl.style.color = "red";
       }
     });

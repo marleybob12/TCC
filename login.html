@@ -46,7 +46,6 @@
   </div>
 
   <script type="module">
-    // Importa funções do auth.js e instâncias do firebaseConfig.js
     import { auth, db } from "./javaScript/firebaseConfig.js";
     import { loginUsuario } from "./javaScript/auth.js";
     import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -56,7 +55,7 @@
     const mensagemEl = document.getElementById("mensagem");
     const provider = new GoogleAuthProvider();
 
-    // Função para redirecionar usuário baseado no tipo
+    // Redireciona usuário baseado no tipo
     async function redirecionarUsuario(user) {
       const userDocRef = doc(db, "Usuario", user.uid);
       const userDocSnap = await getDoc(userDocRef);
@@ -72,7 +71,7 @@
       }
     }
 
-    // Login com email e senha usando loginUsuario do auth.js
+    // Login com email/senha
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -86,7 +85,7 @@
       }
 
       try {
-        const user = await loginUsuario(email, senha); // auth.js
+        const user = await loginUsuario(email, senha); 
         await redirecionarUsuario(user);
       } catch (error) {
         let mensagem = "";
@@ -103,7 +102,7 @@
           default:
             mensagem = error.message;
         }
-        mensagemEl.innerText = "❌ " + mensagem;
+        mensagemEl.innerHTML = '<i class="fa-solid fa-xmark"></i> ' + mensagem;
         mensagemEl.style.color = "red";
       }
     });
@@ -114,9 +113,9 @@
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
         const userDocRef = doc(db, "Usuario", user.uid);
-        const userDocSnap = await getDoc(userDocRef);
+        let userDocSnap = await getDoc(userDocRef);
 
-        // Se usuário não existir no Firestore, cria
+        // Se usuário não existir → cria
         if (!userDocSnap.exists()) {
           await setDoc(userDocRef, {
             usuarioID: user.uid,
@@ -125,14 +124,71 @@
             tipo: "participante",
             dataCriacao: serverTimestamp()
           });
+          userDocSnap = await getDoc(userDocRef);
         }
 
-        await redirecionarUsuario(user);
+        // Se faltarem dados → mostra formulário extra
+        if (!userDocSnap.data().cpf || !userDocSnap.data().telefone || !userDocSnap.data().dataNascimento) {
+          mostrarFormularioExtras(user.uid);
+        } else {
+          await redirecionarUsuario(user);
+        }
+
       } catch (error) {
-        mensagemEl.innerText = "❌ Erro Google: " + error.message;
+        mensagemEl.innerHTML = '<i class="fa-solid fa-xmark"></i> '  + error.message;
         mensagemEl.style.color = "red";
       }
     });
+
+    // Formulário extra (CPF, telefone, nascimento)
+    function mostrarFormularioExtras(uid) {
+      const formContainer = document.querySelector(".login-direita");
+      formContainer.innerHTML = `
+        <h3>Complete seu perfil</h3>
+        <div class="input-group">
+          <input type="text" id="cpf" placeholder="CPF (11 dígitos)" required pattern="\\d{11}" maxlength="11" inputmode="numeric">
+        </div>
+        <div class="input-group">
+          <input type="text" id="telefone" placeholder="Telefone" required>
+        </div>
+        <div class="input-group">
+          <input type="date" id="dataNascimento" required>
+        </div>
+        <button id="salvarExtras" class="login-btn">Salvar</button>
+        <p id="mensagemExtras" style="text-align:center; margin-top:10px; font-weight:bold;"></p>
+      `;
+
+      document.getElementById("salvarExtras").addEventListener("click", async () => {
+        const cpf = document.getElementById("cpf").value.trim();
+        const telefone = document.getElementById("telefone").value.trim();
+        const dataNascimento = document.getElementById("dataNascimento").value;
+
+        const mensagemExtras = document.getElementById("mensagemExtras");
+
+        if (!cpf || !telefone || !dataNascimento) {
+          mensagemExtras.innerText = "Preencha todos os campos!";
+          mensagemExtras.style.color = "red";
+          return;
+        }
+
+        try {
+          await setDoc(doc(db, "Usuario", uid), {
+            cpf,
+            telefone,
+            dataNascimento,
+          }, { merge: true });
+
+          mensagemExtras.innerText = "Dados salvos com sucesso!";
+          mensagemExtras.style.color = "green";
+
+          setTimeout(() => redirecionarUsuario({ uid }), 1000);
+
+        } catch (error) {
+          mensagemExtras.innerText = "Erro ao salvar: " + error.message;
+          mensagemExtras.style.color = "red";
+        }
+      });
+    }
   </script>
 </body>
 </html>
