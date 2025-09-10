@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categoria - EventFlow</title>
+  <link rel="stylesheet" href="../css/stylesHome.css">
+  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="home.html">
+        <img src="../img/logo_colorida_cortada.png" alt="EventFlow Logo">
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a href="home.html">Início</a>
+      <a href="eventos.html">Eventos</a>
+      <a href="categorias.html">Categorias</a>
+      <a href="contato.html">Contato</a>
+    </nav>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main-container">
+    <section class="categoria-header">
+      <h1 id="tituloCategoria">Eventos</h1>
+    </section>
+
+    <section class="eventos-categoria-lista">
+      <div class="cards-container"></div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2025 EventFlow - Todos os direitos reservados</p>
+  </footer>
+
+  <!-- SCRIPT FIREBASE -->
+  <script type="module">
+    import { db } from "../javaScript/firebaseConfig.js";
+    import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const params = new URLSearchParams(window.location.search);
+    const categoriaNome = params.get("nome");
+
+    document.getElementById("tituloCategoria").textContent = `Eventos de ${categoriaNome}`;
+
+    const cardsContainer = document.querySelector(".cards-container");
+
+    async function carregarEventosPorCategoria() {
+      try {
+        const qCat = query(collection(db, "Categoria"), where("nome", "==", categoriaNome));
+        const snapCat = await getDocs(qCat);
+
+        if (snapCat.empty) {
+          cardsContainer.innerHTML = `<p class="no-events">Nenhuma categoria chamada <b>${categoriaNome}</b>.</p>`;
+          return;
+        }
+
+        const categoriaID = snapCat.docs[0].id;
+
+        const qEvt = query(collection(db, "Evento"), where("categoriaID", "==", categoriaID));
+        const snapEvt = await getDocs(qEvt);
+
+        if (snapEvt.empty) {
+          cardsContainer.innerHTML = `<p class="no-events">Nenhum evento encontrado em <b>${categoriaNome}</b>.</p>`;
+          return;
+        }
+
+        snapEvt.forEach(docEvento => {
+          const evento = docEvento.data();
+          const eventoID = docEvento.id;
+
+          const card = document.createElement("div");
+          card.classList.add("card-glass");
+          card.innerHTML = `
+            <a href="evento.html?id=${eventoID}">
+              <img src="${evento.imagemBanner || '../img/evento.jpg'}" 
+                   alt="${evento.titulo}" class="card-img">
+              <div class="card-content">
+                <h3>${evento.titulo}</h3>
+                <p><b>Data:</b> ${evento.dataInicio ? new Date(evento.dataInicio.seconds * 1000).toLocaleDateString("pt-BR") : "A definir"}</p>
+                <p><b>Local:</b> ${evento.local || "A definir"}</p>
+              </div>
+            </a>
+          `;
+          cardsContainer.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Erro ao carregar eventos por categoria:", err);
+        cardsContainer.innerHTML = "<p class='error-msg'>Erro ao carregar eventos.</p>";
+      }
+    }
+
+    carregarEventosPorCategoria();
+  </script>
+</body>
+</html>
