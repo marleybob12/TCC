@@ -23,9 +23,7 @@
       <a href="../home/home.html" class="logo">
         <img src="../img/logo_barra.png" alt="Logo EventFlow" />
       </a>
-      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
-        <i class="fas fa-bars"></i>
-      </button>
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu"><i class="fas fa-bars"></i></button>
       <nav class="nav-links" aria-label="Menu principal">
         <ul>
           <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
@@ -55,7 +53,34 @@
   </main>
 
 <script>
-    
+    function toggleDropdown() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      link.addEventListener("click", () => {
+        document.querySelector("header nav ul").classList.remove("show");
+      });
+    });
+
+    try {
+      if (userDoc.exists()) {
+        document.querySelector(".user-name").textContent = userDoc.data().nome || "Usuário";
+      } else {
+        document.querySelector(".user-name").textContent = "Usuário";
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      lista.innerHTML = "<p>Erro ao carregar dados. Tente novamente mais tarde.</p>";
+    }
+
+    if (!nome || !email || !senha || !confirmarSenha) {
+      mensagemEl.innerHTML = "Por favor, preencha todos os campos obrigatórios.";
+      mensagemEl.style.color = "red";
+      return;
+    }
 </script>
 </body>
+</html>
 
