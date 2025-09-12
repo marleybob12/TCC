@@ -20,7 +20,7 @@
   <header>
     <div class="header-container">
       <a href="home.html" class="logo"><img src="../img/logo_barra.png" alt="EventFlow"></a>
-      <button class="menu-icon" id="menu-icon"><i class="fas fa-bars"></i></button>
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu"><i class="fas fa-bars"></i></button>
       <nav class="nav-links">
         <ul>
           <li><a href="criarEvento.html">Criar eventos</a></li>
@@ -123,17 +123,29 @@
       }
     });
 
-    document.getElementById("logoutBtn")?.addEventListener("click", async () => { await logoutUsuario(); window.location.href="../login.html"; });
+    document.getElementById("logoutBtn")?.addEventListener("click", async () => { 
+      await logoutUsuario(); 
+      window.location.href="../login.html"; 
+    });
     document.getElementById("dropdownLogout")?.addEventListener("click", async (e) => { e.preventDefault(); await logoutUsuario(); window.location.href="../login.html"; });
 
     document.getElementById("menu-icon")?.addEventListener("click", () => {
       document.querySelector("header nav ul").classList.toggle("show");
     });
 
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      link.addEventListener("click", () => {
+        document.querySelector("header nav ul").classList.remove("show");
+      });
+    });
+
     async function carregarEventos() {
       try {
         const querySnap = await getDocs(collection(db, "Evento"));
-        if (querySnap.empty) favoritosContainer.innerHTML = "<p>Nenhum evento disponível.</p>";
+        if (querySnap.empty) {
+          favoritosContainer.innerHTML = "<p>Nenhum evento disponível.</p>";
+          return;
+        }
         querySnap.forEach((docEvento) => {
           const evento = docEvento.data();
           const eventoID = docEvento.id;
@@ -147,9 +159,14 @@
             </div></a>`;
           favoritosContainer.appendChild(card);
         });
-      } catch(e){ favoritosContainer.innerHTML="<p>Erro ao carregar eventos.</p>"; console.error(e); }
+      } catch(e){ favoritosContainer.innerHTML="<p>Erro ao carregar eventos. Tente novamente mais tarde.</p>"; console.error(e); }
     }
     carregarEventos();
+
+    function toggleDropdown() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
   </script>
   <script src="../javaScript/btnsCategoria.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
