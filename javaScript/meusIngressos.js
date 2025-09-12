@@ -63,7 +63,7 @@ onAuthStateChanged(auth, async (user) => {
     }
   } catch (err) {
     console.error(err);
-    lista.innerHTML = "<p>❌ Erro ao carregar ingressos.</p>";
+    lista.innerHTML = "<p>❌ Erro ao carregar ingressos. Tente novamente mais tarde.</p>";
   }
 });
 

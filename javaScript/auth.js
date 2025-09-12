@@ -9,18 +9,29 @@ import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase
 
 /** Cadastro de usuário */
 export async function cadastrarUsuario(nome, email, telefone, cpf, dataNascimento, senha) {
-  const cred = await createUserWithEmailAndPassword(auth, email, senha);
-  const user = cred.user;
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, senha);
+    const user = cred.user;
 
-  await setDoc(doc(db, "Usuario", user.uid), {
-    nome,
-    email,
-    telefone,
-    cpf,
-    dataNascimento
-  });
+    await setDoc(doc(db, "Usuario", user.uid), {
+      nome,
+      email,
+      telefone,
+      cpf,
+      dataNascimento
+    });
 
-  return user;
+    return user;
+  } catch (error) {
+    switch (error.code) {
+      case 'auth/email-already-in-use':
+        throw new Error("Este email já está em uso.");
+      case 'auth/invalid-email':
+        throw new Error("Email inválido.");
+      default:
+        throw new Error("Erro ao criar conta.");
+    }
+  }
 }
 
 /** Login de usuário */
