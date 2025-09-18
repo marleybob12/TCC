@@ -305,6 +305,22 @@ export async function popularEventosMassivo(db) {
         "1990-01-01",
         evento
       );
+
+      // Criar Evento
+      const dataEvento = new Date(`${evento.data}T${evento.hora}`);
+      const eventoRef = await addDoc(collection(db, "Evento"), {
+        titulo: evento.nome,
+        descricao: evento.descricao,
+        dataInicio: dataEvento,
+        dataFim: dataEvento,
+        imagemBanner: evento.bannerUrl || "",
+        organizadorID: usuarioTesteID, // usa o UID do usuário atual
+        categoriaID: categoriaRef.id, // Associar o evento à categoria correta
+        localID: localRef.id,
+        status: "ativo",
+        dataCriacao: serverTimestamp()
+      });
+      console.log("✅ Evento criado com sucesso.");
     }
 
     console.log("✅ Base de teste com vários eventos criada com sucesso!");

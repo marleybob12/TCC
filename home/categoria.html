@@ -42,7 +42,7 @@
   <!-- SCRIPT FIREBASE -->
   <script type="module">
     import { db } from "../javaScript/firebaseConfig.js";
-    import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const params = new URLSearchParams(window.location.search);
     const categoriaNome = params.get("nome");
@@ -53,25 +53,27 @@
 
     async function carregarEventosPorCategoria() {
       try {
-        const qCat = query(collection(db, "Categoria"), where("nome", "==", categoriaNome));
-        const snapCat = await getDocs(qCat);
+        // Buscar o ID da categoria pelo nome
+        const categoriaQuery = query(collection(db, "Categoria"), where("nome", "==", categoriaNome));
+        const categoriaSnap = await getDocs(categoriaQuery);
 
-        if (snapCat.empty) {
-          cardsContainer.innerHTML = `<p class="no-events">Nenhuma categoria chamada <b>${categoriaNome}</b>.</p>`;
+        if (categoriaSnap.empty) {
+          cardsContainer.innerHTML = `<p class="no-events">Nenhuma categoria encontrada com o nome <b>${categoriaNome}</b>.</p>`;
           return;
         }
 
-        const categoriaID = snapCat.docs[0].id;
+        const categoriaID = categoriaSnap.docs[0].id;
 
-        const qEvt = query(collection(db, "Evento"), where("categoriaID", "==", categoriaID));
-        const snapEvt = await getDocs(qEvt);
+        // Buscar eventos com base no ID da categoria
+        const eventosQuery = query(collection(db, "Evento"), where("categoriaID", "==", categoriaID));
+        const eventosSnap = await getDocs(eventosQuery);
 
-        if (snapEvt.empty) {
+        if (eventosSnap.empty) {
           cardsContainer.innerHTML = `<p class="no-events">Nenhum evento encontrado em <b>${categoriaNome}</b>.</p>`;
           return;
         }
 
-        snapEvt.forEach(docEvento => {
+        eventosSnap.forEach(docEvento => {
           const evento = docEvento.data();
           const eventoID = docEvento.id;
 

@@ -37,6 +37,8 @@ export async function cadastrarUsuario(nome, email, telefone, cpf, dataNasciment
 /** Login de usuário */
 export async function loginUsuario(email, senha) {
   const cred = await signInWithEmailAndPassword(auth, email, senha);
+  // Redirecionar para home.html após login bem-sucedido
+  window.location.href = "../home/home.html";
   return cred.user;
 }
 
