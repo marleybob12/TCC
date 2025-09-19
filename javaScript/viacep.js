@@ -2,31 +2,22 @@
  * Limpa os campos do formulário relacionados ao CEP.
  */
 function limpa_formulário_cep() {
-    //Limpa valores do formulário de cep.
-    document.getElementById('rua').value=("");
-    document.getElementById('bairro').value=("");
-    document.getElementById('cidade').value=("");
-    document.getElementById('uf').value=("");
+    // Limpa valores do formulário de cep.
+    document.getElementById('rua').value = "";
+    document.getElementById('bairro').value = "";
+    document.getElementById('cidade').value = "";
+    document.getElementById('uf').value = "";
 }
 
 /**
- * Callback para processar os dados retornados pela API ViaCEP.
  * Atualiza os campos do formulário com os dados do endereço.
  * @param {object} conteudo - Dados retornados pela API
  */
-function meu_callback(conteudo) {
-    if (!("erro" in conteudo)) {
-        //Atualiza os campos com os valores.
-        document.getElementById('rua').value=(conteudo.logradouro);
-        document.getElementById('bairro').value=(conteudo.bairro);
-        document.getElementById('cidade').value=(conteudo.localidade);
-        document.getElementById('uf').value=(conteudo.uf);
-    } //end if.
-    else {
-        //CEP não Encontrado.
-        limpa_formulário_cep();
-        alert("CEP não encontrado.");
-    }
+function atualizarCamposEndereco(conteudo) {
+    document.getElementById('rua').value = conteudo.logradouro || "";
+    document.getElementById('bairro').value = conteudo.bairro || "";
+    document.getElementById('cidade').value = conteudo.localidade || "";
+    document.getElementById('uf').value = conteudo.uf || "";
 }
 
 /**
@@ -34,44 +25,46 @@ function meu_callback(conteudo) {
  * Valida o formato do CEP e consulta a API ViaCEP.
  * @param {string} valor - CEP informado pelo usuário
  */
-function pesquisacep(valor) {
+async function pesquisacep(valor) {
+    // Nova variável "cep" somente com dígitos.
+    const cep = valor.replace(/\D/g, '');
 
-    //Nova variável "cep" somente com dígitos.
-    var cep = valor.replace(/\D/g, '');
+    // Verifica se campo cep possui valor informado.
+    if (cep !== "") {
+        // Expressão regular para validar o CEP.
+        const validacep = /^[0-9]{8}$/;
 
-    //Verifica se campo cep possui valor informado.
-    if (cep != "") {
+        // Valida o formato do CEP.
+        if (validacep.test(cep)) {
+            // Preenche os campos com "..." enquanto consulta webservice.
+            document.getElementById('rua').value = "...";
+            document.getElementById('bairro').value = "...";
+            document.getElementById('cidade').value = "...";
+            document.getElementById('uf').value = "...";
 
-        //Expressão regular para validar o CEP.
-        var validacep = /^[0-9]{8}$/;
+            try {
+                // Faz a requisição à API ViaCEP usando fetch.
+                const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                const conteudo = await response.json();
 
-        //Valida o formato do CEP.
-        if(validacep.test(cep)) {
-
-            //Preenche os campos com "..." enquanto consulta webservice.
-            document.getElementById('rua').value="...";
-            document.getElementById('bairro').value="...";
-            document.getElementById('cidade').value="...";
-            document.getElementById('uf').value="...";
-
-            //Cria um elemento javascript.
-            var script = document.createElement('script');
-
-            //Sincroniza com o callback.
-            script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
-
-            //Insere script no documento e carrega o conteúdo.
-            document.body.appendChild(script);
-
-        } //end if.
-        else {
-            //cep é inválido.
+                if (!conteudo.erro) {
+                    atualizarCamposEndereco(conteudo);
+                } else {
+                    limpa_formulário_cep();
+                    alert("CEP não encontrado.");
+                }
+            } catch (error) {
+                limpa_formulário_cep();
+                console.error("Erro ao consultar o CEP:", error);
+                alert("Erro ao consultar o CEP. Tente novamente mais tarde.");
+            }
+        } else {
+            // cep é inválido.
             limpa_formulário_cep();
             alert("Formato de CEP inválido.");
         }
-    } //end if.
-    else {
-        //cep sem valor, limpa formulário.
+    } else {
+        // cep sem valor, limpa formulário.
         limpa_formulário_cep();
     }
-};
+}

@@ -1,0 +1,95 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #f5f9ff, #e6eeff);
+  color: #333;
+  margin: 0;
+}
+
+header {
+  background: #2F78E3;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .logo img {
+  height: 50px;
+}
+
+header .nav-links ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+header .nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+}
+
+header .nav-links a.active {
+  text-decoration: underline;
+}
+
+main {
+  padding: 20px;
+}
+
+main h1 {
+  font-size: 2rem;
+  color: #2F78E3;
+  text-align: center;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background: #2F78E3;
+  color: white;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #199BD9;
+}
+
+.search-bar {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 80%;
+}
+
+.participantes-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.participantes-lista li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background: white;
+}
