@@ -25,23 +25,29 @@
 
   <main>
     <h1>Relatórios e Análises</h1>
-    <p>Acompanhe o desempenho do seu evento com relatórios detalhados.</p>
-    <div class="relatorios-container">
-      <div class="relatorio-card">
-        <h2>Participantes Confirmados</h2>
-        <img src="../img/relatorio_participantes.png" alt="Gráfico de Participantes Confirmados">
-      </div>
-      <div class="relatorio-card">
-        <h2>Status dos Ingressos</h2>
-        <img src="../img/relatorio_ingressos.png" alt="Gráfico de Status dos Ingressos">
-      </div>
-      <div class="relatorio-card">
-        <h2>Categoria dos Participantes</h2>
-        <img src="../img/relatorio_categorias.png" alt="Gráfico de Categorias dos Participantes">
-      </div>
-      <div class="relatorio-card">
-        <h2>Avaliação Média</h2>
-        <img src="../img/relatorio_avaliacao.png" alt="Gráfico de Avaliação Média">
+    <p>Selecione um evento para visualizar os relatórios:</p>
+    <select id="eventoSelector">
+      <option value="">Selecione um evento</option>
+    </select>
+    <div id="relatoriosContainer" style="display: none;">
+      <h2>Relatórios do Evento</h2>
+      <div class="relatorios-container">
+        <div class="relatorio-card">
+          <h2>Participantes Confirmados</h2>
+          <canvas id="graficoParticipantes"></canvas>
+        </div>
+        <div class="relatorio-card">
+          <h2>Status dos Ingressos</h2>
+          <canvas id="graficoIngressos"></canvas>
+        </div>
+        <div class="relatorio-card">
+          <h2>Categoria dos Participantes</h2>
+          <canvas id="graficoCategorias"></canvas>
+        </div>
+        <div class="relatorio-card">
+          <h2>Avaliação Média</h2>
+          <canvas id="graficoAvaliacao"></canvas>
+        </div>
       </div>
     </div>
   </main>
@@ -49,5 +55,7 @@
   <footer>
     <p>&copy; 2025 EventFlow. Todos os direitos reservados.</p>
   </footer>
+
+  <script type="module" src="../javaScript/relatorios.js"></script>
 </body>
 </html>
