@@ -183,7 +183,8 @@
           mensagemExtras.innerText = "Dados salvos com sucesso!";
           mensagemExtras.style.color = "green";
 
-          setTimeout(() => redirecionarUsuario({ uid }), 1000);
+          // Redirecionar para home.html após salvar os dados
+          setTimeout(() => window.location.href = "home/home.html", 1000);
 
         } catch (error) {
           mensagemExtras.innerText = "Erro ao salvar: " + error.message;

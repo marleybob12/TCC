@@ -4,7 +4,14 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /**
- * Função para cadastrar um usuário simples (participante)
+ * Insere os dados de um novo usuário no Firestore.
+ * @param {object} db - Instância do Firestore
+ * @param {string} usuarioID - ID do usuário
+ * @param {string} nome - Nome do usuário
+ * @param {string} email - Email do usuário
+ * @param {string} telefone - Telefone do usuário
+ * @param {string} cpf - CPF do usuário
+ * @param {string} dataNascimento - Data de nascimento do usuário
  */
 export async function inserirDadosUsuario(db, usuarioID, nome, email, telefone, cpf, dataNascimento) {
   try {
@@ -27,7 +34,15 @@ export async function inserirDadosUsuario(db, usuarioID, nome, email, telefone, 
 }
 
 /**
- * Função para criar evento e garantir que o usuário seja organizador
+ * Insere os dados de um evento e promove o usuário a organizador, se necessário.
+ * @param {object} db - Instância do Firestore
+ * @param {string} usuarioID - ID do usuário
+ * @param {string} nome - Nome do organizador
+ * @param {string} email - Email do organizador
+ * @param {string} telefone - Telefone do organizador
+ * @param {string} cpf - CPF do organizador
+ * @param {string} dataNascimento - Data de nascimento do organizador
+ * @param {object} eventoData - Dados do evento
  */
 export async function inserirDadosComOrganizador(
   db,
@@ -45,12 +60,11 @@ export async function inserirDadosComOrganizador(
     let userData = userSnap.exists() ? userSnap.data() : null;
 
     // Se o usuário existe e não é organizador, promove a organizador
-if (userData && userData.tipo !== "organizador") {
-  await setDoc(userRef, { tipo: "organizador" }, { merge: true });
-  userData = { ...userData, tipo: "organizador" }; // garante consistência
-  console.log("✅ Usuário promovido a organizador automaticamente.");
-}
-
+    if (userData && userData.tipo !== "organizador") {
+      await setDoc(userRef, { tipo: "organizador" }, { merge: true });
+      userData = { ...userData, tipo: "organizador" }; // garante consistência
+      console.log("✅ Usuário promovido a organizador automaticamente.");
+    }
 
     // Criar documento em Organizador
     const organizadorRef = await addDoc(collection(db, "Organizador"), {
@@ -88,7 +102,6 @@ if (userData && userData.tipo !== "organizador") {
     });
     console.log("✅ Local criado com sucesso.");
 
-
     // Criar Evento
     const dataEvento = new Date(`${eventoData.data}T${eventoData.hora}`);
     const eventoRef = await addDoc(collection(db, "Evento"), {
@@ -105,18 +118,18 @@ if (userData && userData.tipo !== "organizador") {
     });
     console.log("✅ Evento criado com sucesso.");
 
-   // Criar Lotes (vários ingressos)
-for (const ingresso of eventoData.ingressos) {
-  await addDoc(collection(db, "Lote"), {
-    eventoID: eventoRef.id,
-    nome: ingresso.nome,
-    preco: parseFloat(ingresso.preco),
-    quantidade: parseInt(ingresso.quantidade, 10),
-    dataInicio: serverTimestamp(),
-    dataFim: dataEvento
-  });
-}
-console.log("✅ Lotes do evento criados com sucesso.");
+    // Criar Lotes (vários ingressos)
+    for (const ingresso of eventoData.ingressos) {
+      await addDoc(collection(db, "Lote"), {
+        eventoID: eventoRef.id,
+        nome: ingresso.nome,
+        preco: parseFloat(ingresso.preco),
+        quantidade: parseInt(ingresso.quantidade, 10),
+        dataInicio: serverTimestamp(),
+        dataFim: dataEvento
+      });
+    }
+    console.log("✅ Lotes do evento criados com sucesso.");
     console.log("✅ Todos os dados foram inseridos com sucesso.");
 
   } catch (error) {

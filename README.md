@@ -1,5 +1,8 @@
 # EventFlow - Gerenciamento de Eventos
 
+<!-- Adicione aqui uma descrição do projeto -->
+<!-- Inclua informações sobre como configurar e executar o projeto -->
+
 EventFlow é uma aplicação web para gerenciamento de eventos, permitindo que usuários criem, organizem e participem de eventos de forma prática e eficiente.
 
 ## Funcionalidades

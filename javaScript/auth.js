@@ -1,4 +1,4 @@
-// auth.js
+// Importa as configurações do Firebase e os módulos necessários
 import { auth, db } from "./firebaseConfig.js";
 import { 
   createUserWithEmailAndPassword,
@@ -7,12 +7,24 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/** Cadastro de usuário */
+/** 
+ * Função para cadastrar um novo usuário no sistema.
+ * Cria uma conta de autenticação e armazena os dados no Firestore.
+ * @param {string} nome - Nome do usuário
+ * @param {string} email - Email do usuário
+ * @param {string} telefone - Telefone do usuário
+ * @param {string} cpf - CPF do usuário
+ * @param {string} dataNascimento - Data de nascimento do usuário
+ * @param {string} senha - Senha do usuário
+ * @returns {object} - Objeto do usuário criado
+ */
 export async function cadastrarUsuario(nome, email, telefone, cpf, dataNascimento, senha) {
   try {
+    // Cria o usuário na autenticação do Firebase
     const cred = await createUserWithEmailAndPassword(auth, email, senha);
     const user = cred.user;
 
+    // Salva os dados adicionais do usuário no Firestore
     await setDoc(doc(db, "Usuario", user.uid), {
       nome,
       email,
@@ -23,6 +35,7 @@ export async function cadastrarUsuario(nome, email, telefone, cpf, dataNasciment
 
     return user;
   } catch (error) {
+    // Trata erros específicos de autenticação
     switch (error.code) {
       case 'auth/email-already-in-use':
         throw new Error("Este email já está em uso.");
@@ -34,15 +47,23 @@ export async function cadastrarUsuario(nome, email, telefone, cpf, dataNasciment
   }
 }
 
-/** Login de usuário */
+/** 
+ * Função para realizar login de um usuário.
+ * Redireciona para a página inicial após login bem-sucedido.
+ * @param {string} email - Email do usuário
+ * @param {string} senha - Senha do usuário
+ * @returns {object} - Objeto do usuário autenticado
+ */
 export async function loginUsuario(email, senha) {
   const cred = await signInWithEmailAndPassword(auth, email, senha);
-  // Redirecionar para home.html após login bem-sucedido
-  window.location.href = "../home/home.html";
+  window.location.href = "../home/home.html"; // Redireciona após login
   return cred.user;
 }
 
-/** Logout */
+/** 
+ * Função para realizar logout do usuário.
+ * Encerra a sessão atual do usuário.
+ */
 export async function logoutUsuario() {
   await signOut(auth);
 }

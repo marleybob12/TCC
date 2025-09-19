@@ -1,9 +1,9 @@
-// popularEventosMassivo.js
+// Importa a função para inserir dados no Firestore
 import { inserirDadosComOrganizador } from "./inserirDados.js";
 
 /**
- * Popula o Firestore com vários eventos de teste (para desenvolvimento)
- * @param {object} db - instância do Firestore
+ * Popula o Firestore com eventos de teste para desenvolvimento.
+ * @param {object} db - Instância do Firestore
  */
 export async function popularEventosMassivo(db) {
   const usuarioTesteID = "aDesRZfPzSQ3qqZsodMRQMAydFV2"; // UID fixo para o organizador de teste

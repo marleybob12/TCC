@@ -67,6 +67,14 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+/**
+ * Gera um PDF com os dados do ingresso e um QR Code.
+ * @param {object} user - Dados do usuário autenticado
+ * @param {object} evento - Dados do evento
+ * @param {object} lote - Dados do lote do ingresso
+ * @param {object} ingresso - Dados do ingresso
+ * @param {string} ingressoID - ID do ingresso
+ */
 async function gerarPDF(user, evento, lote, ingresso, ingressoID) {
   const { jsPDF } = window.jspdf;
   const docPDF = new jsPDF();

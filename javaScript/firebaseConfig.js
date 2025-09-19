@@ -1,10 +1,10 @@
-// firebaseConfig.js
+// Importa os módulos necessários do Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-// Configuração do Firebase (do seu projeto)
+// Configuração do Firebase (substitua pelos dados do seu projeto)
 const firebaseConfig = {
   apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
   authDomain: "eventflow-87d51.firebaseapp.com",
@@ -15,6 +15,7 @@ const firebaseConfig = {
   appId: "1:1060995756519:web:1963ecc800497812630d42"
 };
 
+// Inicializa o Firebase e exporta as instâncias necessárias
 // Inicializa Firebase apenas uma vez
 const app = initializeApp(firebaseConfig);
 

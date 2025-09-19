@@ -15,10 +15,13 @@ const bannerEl = document.getElementById("bannerEvento");
 const listaIngressos = document.getElementById("listaIngressos");
 const msgEl = document.getElementById("mensagem");
 const btnComprar = document.getElementById("comprarBtn");
+const qrCodeContainer = document.getElementById("qrCodeContainer"); // Container para exibir o QR Code
 
 let loteSelecionado = null;
 
-// Carrega dados do evento
+/**
+ * Carrega os dados do evento selecionado.
+ */
 async function carregarEvento() {
   const eventoRef = doc(db, "Evento", eventoID);
   const eventoSnap = await getDoc(eventoRef);
@@ -38,6 +41,9 @@ async function carregarEvento() {
   await carregarLotes();
 }
 
+/**
+ * Carrega os lotes (ingressos disponíveis) do evento.
+ */
 async function carregarLotes() {
   const q = query(collection(db, "Lote"), where("eventoID", "==", eventoID));
   const querySnap = await getDocs(q);
@@ -105,24 +111,43 @@ onAuthStateChanged(auth, (user) => {
         return;
       }
 
-      // Atualiza quantidade
-      await updateDoc(loteRef, { quantidade: lote.quantidade - 1 });
+      // Gera o QR Code Pix para pagamento
+      const qrCodePix = await gerarQrCodePix(lote.preco);
+      qrCodeContainer.innerHTML = `<img src="${qrCodePix}" alt="QR Code Pix" style="max-width: 300px; margin-top: 20px;">`;
 
-      // Cria ingresso
-      await addDoc(collection(db, "Ingresso"), {
-        usuarioID: user.uid,
-        eventoID,
-        loteID: loteSelecionado,
-        dataCompra: serverTimestamp(),
-        status: "ativo"
-      });
-
-      msgEl.innerText = "✅ Ingresso comprado com sucesso!";
+      msgEl.innerText = "✅ Escaneie o QR Code para realizar o pagamento.";
       msgEl.style.color = "green";
+
     } catch (err) {
       console.error(err);
-      msgEl.innerText = "❌ Erro ao comprar ingresso.";
+      msgEl.innerText = "❌ Erro ao gerar QR Code para pagamento.";
       msgEl.style.color = "red";
     }
   });
 });
+
+/**
+ * Gera um QR Code Pix para pagamento usando uma API gratuita.
+ * @param {number} valor - Valor do ingresso
+ * @returns {string} - URL do QR Code gerado
+ */
+async function gerarQrCodePix(valor) {
+  const response = await fetch("https://api.qr-code-pix.com.br/v1/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      chave: "sua-chave-pix@exemplo.com", // Substitua pela sua chave Pix
+      valor: valor,
+      descricao: "Pagamento de ingresso - EventFlow"
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Erro ao gerar QR Code Pix.");
+  }
+
+  const data = await response.json();
+  return data.qrcode_image; // Retorna a URL da imagem do QR Code
+}

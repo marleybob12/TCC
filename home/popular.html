@@ -13,6 +13,7 @@
   import { app, db } from "../javaScript/firebaseConfig.js";
   import { popularEventosMassivo } from "../javaScript/popularEventosMassivo.js";
 
+  // Adiciona evento ao botão para popular eventos no Firestore
   document.getElementById("popular").addEventListener("click", async () => {
     document.getElementById("status").textContent = "⏳ Inserindo eventos...";
     try {
@@ -26,4 +27,3 @@
 
 </body>
 </html>
-    

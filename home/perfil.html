@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- Metadados básicos -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>EventFlow - Perfil</title>
 
-  <!-- CSS -->
+  <!-- Estilos e ícones -->
   <link rel="stylesheet" href="../css/perfil.css" />
   <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
-
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-  <!-- Fonte Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-     <!-- Header com glassmorphism -->
+  <!-- Cabeçalho com glassmorphism -->
   <header>
     <div class="header-container">
       <a href="../home/home.html" class="logo">
@@ -48,26 +45,34 @@
       </nav>
     </div>
   </header>
+
+  <!-- Conteúdo principal -->
   <main>
-    <H2>Dados perfil</H2>
+    <h2>Dados perfil</h2>
+    <!-- Espaço reservado para exibir os dados do perfil -->
   </main>
 
-<script>
+  <!-- Scripts -->
+  <script>
+    // Função para alternar a exibição do menu suspenso
     function toggleDropdown() {
       const dropdown = document.getElementById("dropdown");
       dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
     }
 
+    // Adiciona evento para fechar o menu ao clicar em um link
     document.querySelectorAll(".nav-links a").forEach(link => {
       link.addEventListener("click", () => {
         document.querySelector("header nav ul").classList.remove("show");
       });
     });
 
+    // Exemplo de manipulação de dados do usuário
     try {
       if (userDoc.exists()) {
         document.querySelector(".user-name").textContent = userDoc.data().nome || "Usuário";
       } else {
+        // Tratamento para caso o documento não exista
         document.querySelector(".user-name").textContent = "Usuário";
       }
     } catch (error) {
@@ -75,12 +80,14 @@
       lista.innerHTML = "<p>Erro ao carregar dados. Tente novamente mais tarde.</p>";
     }
 
+    // Validação de campos obrigatórios
     if (!nome || !email || !senha || !confirmarSenha) {
+      // Tratamento para campos vazios
       mensagemEl.innerHTML = "Por favor, preencha todos os campos obrigatórios.";
       mensagemEl.style.color = "red";
       return;
     }
-</script>
+  </script>
 </body>
 </html>
 

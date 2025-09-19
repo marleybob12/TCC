@@ -11,7 +11,12 @@ const mensagemEl = document.getElementById("mensagem");
 const btnCriarEvento = document.getElementById("btnCriarEvento");
 const loader = document.getElementById("loader");
 
-// Função para adicionar ingresso dinamicamente
+/**
+ * Adiciona dinamicamente um novo ingresso ao formulário.
+ * @param {string} nome - Nome do ingresso (opcional)
+ * @param {string} preco - Preço do ingresso (opcional)
+ * @param {string} quantidade - Quantidade do ingresso (opcional)
+ */
 function adicionarIngresso(nome = "", preco = "", quantidade = "") {
   const div = document.createElement("div");
   div.classList.add("ingresso-item");
