@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Participantes e Validação - EventFlow</title>
+  <link rel="stylesheet" href="../css/participantes.css">
+  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="home.html" class="logo">
+        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+      </a>
+      <nav class="nav-links">
+        <ul>
+          <li><a href="home.html">Home</a></li>
+          <li><a href="meusEventos.html">Meus Eventos</a></li>
+          <li><a href="participantesValidar.html" class="active">Participantes e Validação</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Participantes e Validação</h1>
+
+    <!-- Seletor de eventos -->
+    <div class="evento-selector">
+      <label for="eventoSelect">Selecione um evento:</label>
+      <select id="eventoSelect">
+        <option value="">Selecione um evento</option>
+      </select>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" style="display: none;">
+      <button class="tab active" data-tab="participantes">Participantes</button>
+      <button class="tab" data-tab="validar">Validar Ingressos</button>
+    </div>
+
+    <!-- Participantes -->
+    <section id="participantes" class="tab-content active" style="display: none;">
+      <div class="search-bar">
+        <input type="text" placeholder="Buscar participante..." id="buscarParticipante">
+      </div>
+      <ul class="participantes-lista" id="listaParticipantes"></ul>
+    </section>
+
+    <!-- Validador de Ingressos -->
+    <section id="validar" class="tab-content" style="display: none;">
+      <video id="preview" width="300" height="300"></video>
+      <p id="status">Aponte o QR Code do ingresso</p>
+      <div id="historico">
+        <h2>Últimos ingressos validados</h2>
+        <ul id="listaHistorico"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 EventFlow. Todos os direitos reservados.</p>
+  </footer>
+
+  <script type="module">
+    import { auth, db } from "../javaScript/firebaseConfig.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import Instascan from "https://cdnjs.cloudflare.com/ajax/libs/instascan/1.0.0/instascan.min.js";
+
+    const eventoSelect = document.getElementById("eventoSelect");
+    const tabs = document.querySelector(".tabs");
+    const tabContents = document.querySelectorAll(".tab-content");
+    const listaParticipantes = document.getElementById("listaParticipantes");
+    const buscarParticipante = document.getElementById("buscarParticipante");
+
+    // Carrega os eventos do organizador
+    async function carregarEventos() {
+      const eventosQuery = query(collection(db, "Evento"));
+      const eventosSnap = await getDocs(eventosQuery);
+
+      eventosSnap.forEach((docEvento) => {
+        const evento = docEvento.data();
+        const option = document.createElement("option");
+        option.value = docEvento.id;
+        option.textContent = evento.titulo;
+        eventoSelect.appendChild(option);
+      });
+    }
+
+    // Alterna entre as abas
+    tabs.addEventListener("click", (e) => {
+      if (e.target.classList.contains("tab")) {
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(content => content.style.display = "none");
+
+        e.target.classList.add("active");
+        document.getElementById(e.target.dataset.tab).style.display = "block";
+      }
+    });
+
+    // Carrega os participantes do evento selecionado
+    async function carregarParticipantes(eventoID) {
+      listaParticipantes.innerHTML = "Carregando participantes...";
+      const ingressosQuery = query(collection(db, "Ingresso"), where("eventoID", "==", eventoID));
+      const ingressosSnap = await getDocs(ingressosQuery);
+
+      if (ingressosSnap.empty) {
+        listaParticipantes.innerHTML = "<p>Nenhum participante encontrado.</p>";
+        return;
+      }
+
+      listaParticipantes.innerHTML = "";
+      ingressosSnap.forEach((docIngresso) => {
+        const ingresso = docIngresso.data();
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <span>${ingresso.nomeParticipante || "Participante Anônimo"}</span>
+          <input type="checkbox" ${ingresso.confirmado ? "checked" : ""} disabled>
+        `;
+        listaParticipantes.appendChild(li);
+      });
+    }
+
+    // Evento de mudança no seletor de eventos
+    eventoSelect.addEventListener("change", async () => {
+      const eventoID = eventoSelect.value;
+      if (!eventoID) {
+        tabs.style.display = "none";
+        tabContents.forEach(content => content.style.display = "none");
+        return;
+      }
+
+      tabs.style.display = "flex";
+      document.getElementById("participantes").style.display = "block";
+      await carregarParticipantes(eventoID);
+    });
+
+    // Busca dinâmica de participantes
+    buscarParticipante.addEventListener("input", () => {
+      const termo = buscarParticipante.value.toLowerCase();
+      document.querySelectorAll(".participantes-lista li").forEach(li => {
+        const nome = li.querySelector("span").textContent.toLowerCase();
+        li.style.display = nome.includes(termo) ? "flex" : "none";
+      });
+    });
+
+    // Validador de ingressos
+    const statusEl = document.getElementById('status');
+    const listaHistorico = document.getElementById('listaHistorico');
+    let historico = [];
+
+    function atualizarHistorico(id, status) {
+      historico.unshift({ id, status });
+      if (historico.length > 5) historico.pop();
+
+      listaHistorico.innerHTML = "";
+      historico.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.id} — ${item.status}`;
+        li.className = item.status.toLowerCase();
+        listaHistorico.appendChild(li);
+      });
+    }
+
+    function iniciarScanner() {
+      const scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+
+      scanner.addListener('scan', async function(content) {
+        try {
+          const ingressoRef = doc(db, "Ingresso", content);
+          const ingressoSnap = await getDoc(ingressoRef);
+
+          if (!ingressoSnap.exists()) {
+            statusEl.textContent = "Ingresso inválido!";
+            statusEl.className = "invalido";
+            atualizarHistorico(content, "Inválido");
+            return;
+          }
+
+          const ingressoData = ingressoSnap.data();
+
+          if (ingressoData.usado) {
+            statusEl.textContent = "Ingresso já utilizado!";
+            statusEl.className = "usado";
+            atualizarHistorico(content, "Usado");
+            return;
+          }
+
+          await updateDoc(ingressoRef, { usado: true });
+          statusEl.textContent = "Ingresso válido! Entrada liberada.";
+          statusEl.className = "valido";
+          atualizarHistorico(content, "Válido");
+
+        } catch (error) {
+          console.error(error);
+          statusEl.textContent = "Erro na validação!";
+          statusEl.className = "invalido";
+          atualizarHistorico(content, "Erro");
+        }
+      });
+
+      Instascan.Camera.getCameras().then(function(cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          alert('Nenhuma câmera encontrada.');
+        }
+      }).catch(function(e) {
+        console.error(e);
+        alert('Erro ao acessar a câmera. Verifique as permissões do navegador.');
+      });
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("Você precisa estar logado como organizador.");
+        window.location.href = "../login.html";
+        return;
+      }
+
+      iniciarScanner();
+      await carregarEventos();
+    });
+  </script>
+</body>
+</html>
