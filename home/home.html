@@ -181,5 +181,19 @@
   <script>
     new Swiper('.categoria-swiper', { slidesPerView:'auto', spaceBetween:16, navigation:{nextEl:'.swiper-button-next',prevEl:'.swiper-button-prev'}, freeMode:true, grabCursor:true });
   </script>
+  <script>
+    // Função para alternar a exibição do menu suspenso
+    function toggleDropdown() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+
+    // Adiciona evento para fechar o menu ao clicar em um link
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      link.addEventListener("click", () => {
+        document.querySelector("header nav ul").classList.remove("show");
+      });
+    });
+  </script>
 </body>
 </html>
