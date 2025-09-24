@@ -221,6 +221,29 @@
     img.style.display = "none";
   }
 });
+// Dropdown do usuário
+const userAccount = document.querySelector(".user-account");
+const dropdown = document.getElementById("dropdown");
+
+userAccount.addEventListener("click", () => {
+  dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+});
+
+// Fecha dropdown ao clicar fora
+document.addEventListener("click", function(event) {
+  if (!userAccount.contains(event.target) && !dropdown.contains(event.target)) {
+    dropdown.style.display = "none";
+  }
+});
+
+// Menu mobile
+const menuIcon = document.getElementById("menu-icon");
+const navUl = document.querySelector(".nav-links ul");
+
+menuIcon.addEventListener("click", () => {
+  navUl.classList.toggle("show");
+});
+
 
   </script>
 </body>

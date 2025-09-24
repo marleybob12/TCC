@@ -389,3 +389,18 @@ footer .copyright {
   main h1 { font-size: 1.1rem; }
   main { padding: 6px 1px; }
 }
+header nav ul {
+  display: flex;
+  align-items: center;      /* centraliza verticalmente */
+  gap: 20px;                /* mantém o espaçamento entre botões */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+header nav ul li a,
+header .user-account {
+  display: flex;
+  align-items: center;      /* garante que cada botão/link interno também fique centralizado verticalmente */
+  height: 100%;             /* ocupa toda a altura do header */
+}
