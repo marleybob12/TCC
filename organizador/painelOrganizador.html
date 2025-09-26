@@ -15,10 +15,12 @@
 <body>
   <header>
     <a href="home.html" class="logo"><img src="../img/logo_barra.png" alt="Logo EventFlow" /></a>
+   <button class="menu-icon" onclick="toggleMenu()">☰</button>
+
     <nav class="nav-links">
-      <ul>
-        <li><a href="home.html">Home</a></li>
-        <li><a href="meusEventos.html">Meus Eventos</a></li>
+      <ul id="nav-links">
+        <li><a href="../home/home.html">Home</a></li>
+        <li><a href="../home/meusEventos.html">Meus Eventos</a></li>
         <li><a href="participantesValidar.html" class="active">Painel Organizador</a></li>
       </ul>
     </nav>
@@ -40,6 +42,7 @@
       <button class="tab" data-tab="relatorios">Relatórios</button>
     </div>
 
+    <!-- Aba Participantes -->
     <section id="participantes" class="tab-content active" style="display: none;">
       <div class="search-bar">
         <input type="text" placeholder="Buscar participante..." id="buscarParticipante" />
@@ -47,6 +50,7 @@
       <ul class="participantes-lista" id="listaParticipantes"></ul>
     </section>
 
+    <!-- Aba Validar Ingressos -->
     <section id="validar" class="tab-content" style="display: none;">
       <video id="preview" width="300" height="300"></video>
       <p id="status">Aponte o QR Code do ingresso</p>
@@ -56,6 +60,7 @@
       </div>
     </section>
 
+    <!-- Aba Relatórios -->
     <section id="relatorios" class="tab-content" style="display: none;">
       <h2>Relatórios e Análises</h2>
       <p>Selecione um evento para visualizar os relatórios:</p>
@@ -106,5 +111,11 @@
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
   <script type="module" src="../javaScript/painelOrganizador.js"></script>
+  <script>
+function toggleMenu() {
+  document.getElementById('nav-links').classList.toggle('show');
+}
+</script>
+
 </body>
 </html>
