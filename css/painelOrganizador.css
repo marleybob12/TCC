@@ -1,0 +1,226 @@
+/* =========================
+   Fonte e Variáveis Globais
+========================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+  --header-height: 85px;
+  --primary-color: #2F78E3;
+  --secondary-color: #199BD9;
+  --background-glass: rgba(255,255,255,0.1);
+  --text-color: #fff;
+  --border-radius: 12px;
+}
+
+/* =========================
+   Reset e Básicos
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to right, #1e3c72, #2a5298);
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+/* =========================
+   Header
+========================= */
+header {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--background-glass);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+header .logo img {
+  height: 50px;
+}
+
+.nav-links ul {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+
+.nav-links ul li a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.nav-links ul li a.active,
+.nav-links ul li a:hover {
+  background: var(--primary-color);
+}
+
+/* =========================
+   Main e Conteúdos
+========================= */
+main {
+  padding: calc(var(--header-height) + 20px) 20px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* =========================
+   Tabs
+========================= */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.tabs .tab {
+  flex: 1;
+  padding: 10px 15px;
+  background: var(--background-glass);
+  border-radius: var(--border-radius);
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+}
+
+.tabs .tab.active {
+  background: var(--primary-color);
+}
+
+/* =========================
+   Lista de Participantes
+========================= */
+.participantes-lista li {
+  background: var(--background-glass);
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.participantes-lista li .status-uso.usado {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.participantes-lista li .status-uso.valido {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.participantes-lista li .status-uso.invalido {
+  color: #f87171;
+  font-weight: 600;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  border: none;
+  outline: none;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   Validador de Ingressos
+========================= */
+#preview {
+  border-radius: var(--border-radius);
+  margin-bottom: 15px;
+}
+
+#historico ul li {
+  background: var(--background-glass);
+  padding: 8px 10px;
+  border-radius: var(--border-radius);
+  margin-bottom: 5px;
+}
+
+/* =========================
+   Relatórios - Swiper
+========================= */
+.swiper-container {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+}
+
+.relatorio-card {
+  background: var(--background-glass);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--primary-color);
+}
+
+.swiper-pagination-bullet {
+  background: var(--primary-color);
+}
+
+/* =========================
+   Footer
+========================= */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: var(--background-glass);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.2);
+  margin-top: 40px;
+}
+
+/* =========================
+   Responsividade
+========================= */
+@media(max-width:768px){
+  .nav-links ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tabs {
+    flex-direction: column;
+  }
+
+  .relatorio-card {
+    width: 95%;
+  }
+}
+
+@media(max-width:480px){
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
