@@ -1,0 +1,424 @@
+/* ==================== FONTE ==================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* ==================== RESET ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f5f9ff;
+}
+
+/* ==================== HEADER ==================== */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, padding 0.3s ease;
+}
+
+header .logo img {
+  height: 50px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background-color: rgba(25, 155, 217, 0.3);
+}
+
+.nav-links .login {
+  background: linear-gradient(to right, rgb(18, 69, 255), rgb(65, 214, 255));
+  padding: 8px 15px;
+  border-radius: 20px;
+  transition: 0.5s linear;
+}
+
+.nav-links .login:hover {
+  background: linear-gradient(to bottom, rgb(65, 214, 255), rgb(18, 69, 255));
+}
+
+/* Ícone hamburguer */
+.menu-icon {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: white;
+}
+
+/* ==================== HERO ==================== */
+.hero {
+  background: linear-gradient(135deg, #09B3CF, #7D2AE7);
+  color: white;
+  padding: 120px 20px 100px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 450px;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 800px;
+  padding: 30px;
+  background-color: rgba(255,255,255,0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.3);
+}
+
+.hero p {
+  font-size: 1.3rem;
+  margin-bottom: 40px;
+  line-height: 1.6;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.25);
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 15px 35px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  border: none;
+}
+
+.btn-primary {
+  background-color: white;
+  color: #09B3CF;
+  box-shadow: 0 8px 15px rgba(9,179,207,0.3);
+}
+
+.btn-primary:hover {
+  background-color: #e6e6e6;
+  box-shadow: 0 10px 20px rgba(9,179,207,0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(255,255,255,0.2);
+  border-color: #199BD9;
+  transform: translateY(-2px);
+}
+
+/* ==================== SOBRE ==================== */
+#sobre {
+  padding: 80px 20px;
+  background: #f7f9fc;
+  text-align: center;
+  color: #333;
+}
+
+.sobre-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#sobre h2 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #2F78E3;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+}
+
+#sobre h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: #2F78E3;
+  margin: 15px auto 0;
+  border-radius: 2px;
+}
+
+#sobre .descricao {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+#sobre .impacto {
+  font-size: 1.3rem;
+  color: #222;
+  margin-top: 30px;
+  font-weight: 600;
+}
+
+/* ==================== ACORDEÃO ==================== */
+#missao-valores {
+  padding: 50px 20px;
+  background-color: #e6f2f1;
+  text-align: center;
+}
+
+.acordeao-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.acordeao-item {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #ccc;
+}
+
+.acordeao-titulo {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 15px 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #199BD9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.3s ease;
+}
+
+.acordeao-titulo:hover {
+  background-color: rgba(25, 155, 217, 0.1);
+}
+
+.acordeao-conteudo {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 20px;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+.acordeao-item.ativo .acordeao-conteudo {
+  padding: 15px 20px;
+  max-height: 1000px;
+}
+
+/* ==================== FUNCIONALIDADES ==================== */
+#funcionalidades {
+  padding: 60px 20px;
+  background-color: #f4f4f4;
+  text-align: center;
+}
+
+#funcionalidades h2 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #2F78E3;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.funcionalidades {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  
+}
+
+.funcao {
+    box-shadow: 0px 0px 8px 0px black;
+  width: 300px;
+  border-radius: 20px;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.funcao:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0px 0px 8px 0px black;
+}
+
+.funcao img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+/* ==================== CTA FINAL ==================== */
+#cta-final {
+  background: linear-gradient(135deg, #5251E8, #9C8CEB);
+  color: white;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+#cta-final h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+#cta-final p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+#cta-final .cta {
+  background-color: #09B3CF;
+  color: white;
+  padding: 15px 35px;
+  border-radius: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#cta-final .cta:hover {
+  background-color: #199BD9;
+  transform: translateY(-3px);
+}
+
+/* ==================== FOOTER ==================== */
+footer {
+  background-color: #2F78E3;
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+footer ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+footer a:hover {
+  color: #e6e6e6;
+  transform: translateY(-2px);
+}
+
+.social-media {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.social-media a {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-media a:hover {
+  transform: scale(1.2);
+  color: #09B3CF;
+}
+
+/* ==================== RESPONSIVIDADE ==================== */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .funcionalidades {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header nav {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 220px;
+    flex-direction: column;
+    background-color: rgba(52,73,94,0.95);
+    padding: 10px;
+    border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+  }
+
+  header nav.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .menu-icon {
+    display: block;
+  }
+
+  .nav-links a {
+    padding: 10px;
+  }
+}

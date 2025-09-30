@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Popular Eventos</title>
+</head>
+<body>
+  <h1>Popular Firestore com Eventos de Teste</h1>
+  <button id="popular">Popular Eventos</button>
+
+<p id="status"></p>
+<script type="module">
+  import { app, db } from "../javaScript/firebaseConfig.js";
+  import { popularEventosMassivo } from "../javaScript/popularEventosMassivo.js";
+
+  // Adiciona evento ao botão para popular eventos no Firestore
+  document.getElementById("popular").addEventListener("click", async () => {
+    document.getElementById("status").textContent = "⏳ Inserindo eventos...";
+    try {
+      await popularEventosMassivo(db);
+      document.getElementById("status").textContent = "✅ Eventos de teste criados com sucesso!";
+    } catch (e) {
+      document.getElementById("status").textContent = "❌ Erro ao popular eventos: " + e.message;
+    }
+  });
+</script>
+
+</body>
+</html>

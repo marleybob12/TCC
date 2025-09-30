@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Metadados básicos -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>EventFlow - Recuperar Usuário</title>
+
+  <!-- Adicione aqui links para CSS e outros recursos -->
+  <link rel="icon" href="img/logo_colorida_cortada.png" type="image/png" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <!-- Cabeçalho -->
+  <header>
+    <!-- Espaço reservado para o cabeçalho -->
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main>
+    <!-- Espaço reservado para o formulário ou informações de recuperação -->
+    <div class="login-container">
+      <div class="login-esquerda">
+        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Ilustração de recuperação de conta">
+      </div>
+
+      <div class="login-direita">
+        <h2>Recuperar Usuário</h2>
+        <p>Informe o email cadastrado para visualizar seu nome de usuário.</p>
+
+        <form id="recuperarUsuarioForm" autocomplete="off">
+          <div class="input-group">
+            <label for="email" class="sr-only">Email:</label>
+            <input type="email" id="email" placeholder="Digite seu email" required>
+          </div>
+
+          <button type="submit" class="login-btn">Ver Nome</button>
+
+          <p class="voltar-login">
+            <a href="login.html">← Voltar para o Login</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <!-- Espaço reservado para o rodapé -->
+  </footer>
+
+  <!-- Firebase Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAMV0Fbn-3bUCu6-Vn3182MYWEqrJsqZPM",
+      authDomain: "eventflow-87d51.firebaseapp.com",
+      databaseURL: "https://eventflow-87d51-default-rtdb.firebaseio.com",
+      projectId: "eventflow-87d51",
+      storageBucket: "eventflow-87d51.appspot.com",
+      messagingSenderId: "1060995756519",
+      appId: "1:1060995756519:web:1963ecc800497812630d42"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById("recuperarUsuarioForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+
+      try {
+        const usuariosRef = collection(db, "Usuario");
+        const q = query(usuariosRef, where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          alert("Nenhum usuário encontrado com este email.");
+        } else {
+          querySnapshot.forEach((doc) => {
+            const dados = doc.data();
+            alert(`Nome do usuário: ${dados.nome}`);
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao recuperar usuário:", error);
+        alert("Erro ao recuperar usuário.");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,647 @@
+/* =========================
+   Importação de fontes
+   ========================= */
+   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+   /* =========================
+      Variáveis globais
+      ========================= */
+   :root {
+     --header-height: 85px;
+   }
+   
+   /* =========================
+      Reset e estilos globais
+      ========================= */
+   * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+     scroll-behavior: smooth;
+   }
+   
+   body {
+     font-family: 'Poppins', sans-serif;
+     line-height: 1.6;
+     color: #1f1f1f;
+     background: linear-gradient(to bottom, #f5f9ff, #e6eeff);
+     padding-top: var(--header-height);
+   }
+   
+   /* =========================
+      Header
+      ========================= */
+   header {
+     position: fixed;
+     top: 0;
+     width: 100%;
+     z-index: 10;
+     background: linear-gradient(135deg, rgba(156, 140, 235, 0.7), rgba(47, 120, 227, 0.7));
+     backdrop-filter: blur(12px);
+     -webkit-backdrop-filter: blur(12px);
+     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+   }
+   
+   .header-container {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 10px 30px;
+   }
+   
+   header .logo img {
+     width: 190px;
+   }
+   
+   header nav ul {
+     list-style: none;
+     display: flex;
+     gap: 20px;
+   }
+   
+   header nav a {
+     text-decoration: none;
+     color: #ffffff;
+     font-weight: 600;
+     padding: 8px 12px;
+     border-radius: 5px;
+     transition: background-color 0.3s ease;
+   }
+   
+   header nav a:hover {
+     background-color: rgba(0, 86, 210, 0.8);
+   }
+   
+   /* =========================
+      Menu Mobile
+      ========================= */
+   .menu-icon {
+     display: none;
+     font-size: 1.8rem;
+     color: white;
+     background: none;
+     border: none;
+     cursor: pointer;
+   }
+   
+   /* =========================
+      Carrossel (Bootstrap imagens)
+      ========================= */
+   .carousel {
+     position: relative;
+     width: 100%;
+     max-width: 1200px;
+     margin: auto;
+     overflow: hidden;
+   }
+   
+   .carousel-item img {
+     width: 80%;
+     height: 350px;
+     object-fit: cover;
+     border-radius: 20px;
+   }
+   
+   .carousel-control-prev-icon,
+   .carousel-control-next-icon {
+     background-color: rgba(0, 0, 0, 0.4);
+     border-radius: 50%;
+     padding: 20px;
+   }
+   
+   /* =========================
+      Hero
+      ========================= */
+   .hero {
+     text-align: center;
+     padding: 40px 20px;
+   }
+   
+   .hero h1 {
+     font-size: 2.5rem;
+     color: #1673ff;
+   }
+   
+   .hero p {
+     font-size: 1.2rem;
+     margin-bottom: 20px;
+   }
+   
+   /* =========================
+      Botões
+      ========================= */
+   .btn {
+     background: #1673ff;
+     color: #fff;
+     padding: 0.8rem 1.4rem;
+     border-radius: 30px;
+     font-weight: 600;
+     text-decoration: none;
+     border: none;
+     cursor: pointer;
+     transition: background 0.3s ease, transform 0.2s ease;
+   }
+   
+   .btn:hover {
+     background: #0056d2;
+     transform: translateY(-2px);
+   }
+   
+   .btn-logout {
+     background: #ff4d4d;
+   }
+   .btn-logout:hover {
+     background: #cc0000;
+   }
+   
+   /* =========================
+      Dropdown usuário
+      ========================= */
+   .user-dropdown {
+     position: relative;
+     display: inline-block;
+   }
+   
+   .user-account {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+     padding: 6px 12px;
+     border-radius: 30px;
+     background: rgba(255, 255, 255, 0.1);
+     backdrop-filter: blur(8px);
+     border: 1px solid rgba(255, 255, 255, 0.2);
+     cursor: pointer;
+     transition: background 0.3s ease;
+   }
+   
+   .user-account:hover {
+     background: rgba(255, 255, 255, 0.2);
+   }
+   
+   .user-account img {
+     width: 36px;
+     height: 36px;
+     border-radius: 50%;
+     object-fit: cover;
+     border: 2px solid white;
+   }
+   
+   .user-name {
+     font-weight: 500;
+     color: white;
+     font-size: 16px;
+   }
+   
+   .arrow {
+     color: white;
+     font-size: 14px;
+   }
+   
+   .dropdown-menu {
+     position: absolute;
+     right: 0;
+     top: 120%;
+     background: rgba(255, 255, 255, 0.15);
+     backdrop-filter: blur(10px);
+     border: 1px solid rgba(255, 255, 255, 0.2);
+     border-radius: 12px;
+     display: none;
+     flex-direction: column;
+     min-width: 150px;
+     z-index: 1000;
+     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+   }
+   
+   .dropdown-menu a {
+     color: rgb(39, 171, 211);
+     text-decoration: none;
+     padding: 10px 15px;
+     font-size: 15px;
+     transition: background 0.2s ease;
+     border-radius: 8px;
+   }
+   
+   .dropdown-menu a:hover {
+     background: rgba(255, 255, 255, 0.3);
+   }
+   
+   /* =========================
+      Cards Glass
+      ========================= */
+   .card-glass {
+     background: rgba(255, 255, 255, 0.15);
+     backdrop-filter: blur(8px);
+     border-radius: 12px;
+     border: 1px solid rgba(255, 255, 255, 0.2);
+     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+     padding: 12px;
+     margin: 8px auto;
+   
+     /* 🔹 Fixando tamanho */
+     width: 100%;
+     max-width: 300px;
+     height: 320px;
+   
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+   }
+   
+   .card-glass img {
+     width: 100%;
+     height: 140px;
+     object-fit: cover;
+     border-radius: 10px;
+   }
+   
+   .card-content {
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+     padding-top: 8px;
+   }
+   
+   .card-glass h2 {
+     font-size: 1rem;
+     margin: 6px 0 4px;
+     line-height: 1.2;
+     flex-shrink: 0;
+   }
+   
+   .card-glass p {
+     font-size: 0.85rem;
+     margin: 2px 0;
+     line-height: 1.4;
+     color: #333;
+     flex-shrink: 0;
+   }
+   
+   .cards-container {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+     gap: 20px;
+     margin-top: 15px;
+   }
+   
+   /* =========================
+      Botões de categoria (base)
+      ========================= */
+   .btn-categoria {
+     /* original: flex: 1 1 0; */
+     /* ajustaremos com overrides abaixo para evitar crescimento indesejado */
+     min-width: 120px;
+     min-height: 100px;
+     text-align: center;
+     padding: 0.7rem 1.5rem;
+     border: none;
+     border-radius: 2rem;
+     background: #4f8cff;
+     color: #fff;
+     font-weight: 600;
+     font-size: 1rem;
+     cursor: pointer;
+     transition: background 0.3s ease, transform 0.2s ease;
+   }
+   
+   .btn-categoria:hover {
+     background: #2563eb;
+     transform: translateY(-3px);
+   }
+   
+   /* =========================
+      Evento-categoria (base)
+      ========================= */
+   .eventos-categoria {
+     display: flex;
+     overflow-x: auto;
+     gap: 1rem;
+     padding: 1rem 0;
+     scrollbar-width: thin;
+     scrollbar-color: #888 #eee;
+   }
+   
+   .eventos-categoria::-webkit-scrollbar {
+     height: 8px;
+   }
+   .eventos-categoria::-webkit-scrollbar-thumb {
+     background: #888;
+     border-radius: 4px;
+   }
+   .eventos-categoria::-webkit-scrollbar-track {
+     background: #eee;
+   }
+   
+   /* =========================
+      Container principal
+      ========================= */
+   main {
+     max-width: 1200px;
+     margin: 0 auto;
+     padding: 60px 20px;
+   }
+   
+   /* =========================
+      Footer
+      ========================= */
+   footer {
+     background: rgba(47, 120, 227, 0.85);
+     backdrop-filter: blur(10px);
+     -webkit-backdrop-filter: blur(10px);
+     color: #fff;
+     padding: 40px 20px 20px;
+     text-align: center;
+     font-family: 'Poppins', sans-serif;
+     border-top: 1px solid rgba(255,255,255,0.2);
+     margin-top: 40px;
+   }
+   
+   .footer-container {
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: space-around;
+     gap: 30px;
+     max-width: 1200px;
+     margin: auto;
+   }
+   
+   .footer-section {
+     flex: 1 1 200px;
+     min-width: 180px;
+   }
+   
+   .footer-section h3 {
+     margin-bottom: 15px;
+     font-size: 1.2rem;
+     color: #fff;
+   }
+   
+   .footer-section p, 
+   .footer-section ul li {
+     font-size: 0.95rem;
+     line-height: 1.5;
+     color: #ffffffcc;
+   }
+   
+   .footer-section ul {
+     list-style: none;
+     padding: 0;
+   }
+   
+   .footer-section ul li a {
+     text-decoration: none;
+     color: #ffffffcc;
+     transition: color 0.3s;
+   }
+   
+   .footer-section ul li a:hover {
+     color: #fff;
+   }
+   
+   .social-media {
+     display: flex;
+     gap: 15px;
+     justify-content: center;
+     margin-top: 10px;
+   }
+   
+   .social-media a {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 36px;
+     height: 36px;
+     border-radius: 50%;
+     background: rgba(255, 255, 255, 0.15);
+     backdrop-filter: blur(6px);
+     color: #fff;
+     font-size: 1.3rem;
+     transition: all 0.3s ease;
+   }
+   
+   .social-media a:hover {
+     background: rgba(255, 255, 255, 0.3);
+     color: #a8c6ff;
+   }
+   
+   footer .copyright {
+     margin-top: 25px;
+     font-size: 0.85rem;
+     color: #ffffff99;
+   }
+   .card-content {
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+     padding-top: 8px;
+   }
+   
+   /* =========================
+      Responsividade (base)
+      ========================= */
+   @media (max-width: 1024px) {
+     main { padding: 20px 8px; }
+     .carousel-item img { height: 220px; }
+   }
+   
+   @media (max-width: 900px) {
+     .cards-container {
+       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+       gap: 12px;
+     }
+   
+     .card-glass {
+       max-width: 260px;
+       height: 280px;
+       padding: 10px;
+     }
+   
+     .card-glass img {
+       height: 120px;
+     }
+   
+     .card-glass h2 { font-size: 0.95rem; }
+     .card-glass p { font-size: 0.8rem; }
+   }
+   
+   @media (max-width: 768px) {
+     .header-container { flex-direction: column; align-items: flex-start; padding: 10px 8px; }
+     header .logo img { width: 120px; }
+     .hero h1 { font-size: 1.3rem; }
+     .hero p { font-size: 0.95rem; }
+   
+     header nav ul {
+       display: none;
+       flex-direction: column;
+       position: absolute;
+       top: var(--header-height);
+       right: 10px;
+       background: rgba(22, 115, 255, 0.95);
+       padding: 12px;
+       border-radius: 8px;
+       gap: 8px;
+       min-width: 160px;
+     }
+     header nav ul.show { display: flex !important; }
+     .menu-icon { display: block; margin-left: auto; }
+     .user-account { padding: 6px 8px; }
+     .dropdown-menu { min-width: 120px; right: 0; left: auto; }
+     .categoria-swiper .swiper-slide { min-width: 120px; }
+     .btn-categoria { font-size: 0.95rem; padding: 0.6rem 1.1rem; }
+   }
+   
+   @media (max-width: 600px) {
+     .cards-container {
+       grid-template-columns: 1fr;
+       gap: 10px;
+     }
+   
+     .card-glass {
+       max-width: 100%;
+       height: 260px;
+       padding: 8px;
+     }
+   
+     .card-glass img { height: 100px; }
+     .card-glass h2 { font-size: 0.9rem; }
+     .card-glass p { font-size: 0.75rem; line-height: 1.3; }
+   }
+   
+   @media (max-width: 480px) {
+     .header-container { padding: 6px 2px; }
+     .hero { padding: 20px 4px; }
+     .hero h1 { font-size: 1.1rem; }
+     .carousel-item img { height: 120px; width: 100%; }
+     .categoria-swiper .swiper-slide { min-width: 90px; }
+     .btn-categoria { font-size: 0.85rem; padding: 0.5rem 0.7rem; }
+     main { padding: 10px 2px; }
+   }
+   
+   /* =========================
+      OVERRIDES para o CARROSSEL DE CATEGORIAS (Swiper)
+      Coloque essas regras por último para garantir prioridade.
+      ========================= */
+   
+   /* Remove o overflow-x padrão e o gap do container pai (Swiper controla o scroll) */
+   .eventos-categoria {
+     overflow: visible !important;
+     gap: 0 !important;
+     padding: 0.6rem 0 !important;
+   }
+   
+   /* Garanta que a "swiper" ocupe largura total e que o wrapper alinhe centralmente */
+   .categoria-swiper {
+     width: 100%;
+   }
+   .categoria-swiper .swiper-wrapper {
+     display: flex;
+     align-items: center;
+     /* O Swiper aplica transform/translate no wrapper; não sobrescreva isso */
+   }
+   
+   /* Força cada slide a ter width auto e não crescer (assim o botão não se estica) */
+   .categoria-swiper .swiper-slide {
+     width: auto !important;
+     flex: 0 0 auto !important; /* não crescer, não encolher */
+     margin-right: 8px !important; /* <== ajuste este valor para controlar o espaçamento */
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+   }
+   
+   /* Remove margem do último slide */
+   .categoria-swiper .swiper-slide:last-child {
+     margin-right: 0 !important;
+   }
+   
+   /* Ajustes visuais e comportamento dos botões de categoria:
+      - flex:none evita que cresçam para preencher a linha
+      - min-width/min-height reduzidos deixam mais compactos
+   */
+   .btn-categoria {
+     flex: none !important;
+     display: inline-flex !important;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 6px;
+     min-width: 86px !important;
+     min-height: 70px !important;
+     padding: 8px 10px !important;
+     font-size: 0.95rem !important;
+     border-radius: 14px !important;
+     white-space: nowrap !important;
+     box-sizing: border-box !important;
+   }
+   
+   /* Melhora a apresentação do ícone (quando usado com <i> e <br>) */
+   .btn-categoria i {
+     display: block;
+     font-size: 16px;
+     line-height: 1;
+   }
+   
+   /* Ajuste leve nas setas do Swiper (opcionales) */
+   .categoria-swiper .swiper-button-next,
+   .categoria-swiper .swiper-button-prev {
+     top: 50%;
+     transform: translateY(-50%);
+     width: 36px;
+     height: 36px;
+     border-radius: 50%;
+     background: rgba(0,0,0,0.06);
+   }
+   .categoria-swiper .swiper-button-next::after,
+   .categoria-swiper .swiper-button-prev::after {
+     font-size: 14px;
+     color: rgba(0,0,0,0.6);
+   }
+   
+   /* Responsividade dos overrides */
+   @media (max-width: 768px) {
+     .categoria-swiper .swiper-slide { margin-right: 6px !important; }
+     .btn-categoria {
+       min-width: 72px !important;
+       min-height: 58px !important;
+       padding: 6px 8px !important;
+       font-size: 0.85rem !important;
+     }
+   }
+   
+   @media (max-width: 480px) {
+     .categoria-swiper .swiper-slide { margin-right: 4px !important; }
+     .btn-categoria {
+       min-width: 64px !important;
+       min-height: 54px !important;
+       padding: 5px 6px !important;
+       font-size: 0.82rem !important;
+     }
+   }
+   
+   /* -------------------------
+      NOTAS RÁPIDAS:
+      - Para diminuir ainda mais o espaçamento, reduza `margin-right` em:
+          .categoria-swiper .swiper-slide { margin-right: 4px !important; }
+      - Para aumentar, aumente esse valor.
+      - Mantenha a inicialização do Swiper com `spaceBetween: 0` (ou pequeno), 
+        pois o espaçamento agora é controlado pelo CSS (margin-right).
+   ------------------------- */
+   header nav ul {
+    display: flex;
+    align-items: center;      /* centraliza verticalmente */
+    gap: 20px;                /* mantém o espaçamento entre botões */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header nav ul li a,
+  header .user-account {
+    display: flex;
+    align-items: center;      /* garante que cada botão/link interno também fique centralizado verticalmente */
+    height: 100%;             /* ocupa toda a altura do header */
+  }
+  

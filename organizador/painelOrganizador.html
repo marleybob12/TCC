@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EventFlow - Painel Organizador</title>
+  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png">
+  <link rel="stylesheet" href="../css/painelOrganizador.css">
+
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/instascan/1.0.0/instascan.min.js"></script>
+</head>
+<body>
+  <header>
+    <a href="../home/home.html" class="logo"><img src="../img/logo_barra.png" alt="Logo EventFlow" /></a>
+   <button class="menu-icon" onclick="toggleMenu()">☰</button>
+
+    <nav class="nav-links">
+      <ul id="nav-links">
+        <li><a href="../home/home.html">Home</a></li>
+        <li><a href="../home/meusEventos.html">Meus Eventos</a></li>
+        <li><a href="participantesValidar.html" class="active">Painel Organizador</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Painel do Organizador</h1>
+
+    <div class="evento-selector">
+      <label for="eventoSelect">Selecione um evento:</label>
+      <select id="eventoSelect">
+        <option value="">Selecione um evento</option>
+      </select>
+    </div>
+
+    <div class="tabs" style="display: none;">
+      <button class="tab active" data-tab="participantes">Participantes</button>
+      <button class="tab" data-tab="validar">Validar Ingressos</button>
+      <button class="tab" data-tab="relatorios">Relatórios</button>
+    </div>
+
+    <!-- Aba Participantes -->
+    <section id="participantes" class="tab-content active" style="display: none;">
+      <div class="search-bar">
+        <input type="text" placeholder="Buscar participante..." id="buscarParticipante" />
+      </div>
+      <ul class="participantes-lista" id="listaParticipantes"></ul>
+    </section>
+
+    <!-- Aba Validar Ingressos -->
+    <section id="validar" class="tab-content" style="display: none;">
+      <video id="preview" width="300" height="300"></video>
+      <p id="status">Aponte o QR Code do ingresso</p>
+      <div id="historico">
+        <h2>Últimos ingressos validados</h2>
+        <ul id="listaHistorico"></ul>
+      </div>
+    </section>
+
+    <!-- Aba Relatórios -->
+    <section id="relatorios" class="tab-content" style="display: none;">
+      <h2>Relatórios e Análises</h2>
+      <p>Selecione um evento para visualizar os relatórios:</p>
+      <select id="eventoSelectorRelatorio">
+        <option value="">Selecione um evento</option>
+      </select>
+
+      <div id="relatoriosContainer" style="display: none;">
+        <div class="swiper-container">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <div class="relatorio-card">
+                <h2>Participantes Confirmados</h2>
+                <canvas id="graficoParticipantes"></canvas>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="relatorio-card">
+                <h2>Status dos Ingressos</h2>
+                <canvas id="graficoIngressos"></canvas>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="relatorio-card">
+                <h2>Categoria dos Participantes</h2>
+                <canvas id="graficoCategorias"></canvas>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="relatorio-card">
+                <h2>Avaliação Média</h2>
+                <canvas id="graficoAvaliacao"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-pagination"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 EventFlow. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <script type="module" src="../javaScript/painelOrganizador.js"></script>
+  <script>
+function toggleMenu() {
+  document.getElementById('nav-links').classList.toggle('show');
+}
+</script>
+
+</body>
+</html>

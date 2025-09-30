@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EventFlow - Login</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="logo_colorida_cortada.png" type="image/png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-esquerda">
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Ilustração Login">
+    </div>
+    <div class="login-direita">
+      <h2>Fazer Login</h2>
+
+      <form id="loginForm" autocomplete="off">
+        <div class="input-group">
+          <label for="loginEmail" class="sr-only">Email:</label>
+          <input type="email" id="loginEmail" placeholder="Digite seu email" required>
+        </div>
+        <div class="input-group">
+          <label for="loginSenha" class="sr-only">Senha:</label>
+          <input type="password" id="loginSenha" placeholder="Digite sua senha" required>
+        </div>
+        <button type="submit" class="login-btn">LOGIN</button>
+
+        <p class="esqueceu"><a href="recuperacaoUser.html">Esqueceu seu usuário?</a></p>
+        <p class="esqueceu"><a href="recuperacaoSenha.html">Esqueceu sua senha?</a></p>
+
+        <p>
+          <button type="button" class="criar-conta-btn" onclick="window.location.href='cadastro.html'">
+            Criar conta →
+          </button>
+        </p>
+
+        <p>
+          <button type="button" id="googleLogin" class="google-btn">
+            <i class="fa-brands fa-google"></i> Entrar com Google
+          </button>
+        </p>
+
+        <p id="mensagem" style="text-align:center; margin-top:10px; font-weight:bold;"></p>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from "./javaScript/firebaseConfig.js";
+    import { loginUsuario } from "./javaScript/auth.js";
+    import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const loginForm = document.getElementById("loginForm");
+    const mensagemEl = document.getElementById("mensagem");
+    const provider = new GoogleAuthProvider();
+
+    // Redireciona usuário baseado no tipo
+    async function redirecionarUsuario(user) {
+      const userDocRef = doc(db, "Usuario", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const tipo = userDocSnap.data().tipo || "participante";
+
+        if (tipo === "organizador") window.location.href = "organizador/painelOrganizador.html";
+        else if (tipo === "admin") window.location.href = "admin/dashboard.html";
+        else window.location.href = "home/home.html";
+      } else {
+        alert("Usuário não encontrado no banco de dados.");
+      }
+    }
+
+    // Login com email/senha
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("loginEmail").value.trim();
+      const senha = document.getElementById("loginSenha").value;
+
+      if (!email || !senha) {
+        mensagemEl.innerText = "Preencha todos os campos!";
+        mensagemEl.style.color = "red";
+        return;
+      }
+
+      try {
+        const user = await loginUsuario(email, senha); 
+        await redirecionarUsuario(user);
+      } catch (error) {
+        let mensagem = "";
+        switch(error.code) {
+          case 'auth/user-not-found':
+            mensagem = "Usuário não encontrado.";
+            break;
+          case 'auth/wrong-password':
+            mensagem = "Senha incorreta.";
+            break;
+          case 'auth/invalid-email':
+            mensagem = "Email inválido.";
+            break;
+          default:
+            mensagem = error.message;
+        }
+        mensagemEl.innerHTML = '<i class="fa-solid fa-xmark"></i> ' + mensagem;
+        mensagemEl.style.color = "red";
+      }
+    });
+
+    // Login com Google
+    document.getElementById("googleLogin").addEventListener("click", async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        const userDocRef = doc(db, "Usuario", user.uid);
+        let userDocSnap = await getDoc(userDocRef);
+
+        // Se usuário não existir → cria
+        if (!userDocSnap.exists()) {
+          await setDoc(userDocRef, {
+            usuarioID: user.uid,
+            nome: user.displayName || "",
+            email: user.email || "",
+            tipo: "participante",
+            dataCriacao: serverTimestamp()
+          });
+          userDocSnap = await getDoc(userDocRef);
+        }
+
+        // Se faltarem dados → mostra formulário extra
+        if (!userDocSnap.data().cpf || !userDocSnap.data().telefone || !userDocSnap.data().dataNascimento) {
+          mostrarFormularioExtras(user.uid);
+        } else {
+          await redirecionarUsuario(user);
+        }
+
+      } catch (error) {
+        mensagemEl.innerHTML = '<i class="fa-solid fa-xmark"></i> '  + error.message;
+        mensagemEl.style.color = "red";
+      }
+    });
+
+    // Formulário extra (CPF, telefone, nascimento)
+    function mostrarFormularioExtras(uid) {
+      const formContainer = document.querySelector(".login-direita");
+      formContainer.innerHTML = `
+        <h3>Complete seu perfil</h3>
+        <div class="input-group">
+          <input type="text" id="cpf" placeholder="CPF (11 dígitos)" required pattern="\\d{11}" maxlength="11" inputmode="numeric">
+        </div>
+        <div class="input-group">
+          <input type="text" id="telefone" placeholder="Telefone" required>
+        </div>
+        <div class="input-group">
+          <input type="date" id="dataNascimento" required>
+        </div>
+        <button id="salvarExtras" class="login-btn">Salvar</button>
+        <p id="mensagemExtras" style="text-align:center; margin-top:10px; font-weight:bold;"></p>
+      `;
+
+      document.getElementById("salvarExtras").addEventListener("click", async () => {
+        const cpf = document.getElementById("cpf").value.trim();
+        const telefone = document.getElementById("telefone").value.trim();
+        const dataNascimento = document.getElementById("dataNascimento").value;
+
+        const mensagemExtras = document.getElementById("mensagemExtras");
+
+        if (!cpf || !telefone || !dataNascimento) {
+          mensagemExtras.innerText = "Preencha todos os campos!";
+          mensagemExtras.style.color = "red";
+          return;
+        }
+
+        try {
+          await setDoc(doc(db, "Usuario", uid), {
+            cpf,
+            telefone,
+            dataNascimento,
+          }, { merge: true });
+
+          mensagemExtras.innerText = "Dados salvos com sucesso!";
+          mensagemExtras.style.color = "green";
+
+          // Redirecionar para home.html após salvar os dados
+          setTimeout(() => window.location.href = "home/home.html", 1000);
+
+        } catch (error) {
+          mensagemExtras.innerText = "Erro ao salvar: " + error.message;
+          mensagemExtras.style.color = "red";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

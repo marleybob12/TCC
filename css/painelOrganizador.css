@@ -1,0 +1,331 @@
+/* =========================
+   Importação de fontes
+========================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* =========================
+   Variáveis globais
+========================= */
+:root {
+  --header-height: 85px;
+  --primary-color: #2F78E3;
+  --secondary-color: #199BD9;
+  --background-glass: rgba(255,255,255,0.1);
+  --text-color: #fff;
+  --border-radius: 12px;
+}
+
+/* =========================
+   Reset e estilos globais
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+  background: linear-gradient(to right, #1e3c72, #2a5298);
+  min-height: 100vh;
+  padding-top: var(--header-height);
+}
+
+/* =========================
+   Header
+========================= */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: var(--header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background: var(--background-glass);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  z-index: 999;
+}
+
+header .logo img {
+  height: 50px;
+}
+
+header nav ul {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  list-style: none;
+  transition: all 0.3s ease;
+}
+
+header nav ul li a,
+header .user-account {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+header nav ul li a.active,
+header nav ul li a:hover {
+  background: var(--primary-color);
+}
+
+/* =========================
+   Menu Mobile
+========================= */
+.menu-icon {
+  display: none;
+  font-size: 1.8rem;
+  color: var(--text-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+header nav ul.show {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: var(--header-height);
+  right: 10px;
+  background: rgba(47, 120, 227, 0.95);
+  padding: 12px;
+  border-radius: 8px;
+  gap: 10px;
+  min-width: 160px;
+}
+
+/* =========================
+   Main e Conteúdos
+========================= */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* =========================
+   Tabs
+========================= */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.tabs .tab {
+  flex: 1;
+  padding: 10px 15px;
+  background: var(--background-glass);
+  border-radius: var(--border-radius);
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-weight: 600;
+}
+
+.tabs .tab.active {
+  background: var(--primary-color);
+}
+
+/* =========================
+   Lista de Participantes
+========================= */
+.participantes-lista li {
+  background: var(--background-glass);
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.participantes-lista li .status-uso.usado {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.participantes-lista li .status-uso.valido {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.participantes-lista li .status-uso.invalido {
+  color: #f87171;
+  font-weight: 600;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  border: none;
+  outline: none;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   Validador de Ingressos
+========================= */
+#preview {
+  border-radius: var(--border-radius);
+  margin-bottom: 15px;
+}
+
+#historico ul li {
+  background: var(--background-glass);
+  padding: 8px 10px;
+  border-radius: var(--border-radius);
+  margin-bottom: 5px;
+}
+
+/* =========================
+   Relatórios - Swiper
+========================= */
+.swiper-container {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+}
+
+.relatorio-card {
+  background: var(--background-glass);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--primary-color);
+}
+
+.swiper-pagination-bullet {
+  background: var(--primary-color);
+}
+
+/* =========================
+   Footer
+========================= */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: var(--background-glass);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.2);
+  margin-top: 40px;
+}
+
+/* =========================
+   Botões de Categoria (Swiper)
+========================= */
+.categoria-swiper {
+  width: 100%;
+}
+
+.categoria-swiper .swiper-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.categoria-swiper .swiper-slide {
+  width: auto !important;
+  flex: 0 0 auto !important;
+  margin-right: 8px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.categoria-swiper .swiper-slide:last-child {
+  margin-right: 0 !important;
+}
+
+.btn-categoria {
+  flex: none !important;
+  display: inline-flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 86px !important;
+  min-height: 70px !important;
+  padding: 8px 10px !important;
+  font-size: 0.95rem !important;
+  border-radius: 14px !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+.btn-categoria:hover {
+  background: #2563eb;
+  transform: translateY(-3px);
+}
+
+.categoria-swiper .swiper-button-next,
+.categoria-swiper .swiper-button-prev {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.06);
+}
+
+.categoria-swiper .swiper-button-next::after,
+.categoria-swiper .swiper-button-prev::after {
+  font-size: 14px;
+  color: rgba(0,0,0,0.6);
+}
+
+/* =========================
+   Responsividade
+========================= */
+@media(max-width:768px){
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .tabs { flex-direction: column; }
+  .relatorio-card { width: 95%; }
+  .categoria-swiper .swiper-slide { margin-right: 6px !important; }
+  .btn-categoria {
+    min-width: 72px !important;
+    min-height: 58px !important;
+    padding: 6px 8px !important;
+    font-size: 0.85rem !important;
+  }
+  .menu-icon { display: block; margin-left: auto; }
+}
+
+@media(max-width:480px){
+  header nav ul { flex-direction: column; gap: 10px; display: none; }
+  header nav ul.show { display: flex; }
+  .categoria-swiper .swiper-slide { margin-right: 4px !important; }
+  .btn-categoria {
+    min-width: 64px !important;
+    min-height: 54px !important;
+    padding: 5px 6px !important;
+    font-size: 0.82rem !important;
+  }
+}
