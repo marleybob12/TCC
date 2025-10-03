@@ -35,6 +35,20 @@
         <option value="">Selecione um evento</option>
       </select>
     </div>
+  
+    <!-- Ações do evento (Edit, Delete, Ver Vendas) -->
+    <div id="eventoActions" style="display:none; margin:12px 0;">
+      <button id="btnEditarEvento" class="btn">✏️ Editar Evento</button>
+      <button id="btnVerVendas" class="btn">💳 Ver Vendas</button>
+      <button id="btnExcluirEvento" class="btn btn-danger">🗑 Excluir Evento</button>
+      <span id="infoVendas" style="margin-left:12px;"></span>
+    </div>
+  
+    <div class="tabs" style="display: none;">
+      <button class="tab active" data-tab="participantes">Participantes</button>
+      <button class="tab" data-tab="validar">Validar Ingressos</button>
+      <button class="tab" data-tab="relatorios">Relatórios</button>
+    </div>
 
     <div class="tabs" style="display: none;">
       <button class="tab active" data-tab="participantes">Participantes</button>

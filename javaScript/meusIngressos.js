@@ -14,6 +14,7 @@ onAuthStateChanged(auth, async (user) => {
   if (!user) return window.location.href = "../login.html";
 
   try {
+    // busca ingressos do usuário
     const q = query(collection(db, "Ingresso"), where("usuarioID", "==", user.uid));
     const querySnap = await getDocs(q);
 
@@ -22,8 +23,42 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
 
-    lista.innerHTML = "";
+    // primeiro: construir lista de eventos únicos a partir dos ingressos
+    const eventoIDs = new Set();
+    querySnap.forEach(doc => eventoIDs.add(doc.data().eventoID));
 
+    // container para eventos
+    let html = "<h2>Eventos que você participa</h2>";
+    html += '<div id="meusEventosParticipando" style="display:flex; flex-direction:column;"></div>';
+    html += "<hr />";
+    html += "<h2>Seus ingressos</h2>";
+    html += '<div id="listaTicketsDetalhados"></div>';
+
+    lista.innerHTML = html;
+
+    const eventosContainer = document.getElementById("meusEventosParticipando");
+    const listaTicketsDetalhados = document.getElementById("listaTicketsDetalhados");
+
+    // popular cartões de eventos
+    for (const eventoID of eventoIDs) {
+      const eventoRef = doc(db, "Evento", eventoID);
+      const eventoSnap = await getDoc(eventoRef);
+      const evento = eventoSnap.exists() ? eventoSnap.data() : {};
+
+      const card = document.createElement("div");
+      card.className = "card-glass";
+      card.style.margin = "8px 0";
+      card.style.padding = "12px";
+      card.innerHTML = `
+        <h3>${evento.titulo || "Evento Desconhecido"}</h3>
+        <p><b>Data:</b> ${evento.dataInicio ? new Date(evento.dataInicio.seconds * 1000).toLocaleDateString() : "A definir"}</p>
+        <p><b>Status:</b> ${evento.status || "A definir"}</p>
+        <a class="btn" href="evento.html?id=${eventoID}">🔍 Ver Detalhes</a>
+      `;
+      eventosContainer.appendChild(card);
+    }
+
+    // Em seguida, lista detalhada dos ingressos (mantendo funcionalidade existente)
     for (const ingressoDoc of querySnap.docs) {
       const ingresso = ingressoDoc.data();
       const ingressoID = ingressoDoc.id;
@@ -47,7 +82,7 @@ onAuthStateChanged(auth, async (user) => {
       div.style.margin = "10px 0";
 
       div.innerHTML = `
-        <h3>${evento.nome || "Evento Desconhecido"}</h3>
+        <h3>${evento.titulo || "Evento Desconhecido"}</h3>
         <p><b>Ingresso:</b> ${lote.nome || "Lote desconhecido"}</p>
         <p><b>Preço:</b> R$ ${lote.preco ? lote.preco.toFixed(2) : "?"}</p>
         <p><b>Status:</b> ${ingresso.status || "ativo"}</p>
@@ -59,8 +94,9 @@ onAuthStateChanged(auth, async (user) => {
         gerarPDF(user, evento, lote, ingresso, ingressoID);
       });
 
-      lista.appendChild(div);
+      listaTicketsDetalhados.appendChild(div);
     }
+
   } catch (err) {
     console.error(err);
     lista.innerHTML = "<p>❌ Erro ao carregar ingressos. Tente novamente mais tarde.</p>";
@@ -90,11 +126,11 @@ async function gerarPDF(user, evento, lote, ingresso, ingressoID) {
   // Dados principais
   docPDF.setFontSize(12);
   docPDF.text(`Nome: ${user.displayName || "Usuário"}`, 20, 40);
-  docPDF.text(`Evento: ${evento.nome || "Evento Desconhecido"}`, 20, 50);
+  docPDF.text(`Evento: ${evento.titulo || "Evento Desconhecido"}`, 20, 50);
   docPDF.text(`Ingresso: ${lote.nome || "Lote Desconhecido"}`, 20, 60);
   docPDF.text(`Preço: R$ ${lote.preco ? lote.preco.toFixed(2) : "?"}`, 20, 70);
   docPDF.text(`Status: ${ingresso.status || "ativo"}`, 20, 80);
-  docPDF.text(`Data da Compra: ${ingresso.dataCompra?.toDate().toLocaleString() || "-"}`, 20, 90);
+  docPDF.text(`Data da Compra: ${ingresso.dataCompra?.toDate?.().toLocaleString() || "-"}`, 20, 90);
 
   // QR Code
   docPDF.addImage(qrCodeDataURL, "PNG", 20, 110, 60, 60);
@@ -104,5 +140,7 @@ async function gerarPDF(user, evento, lote, ingresso, ingressoID) {
   docPDF.text("Apresente este ingresso com QR Code na entrada do evento.", 20, 180);
 
   // Download
-  docPDF.save(`Ingresso_${evento.nome || "evento"}_${lote.nome || "lote"}.pdf`);
+  const safeEventoName = (evento.titulo || "evento").replace(/[^\w\d-_ ]/g, "");
+  const safeLoteName = (lote.nome || "lote").replace(/[^\w\d-_ ]/g, "");
+  docPDF.save(`Ingresso_${safeEventoName}_${safeLoteName}.pdf`);
 }

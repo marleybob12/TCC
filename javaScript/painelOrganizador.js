@@ -1,6 +1,8 @@
 import { auth, db } from "./firebaseConfig.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { 
+  collection, query, where, getDocs, doc, getDoc, updateDoc, deleteDoc 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ======= Variáveis =======
 const eventoSelect = document.getElementById("eventoSelect");
@@ -13,9 +15,16 @@ const statusEl = document.getElementById("status");
 const listaHistorico = document.getElementById("listaHistorico");
 const relatoriosContainer = document.getElementById("relatoriosContainer");
 
+const eventoActions = document.getElementById("eventoActions");
+const btnEditarEvento = document.getElementById("btnEditarEvento");
+const btnExcluirEvento = document.getElementById("btnExcluirEvento");
+const btnVerVendas = document.getElementById("btnVerVendas");
+const infoVendas = document.getElementById("infoVendas");
+
 let historico = [];
 let graficoParticipantes, graficoIngressos, graficoCategorias, graficoAvaliacao;
 let swiper; // Swiper global
+let currentUser = null;
 
 // ======= Funções =======
 function atualizarHistorico(id, status) {
@@ -142,7 +151,7 @@ async function carregarRelatorios(eventoID){
   const eventoSnap = await getDoc(eventoRef);
   if(!eventoSnap.exists()){ alert("Evento não encontrado."); return; }
 
-  // Dados fictícios para gráficos
+  // Dados fictícios para gráficos (substitua por queries reais se necessário)
   const participantes = { confirmados: 120, pendentes: 30 };
   const ingressos = { vendidos: 100, disponiveis: 50 };
   const categorias = { estudante: 80, profissional: 40, outros: 30 };
@@ -178,19 +187,19 @@ async function carregarRelatorios(eventoID){
 function renderizarGraficoParticipantes(data){
   if(graficoParticipantes) graficoParticipantes.destroy();
   const ctx = document.getElementById("graficoParticipantes").getContext("2d");
-  graficoParticipantes = new Chart(ctx,{ type:"doughnut", data:{ labels:["Confirmados","Pendentes"], datasets:[{ data:[data.confirmados,data.pendentes], backgroundColor:["#2F78E3","#E3E3E3"] }] } });
+  graficoParticipantes = new Chart(ctx,{ type:"doughnut", data:{ labels:["Confirmados","Pendentes"], datasets:[{ data:[data.confirmados,data.pendentes] }] } });
 }
 
 function renderizarGraficoIngressos(data){
   if(graficoIngressos) graficoIngressos.destroy();
   const ctx = document.getElementById("graficoIngressos").getContext("2d");
-  graficoIngressos = new Chart(ctx,{ type:"bar", data:{ labels:["Vendidos","Disponíveis"], datasets:[{ data:[data.vendidos,data.disponiveis], backgroundColor:["#2F78E3","#E3E3E3"] }] } });
+  graficoIngressos = new Chart(ctx,{ type:"bar", data:{ labels:["Vendidos","Disponíveis"], datasets:[{ data:[data.vendidos,data.disponiveis] }] } });
 }
 
 function renderizarGraficoCategorias(data){
   if(graficoCategorias) graficoCategorias.destroy();
   const ctx = document.getElementById("graficoCategorias").getContext("2d");
-  graficoCategorias = new Chart(ctx,{ type:"pie", data:{ labels:["Estudante","Profissional","Outros"], datasets:[{ data:[data.estudante,data.profissional,data.outros], backgroundColor:["#2F78E3","#199BD9","#E3E3E3"] }] } });
+  graficoCategorias = new Chart(ctx,{ type:"pie", data:{ labels:["Estudante","Profissional","Outros"], datasets:[{ data:[data.estudante,data.profissional,data.outros] }] } });
 }
 
 function renderizarGraficoAvaliacao(data){
@@ -198,7 +207,7 @@ function renderizarGraficoAvaliacao(data){
   const ctx = document.getElementById("graficoAvaliacao").getContext("2d");
   graficoAvaliacao = new Chart(ctx,{
     type:"bar",
-    data:{ labels:["Avaliação Média"], datasets:[{ data:[data.media], backgroundColor:["#2F78E3"] }] },
+    data:{ labels:["Avaliação Média"], datasets:[{ data:[data.media] }] },
     options:{ scales:{ y:{ beginAtZero:true, max:5 } } }
   });
 }
@@ -223,13 +232,111 @@ buscarParticipante.addEventListener("input", ()=>{
   });
 });
 
+// ======= Função para verificar organizador e habilitar ações =======
+async function verificarOrganizadorECarregar(eventoID, uid) {
+  try {
+    const eventoRef = doc(db, "Evento", eventoID);
+    const eventoSnap = await getDoc(eventoRef);
+    if (!eventoSnap.exists()) {
+      alert("Evento não encontrado.");
+      return false;
+    }
+    const eventoData = eventoSnap.data();
+    if (eventoData.organizadorID !== uid) {
+      alert("Acesso negado: você não é o organizador deste evento.");
+      return false;
+    }
+
+    // mostra ações
+    eventoActions.style.display = "block";
+    infoVendas.textContent = ""; // limpa
+    // preenche botões
+    btnEditarEvento.onclick = () => { window.location.href = `criarEvento.html?edit=${eventoID}`; };
+
+    btnExcluirEvento.onclick = async () => {
+      const confirma = confirm("Tem certeza que deseja excluir este evento? Esta ação é irreversível.");
+      if (!confirma) return;
+      try {
+        await deleteDoc(eventoRef);
+        alert("Evento excluído com sucesso.");
+        window.location.href = "../home/meusEventos.html";
+      } catch (e) {
+        console.error(e);
+        alert("Erro ao excluir evento.");
+      }
+    };
+
+    btnVerVendas.onclick = async () => {
+      // calcula total de ingressos (vendas) para este evento
+      const ingressosQuery = query(collection(db, "Ingresso"), where("eventoID", "==", eventoID));
+      const ingressosSnap = await getDocs(ingressosQuery);
+      const total = ingressosSnap.size;
+      infoVendas.textContent = `Ingressos registrados: ${total}`;
+      // também podemos abrir aba Relatórios se quiser
+      document.querySelector('.tab[data-tab="relatorios"]').click();
+      eventoSelectRelatorio.value = eventoID;
+      relatoriosContainer.style.display = "block";
+      await carregarRelatorios(eventoID);
+    };
+
+    // carrega participantes e relatórios por padrão
+    await carregarParticipantes(eventoID);
+    // habilita abas
+    tabs.style.display = "flex";
+    document.querySelector('.tab[data-tab="participantes"]').click();
+    return true;
+  } catch (e) {
+    console.error(e);
+    alert("Erro ao verificar autorizacao do evento.");
+    return false;
+  }
+}
+
 // ======= Inicialização =======
-onAuthStateChanged(auth, user=>{
-  if(user){ 
-    carregarEventos(user.uid); 
-    iniciarScanner(); 
-    tabs.style.display="flex"; 
-  } else { 
-    window.location.href="login.html"; 
+onAuthStateChanged(auth, async (user)=>{
+  if(!user){ window.location.href="../login.html"; return; }
+  currentUser = user;
+  await carregarEventos(user.uid);
+  iniciarScanner();
+  tabs.style.display="flex";
+
+  // se tiver id na URL, tenta pré-selecionar e validar
+  const params = new URLSearchParams(window.location.search);
+  const preId = params.get("id");
+  if(preId){
+    // espera um pouco até que o select seja populado (carregarEventos já chamou)
+    // mas como não podemos esperar indefinidamente, tentamos selecionar e, se não existir, recarregamos as opções
+    setTimeout(async () => {
+      // se opção existir, seleciona; se não, força carregarEventos novamente
+      const opt = Array.from(eventoSelect.options).find(o=>o.value===preId);
+      if(!opt){
+        await carregarEventos(user.uid);
+      }
+      eventoSelect.value = preId;
+      const ok = await verificarOrganizadorECarregar(preId, user.uid);
+      if(!ok){
+        // se não for organizador, desabilita ações (já alertou)
+        eventoActions.style.display = "none";
+      }
+    }, 300);
   }
 });
+
+// quando o usuário muda o select, carrega os dados e valida organização
+eventoSelect.addEventListener("change", async (e)=>{
+  const eventoID = e.target.value;
+  if(!eventoID){
+    // ocultar tudo
+    eventoActions.style.display = "none";
+    tabContents.forEach(tc=>tc.style.display="none");
+    tabs.style.display = "none";
+    return;
+  }
+  const ok = await verificarOrganizadorECarregar(eventoID, currentUser.uid);
+  if(!ok) {
+    eventoActions.style.display = "none";
+    return;
+  }
+});
+
+// ======= Fim do arquivo =======
