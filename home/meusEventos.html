@@ -113,8 +113,8 @@
               <h3>${evento.titulo}</h3>
               <p><b>Data:</b> ${evento.dataInicio ? new Date(evento.dataInicio.seconds * 1000).toLocaleDateString() : "A definir"}</p>
               <p><b>Status:</b> ${evento.status || "A definir"}</p>
-              <!-- abre o Painel do Organizador para este evento -->
-                <a class="btn" href="../organizador/painelOrganizador.html?id=${eventoID}">⚙️ Abrir Painel (Organizador)</a>
+              <!-- Redireciona para o Painel do Organizador com o eventoID na URL -->
+              <a class="btn" href="../organizador/painelOrganizador.html?id=${eventoID}">⚙️ Abrir Painel (Organizador)</a>
             </div>
           `;
         });

@@ -251,7 +251,7 @@ async function verificarOrganizadorECarregar(eventoID, uid) {
     eventoActions.style.display = "block";
     infoVendas.textContent = ""; // limpa
     // preenche botões
-    btnEditarEvento.onclick = () => { window.location.href = `criarEvento.html?edit=${eventoID}`; };
+    btnEditarEvento.onclick = () => { window.location.href = `editarEvento.html?edit=${eventoID}`; };
 
     btnExcluirEvento.onclick = async () => {
       const confirma = confirm("Tem certeza que deseja excluir este evento? Esta ação é irreversível.");
