@@ -13,9 +13,31 @@
       <a href="../home/home.html" class="logo">
         <img src="../img/logo_barra.png" alt="Logo EventFlow" />
       </a>
-      <div class="user-menu">
-        <span class="user-name"></span>
-      </div>
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="nav-links" aria-label="Menu principal">
+        <ul>
+          <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
+          <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
+          <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
+          <li><a href="home.html" class="btn">EventFlow</a></li>
+          <li>
+            <div class="user-dropdown">
+              <div class="user-account" onclick="toggleDropdown(event)">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+                <span class="user-name">Usuário</span>
+                <span class="arrow">▾</span>
+              </div>
+              <div class="dropdown-menu" id="dropdown" style="display:none;">
+                <a href="perfil.html">👤 Perfil</a>
+                <a href="config.html">⚙️ Configurações</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
     </div>
   </header>
 
@@ -24,6 +46,74 @@
     <div id="listaMeusIngressos"></div>
   </main>
 
-  <script type="module" src="../javaScript/meusIngressos.js"></script>
+  <script type="module">
+    import { auth, db } from "../javaScript/firebaseConfig.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+   
+
+    // Verifica o estado de autenticação do usuário
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "../login.html";
+        return;
+      }
+
+      try {
+        // Atualiza o nome do usuário no menu
+        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
+        if (userDoc.exists()) {
+          const dados = userDoc.data();
+          document.querySelector(".user-name").textContent = dados.nome || "Usuário";
+        }
+
+        // Exibe os ingressos do usuário
+        const ingressosRef = collection(db, "Ingressos");
+        const ingressosSnapshot = await getDocs(ingressosRef);
+        const ingressosList = ingressosSnapshot.docs.map(doc => doc.data());
+
+        const listaIngressos = document.getElementById("listaMeusIngressos");
+        ingressosList.forEach(ingresso => {
+          const item = document.createElement("div");
+          item.classList.add("ingresso-item");
+          item.innerHTML = `
+            <h3>${ingresso.evento}</h3>
+            <p>Data: ${ingresso.data}</p>
+            <p>Quantidade: ${ingresso.quantidade}</p>
+          `;
+          listaIngressos.appendChild(item);
+        });
+
+      } catch (error) {
+        console.error("Erro ao carregar dados do usuário:", error);
+      }
+    });
+
+    // Marca o link ativo com base na página atual
+    const currentPage = window.location.pathname;
+    const menuItems = document.querySelectorAll('.nav-links .btn');
+    menuItems.forEach(item => {
+      if (item.href.includes(currentPage)) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  </script>
+  <script>
+  
+    function toggleDropdown() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      link.addEventListener("click", () => {
+        document.querySelector("header nav ul").classList.remove("show");
+      });
+    });
+  
+  </script>
 </body>
 </html>
