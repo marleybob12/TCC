@@ -18,33 +18,37 @@
 <body>
   <!-- Header -->
   <header>
-    <div class="header-container">
-      <a href="home.html" class="logo"><img src="../img/logo_barra.png" alt="EventFlow"></a>
-      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu"><i class="fas fa-bars"></i></button>
-      <nav class="nav-links">
-        <ul>
-          <li><a href="criarEvento.html">Criar eventos</a></li>
-          <li><a href="meusIngressos.html">Meus ingressos</a></li>
-          <li><a href="meusEventos.html">Meus eventos</a></li>
-          <li><a href="home.html">EventFlow</a></li>
-          <li>
-            <div class="user-dropdown">
-              <div class="user-account" onclick="toggleDropdown()">
-                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
-                <span class="user-name">Usuário</span>
-                <span class="arrow">▾</span>
-              </div>
-              <div class="dropdown-menu" id="dropdown" style="display:none;">
-                <a href="perfil.html">👤 Perfil</a>
-                <a href="config.html">⚙️ Configurações</a>
-                <a href="#" id="dropdownLogout">🚪 Sair</a>
-              </div>
+  <div class="header-container">
+    <a href="../home/home.html" class="logo">
+      <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+    </a>
+    <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+      <i class="fas fa-bars"></i>
+    </button>
+    <nav class="nav-links" aria-label="Menu principal">
+      <ul>
+        <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
+        <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
+        <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
+        <li><a href="home.html" class="btn">EventFlow</a></li>
+        <li>
+          <div class="user-dropdown">
+            <div class="user-account" onclick="toggleDropdown()">
+              <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+              <span class="user-name">Usuário</span>
+              <span class="arrow">▾</span>
             </div>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+            <div class="dropdown-menu" id="dropdown" style="display:none;">
+              <a href="perfil.html">👤 Perfil</a>
+              <a href="config.html">⚙️ Configurações</a>
+              <a href="#" id="dropdownLogout">🚪 Sair</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
 
   <main>
     <!-- Hero -->
