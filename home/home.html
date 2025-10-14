@@ -123,21 +123,22 @@
 
   <section class="Melhor-de-cada-cidade">
   <h2>Experimente o melhor de cada cidade</h2>
-  <div class="cards-cidades">
-    <div class="card-cidade">
-      <img src="../img/sp.jpg" alt="São Paulo">
-      <span class="nome-cidade">São Paulo</span>
-    </div>
-    <div class="card-cidade">
-      <img src="../img/rj.jpg" alt="Rio de Janeiro">
+
+  <div class="card-cidade" data-cidade="São Paulo">
+  <img src="../img/sp.jfif" alt="São Paulo">
+  <span class="nome-cidade">São Paulo</span>
+</div>
+
+    <div class="card-cidade" data-cidade="Rio de Janeiro">
+      <img src="../img/images.jfif" alt="Rio de Janeiro">
       <span class="nome-cidade">Rio de Janeiro</span>
     </div>
-    <div class="card-cidade">
-      <img src="../img/bh.jpg" alt="Belo Horizonte">
+    <div class="card-cidade" data-cidade="Belo Horizonte">
+      <img src="../img/bh.jfif" alt="Belo Horizonte">
       <span class="nome-cidade">Belo Horizonte</span>
     </div>
-    <div class="card-cidade">
-      <img src="../img/salvador.jpg" alt="Salvador">
+    <div class="card-cidade" data-cidade="Salvador">
+      <img src="../img/salvador.jfif" alt="Salvador">
       <span class="nome-cidade">Salvador</span>
     </div>
   </div>
@@ -254,12 +255,12 @@
   </script>
   <script>
   // Redireciona ao clicar na cidade
-  document.querySelectorAll('.card-cidade').forEach(card => {
-    card.addEventListener('click', function() {
-      const cidade = card.getAttribute('data-cidade');
-      window.location.href = `categoria.html?local=${encodeURIComponent(cidade)}`;
-    });
+document.querySelectorAll('.card-cidade').forEach(card => {
+  card.addEventListener('click', function() {
+    const cidade = card.getAttribute('data-cidade');
+    window.location.href = `categoria.html?local=${encodeURIComponent(cidade)}`;
   });
+});
 </script>
 </body>
 </html>

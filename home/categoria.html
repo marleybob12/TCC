@@ -1,59 +1,55 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Categoria - EventFlow</title>
-  <link rel="stylesheet" href="../css/stylesHome.css">
-  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png">
-</head>
-<body>
-  <!-- HEADER -->
-  <header class="navbar">
-    <div class="logo">
-      <a href="home.html">
-        <img src="../img/logo_colorida_cortada.png" alt="EventFlow Logo">
-      </a>
-    </div>
-    <nav class="nav-links">
-      <a href="home.html">Início</a>
-      <a href="eventos.html">Eventos</a>
-      <a href="categorias.html">Categorias</a>
-      <a href="contato.html">Contato</a>
-    </nav>
-  </header>
+<!-- SCRIPT FIREBASE -->
+<script type="module">
+  import { db } from "../javaScript/firebaseConfig.js";
+  import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  <!-- MAIN -->
-  <main class="main-container">
-    <section class="categoria-header">
-      <h1 id="tituloCategoria">Eventos</h1>
-    </section>
+  // --- pegar parâmetros da URL (uma única vez)
+  const params = new URLSearchParams(window.location.search);
+  const categoriaNome = params.get("nome"); // ?nome=...
+  const cidade = params.get("local");       // ?local=...
 
-    <section class="eventos-categoria-lista">
-      <div class="cards-container"></div>
-    </section>
-  </main>
+  // Título mais amigável quando faltar parâmetro
+  const tituloEl = document.getElementById("tituloCategoria");
+  if (categoriaNome && cidade) {
+    tituloEl.textContent = `Eventos de ${categoriaNome} — ${cidade}`;
+  } else if (categoriaNome) {
+    tituloEl.textContent = `Eventos de ${categoriaNome}`;
+  } else if (cidade) {
+    tituloEl.textContent = `Eventos em ${cidade}`;
+  } else {
+    tituloEl.textContent = `Eventos`;
+  }
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>© 2025 EventFlow - Todos os direitos reservados</p>
-  </footer>
+  const cardsContainer = document.querySelector(".cards-container");
 
-  <!-- SCRIPT FIREBASE -->
-  <script type="module">
-    import { db } from "../javaScript/firebaseConfig.js";
-    import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  // formata Timestamp do Firestore de maneira segura
+  function formatDate(field) {
+    if (!field) return "A definir";
+    // Se for Timestamp com toDate()
+    if (typeof field.toDate === "function") {
+      return field.toDate().toLocaleDateString("pt-BR");
+    }
+    // Se for estrutura { seconds: ... }
+    if (field.seconds) {
+      return new Date(field.seconds * 1000).toLocaleDateString("pt-BR");
+    }
+    // Se for string/date
+    const d = new Date(field);
+    if (!isNaN(d)) return d.toLocaleDateString("pt-BR");
+    return "A definir";
+  }
 
-    const params = new URLSearchParams(window.location.search);
-    const categoriaNome = params.get("nome");
+  async function carregarEventosPorCategoria() {
+    try {
+      // Se não houver nome de categoria, podemos listar por cidade (ou listar todos)
+      if (!categoriaNome) {
+        // Caso queira bloquear quando não houver categoria, descomente o bloco abaixo:
+        // cardsContainer.innerHTML = `<p class="no-events">Nenhuma categoria especificada.</p>`; return;
+      }
 
-    document.getElementById("tituloCategoria").textContent = `Eventos de ${categoriaNome}`;
-
-    const cardsContainer = document.querySelector(".cards-container");
-
-    async function carregarEventosPorCategoria() {
-      try {
-        // Buscar o ID da categoria pelo nome
+      // Buscar o ID da categoria pelo nome (se categoriaNome existir)
+      let categoriaID = null;
+      if (categoriaNome) {
         const categoriaQuery = query(collection(db, "Categoria"), where("nome", "==", categoriaNome));
         const categoriaSnap = await getDocs(categoriaQuery);
 
@@ -62,43 +58,59 @@
           return;
         }
 
-        const categoriaID = categoriaSnap.docs[0].id;
-
-        // Buscar eventos com base no ID da categoria
-        const eventosQuery = query(collection(db, "Evento"), where("categoriaID", "==", categoriaID));
-        const eventosSnap = await getDocs(eventosQuery);
-
-        if (eventosSnap.empty) {
-          cardsContainer.innerHTML = `<p class="no-events">Nenhum evento encontrado em <b>${categoriaNome}</b>.</p>`;
-          return;
-        }
-
-        eventosSnap.forEach(docEvento => {
-          const evento = docEvento.data();
-          const eventoID = docEvento.id;
-
-          const card = document.createElement("div");
-          card.classList.add("card-glass");
-          card.innerHTML = `
-            <a href="evento.html?id=${eventoID}">
-              <img src="${evento.imagemBanner || '../img/evento.jpg'}" 
-                   alt="${evento.titulo}" class="card-img">
-              <div class="card-content">
-                <h3>${evento.titulo}</h3>
-                <p><b>Data:</b> ${evento.dataInicio ? new Date(evento.dataInicio.seconds * 1000).toLocaleDateString("pt-BR") : "A definir"}</p>
-                <p><b>Local:</b> ${evento.local || "A definir"}</p>
-              </div>
-            </a>
-          `;
-          cardsContainer.appendChild(card);
-        });
-      } catch (err) {
-        console.error("Erro ao carregar eventos por categoria:", err);
-        cardsContainer.innerHTML = "<p class='error-msg'>Erro ao carregar eventos.</p>";
+        categoriaID = categoriaSnap.docs[0].id;
       }
-    }
 
-    carregarEventosPorCategoria();
-  </script>
-</body>
-</html>
+      // Montar query para eventos:
+      const eventosCol = collection(db, "Evento");
+      let eventosQuery;
+      if (categoriaID && cidade) {
+        eventosQuery = query(eventosCol, where("categoriaID", "==", categoriaID), where("local", "==", cidade));
+      } else if (categoriaID) {
+        eventosQuery = query(eventosCol, where("categoriaID", "==", categoriaID));
+      } else if (cidade) {
+        eventosQuery = query(eventosCol, where("local", "==", cidade));
+      } else {
+        // sem filtros: pega todos (cuidado em produção se houver muitos docs)
+        eventosQuery = query(eventosCol);
+      }
+
+      const eventosSnap = await getDocs(eventosQuery);
+
+      if (eventosSnap.empty) {
+        const nomeExib = categoriaNome || cidade || "a categoria/consulta";
+        cardsContainer.innerHTML = `<p class="no-events">Nenhum evento encontrado para <b>${nomeExib}</b>.</p>`;
+        return;
+      }
+
+      // limpar container antes de adicionar
+      cardsContainer.innerHTML = "";
+
+      eventosSnap.forEach(docEvento => {
+        const evento = docEvento.data();
+        const eventoID = docEvento.id;
+
+        const card = document.createElement("div");
+        card.classList.add("card-glass");
+        card.innerHTML = `
+          <a href="evento.html?id=${eventoID}">
+            <img src="${evento.imagemBanner || '../img/evento.jpg'}" 
+                 alt="${evento.titulo || 'Evento'}" class="card-img">
+            <div class="card-content">
+              <h3>${evento.titulo || "Sem título"}</h3>
+              <p><b>Data:</b> ${formatDate(evento.dataInicio)}</p>
+              <p><b>Local:</b> ${evento.local || "A definir"}</p>
+            </div>
+          </a>
+        `;
+        cardsContainer.appendChild(card);
+      });
+    } catch (err) {
+      console.error("Erro ao carregar eventos por categoria:", err);
+      cardsContainer.innerHTML = "<p class='error-msg'>Erro ao carregar eventos.</p>";
+    }
+  }
+
+  // executa carregamento
+  carregarEventosPorCategoria();
+</script>
