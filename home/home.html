@@ -118,6 +118,30 @@
       <h2>Favoritos da semana</h2>
       <div class="cards-container"></div>
     </section>
+    <!-- Melhor de cada cidade -->  
+
+
+  <section class="Melhor-de-cada-cidade">
+  <h2>Experimente o melhor de cada cidade</h2>
+  <div class="cards-cidades">
+    <div class="card-cidade">
+      <img src="../img/sp.jpg" alt="São Paulo">
+      <span class="nome-cidade">São Paulo</span>
+    </div>
+    <div class="card-cidade">
+      <img src="../img/rj.jpg" alt="Rio de Janeiro">
+      <span class="nome-cidade">Rio de Janeiro</span>
+    </div>
+    <div class="card-cidade">
+      <img src="../img/bh.jpg" alt="Belo Horizonte">
+      <span class="nome-cidade">Belo Horizonte</span>
+    </div>
+    <div class="card-cidade">
+      <img src="../img/salvador.jpg" alt="Salvador">
+      <span class="nome-cidade">Salvador</span>
+    </div>
+  </div>
+</section>
   </main>
 
   <footer>
@@ -228,5 +252,14 @@
       });
     });
   </script>
+  <script>
+  // Redireciona ao clicar na cidade
+  document.querySelectorAll('.card-cidade').forEach(card => {
+    card.addEventListener('click', function() {
+      const cidade = card.getAttribute('data-cidade');
+      window.location.href = `categoria.html?local=${encodeURIComponent(cidade)}`;
+    });
+  });
+</script>
 </body>
 </html>

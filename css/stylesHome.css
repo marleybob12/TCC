@@ -646,3 +646,117 @@
     align-items: center;      /* garante que cada botão/link interno também fique centralizado verticalmente */
     height: 100%;             /* ocupa toda a altura do header */
   }
+  
+  .cards-cidades {
+    display: flex;
+    gap: 32px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 18px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  
+  .card-cidade {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    overflow: hidden;
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transition: transform 0.2s;
+  }
+  
+  .card-cidade img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-bottom: 2px solid #e6eeff;
+  }
+  
+  .nome-cidade {
+    font-weight: 700;
+    font-size: 1.08rem;
+    color: #fff;
+    background: linear-gradient(135deg, #1673ff, #6c63ff);
+    width: 100%;
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: 0 0 12px 12px;
+    margin-top: auto;
+  }
+  
+  .card-cidade:hover {
+    transform: translateY(-6px) scale(1.04);
+    box-shadow: 0 8px 24px rgba(47,120,227,0.13);
+  }
+  
+  @media (max-width: 900px) {
+    .cards-cidades { gap: 18px; }
+    .card-cidade { width: 140px; }
+    .card-cidade img { height: 100px; }
+  }
+  
+  @media (max-width: 600px) {
+    .cards-cidades { flex-direction: column; gap: 12px; }
+    .card-cidade { width: 100%; }
+    .card-cidade img { height: 90px; }
+  }
+  .cards-cidades {
+  display: flex;
+  gap: 32px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.card-cidade {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  overflow: hidden;
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: transform 0.2s;
+}
+
+.card-cidade img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-bottom: 2px solid #e6eeff;
+}
+
+.nome-cidade {
+  font-weight: 700;
+  font-size: 1.08rem;
+  color: #fff;
+  background: linear-gradient(135deg, #1673ff, #6c63ff);
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 0 0 12px 12px;
+  margin-top: auto;
+}
+
+.card-cidade:hover {
+  transform: translateY(-6px) scale(1.04);
+  box-shadow: 0 8px 24px rgba(47,120,227,0.13);
+}
+
+@media (max-width: 900px) {
+  .cards-cidades { gap: 18px; }
+  .card-cidade { width: 140px; }
+  .card-cidade img { height: 100px; }
+}
+
+@media (max-width: 600px) {
+  .cards-cidades { flex-direction: column; gap: 12px; }
+  .card-cidade { width: 100%; }
+  .card-cidade img { height: 90px; }
