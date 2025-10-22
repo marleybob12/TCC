@@ -151,3 +151,16 @@ async function gerarQrCodePix(valor) {
   const data = await response.json();
   return data.qrcode_image; // Retorna a URL da imagem do QR Code
 }
+// chaamar a função de carregar o nome do usuário logado
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "../login.html";
+  } else {
+    const userDoc = await getDoc(doc(db, "Usuario", user.uid));
+    if (userDoc.exists()) {
+      document.querySelector(".user-name").textContent = userDoc.data().nome;
+    } else {
+      console.error("Usuário não encontrado no Firestore.");
+    }
+  }
+});
