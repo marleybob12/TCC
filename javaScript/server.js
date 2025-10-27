@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
   host: "smtp.seuservidor.com", // ex: smtp.gmail.com
   port: 587,
   secure: false,
-  auth: { user: "seuemail@dominio.com", pass: "suasenha" }
+  auth: { user: "marleytfox@gmail.com", pass: "lubn ohny cgbz drmf" }
 });
 
 // ----------------------
@@ -50,7 +50,7 @@ app.post("/enviar-ingresso", async (req, res) => {
 
     // Envia por e-mail
     await transporter.sendMail({
-      from: '"EventFlow" <seuemail@dominio.com>',
+      from: '"EventFlow" <marleytfox@gmail.com>',
       to: usuario.email,
       subject: `Ingresso: ${evento.titulo}`,
       text: `Olá ${usuario.nome}, segue seu ingresso em anexo.`,
@@ -109,7 +109,7 @@ app.post("/enviar-ingressos-lote", async (req, res) => {
 
       // Envia e-mail
       await transporter.sendMail({
-        from: '"EventFlow" <seuemail@dominio.com>',
+        from: '"EventFlow" <marleytfox@gmail.com>',
         to: usuario.email,
         subject: `Ingresso: ${evento.titulo}`,
         text: `Olá ${usuario.nome}, segue seu ingresso em anexo.`,
