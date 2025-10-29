@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalhes do Evento - EventFlow</title>
-  <link rel="stylesheet" href="../css/stylesHome.css">
+  <link rel="stylesheet" href="../css/evento.css">
   <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png">
 </head>
 <body>
@@ -13,9 +13,34 @@
       <a href="../home/home.html" class="logo">
         <img src="../img/logo_barra.png" alt="Logo EventFlow" />
       </a>
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="nav-links" aria-label="Menu principal">
+        <ul>
+          <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
+          <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
+          <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
+          <li><a href="home.html" class="btn">EventFlow</a></li>
+          <li>
+            <div class="user-dropdown">
+              <div class="user-account" onclick="toggleDropdown()">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+                <span class="user-name">Usuário</span>
+                <span class="arrow">▾</span>
+              </div>
+              <div class="dropdown-menu" id="dropdown" style="display:none;">
+                <a href="perfil.html">👤 Perfil</a>
+                <a href="config.html">⚙️ Configurações</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
     </div>
   </header>
-
+  
   <main>
     <h1 id="tituloEvento"></h1>
     <img id="bannerEvento" style="max-width:400px; border-radius:12px; margin:10px 0;">
@@ -28,10 +53,28 @@
     <button id="comprarBtn" class="btn">🎟 Comprar Ingresso</button>
     <p id="mensagem"></p>
 
-    <!-- Container para exibir o QR Code Pix -->
-    <div id="qrCodeContainer" style="text-align: center; margin-top: 20px;"></div>
+    
   </main>
 
   <script type="module" src="../javaScript/comprarIngresso.js"></script>
+  <script>
+    function toggleDropdown() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      link.addEventListener("click", () => {
+        document.querySelector("header nav ul").classList.remove("show");
+      });
+    });
+  </script>
+  <script type="module">
+  import { auth, db } from "../javaScript/firebaseConfig.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  
+</script>
 </body>
 </html>
