@@ -1,17 +1,16 @@
 const functions = require("firebase-functions");
 const nodemailer = require("nodemailer");
 
-// 🔐 Configurações de e-mail seguras via variáveis de ambiente
-// Você definirá esses valores no próximo passo
-const gmailUser = functions.config().email.user;
-const gmailPass = functions.config().email.pass;
+// 🔐 Configurações seguras do SendGrid via variáveis de ambiente
+const sendGridKey = functions.config().sendgrid.key;
 
-// Cria o transportador de e-mails (usando Gmail)
+// Cria o transportador de e-mails (usando SendGrid via SMTP)
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.sendgrid.net",
+  port: 587,
   auth: {
-    user: gmailUser,
-    pass: gmailPass,
+    user: "apikey", // literal, não troque
+    pass: sendGridKey,
   },
 });
 
@@ -22,7 +21,7 @@ const transporter = nodemailer.createTransport({
 exports.sendTicketEmail = functions.https.onCall(async (data, context) => {
   const { toEmail, toName, evento, ingressoPDF } = data;
 
-  // Validação básica
+  // ✅ Validação
   if (!toEmail || !ingressoPDF || !evento) {
     throw new functions.https.HttpsError(
       "invalid-argument",
@@ -31,9 +30,9 @@ exports.sendTicketEmail = functions.https.onCall(async (data, context) => {
   }
 
   const mailOptions = {
-    from: `"EventFlow" <${gmailUser}>`,
+    from: '"EventFlow" <naoresponda@eventflow.com>', // remetente padrão
     to: toEmail,
-    subject: `🎟 Seu ingresso para ${evento.titulo}`,
+    subject: `🎟️ Seu ingresso para ${evento.titulo}`,
     html: `
       <h2>Olá, ${toName}!</h2>
       <p>Seu ingresso para o evento <b>${evento.titulo}</b> está em anexo.</p>
@@ -65,4 +64,3 @@ exports.sendTicketEmail = functions.https.onCall(async (data, context) => {
     );
   }
 });
-m
