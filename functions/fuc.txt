@@ -1,0 +1,37 @@
+CJTTTNQQGD221S9NJV1P1C95
+
+
+
+Adicione todos esses registros à seção DNS do seu host.
+Tipo
+
+Hospedar
+
+Valor
+
+CNAME	
+em2655.eventflow.com
+
+
+u57057198.wl199.sendgrid.net
+
+
+CNAME	
+s1._domainkey.eventflow.com
+
+
+s1.domainkey.u57057198.wl199.sendgrid.net
+
+
+CNAME	
+s2._domainkey.eventflow.com
+
+
+s2.domainkey.u57057198.wl199.sendgrid.net
+
+
+TXT	
+_dmarc.eventflow.com
+
+
+v=DMARC1; p=rejeitar; rua=mailto:dmarc_rua@emaildefense.proofpoint.com; ruf=mailto:dmarc_ruf@emaildefense.proofpoint.com
