@@ -1,9 +1,7 @@
-// evento.js - Integrado com Vercel Backend
 import { auth, db } from "./firebaseConfig.js";
 import { doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// URL do backend Vercel - Configure conforme seu deploy
 const BACKEND_URL = 'https://tcc-puce-three.vercel.app/';
 
 const params = new URLSearchParams(window.location.search);
@@ -15,7 +13,6 @@ const descricao = document.getElementById("descricaoEvento");
 const dataEvento = document.getElementById("dataEvento");
 const listaIngressos = document.getElementById("listaIngressos");
 
-// Formata data do Firestore
 function formatDate(timestamp) {
   if (!timestamp) return "A definir";
   if (timestamp.toDate) return timestamp.toDate().toLocaleDateString("pt-BR");
@@ -23,7 +20,6 @@ function formatDate(timestamp) {
   return new Date(timestamp).toLocaleDateString("pt-BR");
 }
 
-// Carrega dados do evento
 async function carregarEvento() {
   try {
     if (!eventoID) {
@@ -31,24 +27,20 @@ async function carregarEvento() {
       return;
     }
 
-    // Busca evento no Firestore
     const eventoDoc = await getDoc(doc(db, "Evento", eventoID));
-    
     if (!eventoDoc.exists()) {
       listaIngressos.innerHTML = "<p class='error'>Evento não encontrado.</p>";
       return;
     }
 
     const evento = eventoDoc.data();
-    
-    // Preenche informações do evento
+
     titulo.textContent = evento.titulo || "Evento";
     banner.src = evento.imagemBanner || "../img/evento.jpg";
     banner.alt = evento.titulo || "Banner do Evento";
     descricao.textContent = evento.descricao || "Sem descrição disponível";
     dataEvento.textContent = formatDate(evento.dataInicio);
 
-    // Busca lotes disponíveis
     const lotesQuery = query(collection(db, "Lote"), where("eventoID", "==", eventoID));
     const lotesSnap = await getDocs(lotesQuery);
 
@@ -59,13 +51,11 @@ async function carregarEvento() {
 
     listaIngressos.innerHTML = "";
 
-    // Renderiza cada lote
     lotesSnap.forEach(loteDoc => {
       const lote = loteDoc.data();
       const loteID = loteDoc.id;
-      
       const disponivel = (lote.quantidade > 0);
-      
+
       const div = document.createElement("div");
       div.classList.add("lote-card");
       div.innerHTML = `
@@ -84,7 +74,6 @@ async function carregarEvento() {
       listaIngressos.appendChild(div);
     });
 
-    // Adiciona event listeners nos botões de compra
     adicionarEventosCompra();
 
   } catch (err) {
@@ -93,7 +82,6 @@ async function carregarEvento() {
   }
 }
 
-// Adiciona eventos de clique nos botões de compra
 function adicionarEventosCompra() {
   document.querySelectorAll(".btnComprar").forEach(btn => {
     btn.addEventListener("click", async (e) => {
@@ -101,7 +89,6 @@ function adicionarEventosCompra() {
       const loteID = button.dataset.lote;
       const eventoIDCompra = button.dataset.evento;
 
-      // Desabilita botão durante compra
       button.disabled = true;
       button.textContent = "⏳ Processando...";
 
@@ -117,8 +104,8 @@ function adicionarEventosCompra() {
   });
 }
 
-// Função de compra integrada com Vercel
 async function comprarIngresso(eventoID, loteID) {
+  // Promisify onAuthStateChanged to wait user state
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -128,7 +115,6 @@ async function comprarIngresso(eventoID, loteID) {
       }
 
       try {
-        // Chama API do backend Vercel
         const response = await fetch(`${BACKEND_URL}/comprar-ingresso`, {
           method: "POST",
           headers: {
@@ -137,27 +123,27 @@ async function comprarIngresso(eventoID, loteID) {
           body: JSON.stringify({
             usuarioID: user.uid,
             eventoID: eventoID,
-            loteID: loteID
-          })
+            loteID: loteID,
+          }),
         });
 
-        const result = await response.json();
+        const contentType = response.headers.get("content-type");
 
-        if (!response.ok) {
-          throw new Error(result.message || "Erro ao processar compra");
-        }
+        if (contentType && contentType.includes("application/json")) {
+          const result = await response.json();
 
-        if (result.success) {
-          alert(`✅ ${result.message}\n\n📧 Um email com o ingresso em PDF foi enviado para você!`);
-          
-          // Recarrega a página para atualizar disponibilidade
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
-          
-          resolve(result);
+          if (!response.ok) throw new Error(result.message || "Erro ao processar compra");
+
+          if (result.success) {
+            alert(`✅ ${result.message}\n\n📧 Um email com o ingresso em PDF foi enviado para você!`);
+            setTimeout(() => window.location.reload(), 2000);
+            resolve(result);
+          } else {
+            throw new Error(result.message || "Falha na compra");
+          }
         } else {
-          throw new Error(result.message || "Falha na compra");
+          const text = await response.text();
+          throw new Error("Resposta inválida do servidor: " + text);
         }
 
       } catch (error) {
@@ -168,5 +154,4 @@ async function comprarIngresso(eventoID, loteID) {
   });
 }
 
-// Inicializa carregamento
 carregarEvento();

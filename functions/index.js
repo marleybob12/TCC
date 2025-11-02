@@ -1,4 +1,3 @@
-// index.js
 import express from "express";
 import admin from "firebase-admin";
 import nodemailer from "nodemailer";
@@ -8,11 +7,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Inicializar Firebase Admin
 admin.initializeApp();
 const db = admin.firestore();
 
-// Configurar e-mail (Gmail)
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -24,16 +21,11 @@ const transporter = nodemailer.createTransport({
 const app = express();
 app.use(express.json());
 
-// ============================================
-// ROTA HTTP - Comprar e Enviar Ingresso
-// ============================================
 app.post("/comprar-ingresso", async (req, res) => {
   try {
     const { usuarioID, eventoID, loteID } = req.body;
 
     if (!usuarioID) return res.status(401).json({ success: false, message: "Usuário não autenticado" });
-
-    console.log(`Iniciando compra - Usuario: ${usuarioID}, Evento: ${eventoID}, Lote: ${loteID}`);
 
     const [usuarioDoc, eventoDoc, loteDoc] = await Promise.all([
       db.collection("Usuario").doc(usuarioID).get(),
@@ -94,18 +86,13 @@ app.post("/comprar-ingresso", async (req, res) => {
 
     await ingressoRef.update({ emailEnviado: true });
 
-    console.log('✅ Compra finalizada com sucesso!');
     return res.json({ success: true, message: "Ingresso comprado e enviado por email!", ingressoID: ingressoRef.id });
-
   } catch (error) {
-    console.error("❌ Erro na compra:", error);
+    console.error("Erro na compra:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 });
 
-// ============================================
-// FUNÇÃO AUXILIAR - Gerar PDF
-// ============================================
 async function gerarPDFIngresso(usuario, evento, lote, ingressoID) {
   return new Promise(async (resolve, reject) => {
     const chunks = [];
@@ -151,7 +138,4 @@ async function gerarPDFIngresso(usuario, evento, lote, ingressoID) {
   });
 }
 
-// ============================================
-// EXPORTAR APP PARA VERCEL
-// ============================================
 export default app;
