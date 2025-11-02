@@ -24,7 +24,7 @@
           <li><a href="home.html" class="btn">EventFlow</a></li>
           <li>
             <div class="user-dropdown">
-              <div class="user-account" onclick="toggleDropdown()">
+              <div class="user-account" id="userAccount">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
                 <span class="user-name">Usuário</span>
                 <span class="arrow">▾</span>
@@ -46,46 +46,6 @@
     <div id="listaMeusIngressos"></div>
   </main>
 
-  <!-- Script centralizado para autenticação, carregamento de ingressos e PDF -->
-  <script type="module" src="../javaScript/ingresso.js"></script>
-
-  <script>
-    // Toggle dropdown menu
-    function toggleDropdown() {
-      const dropdown = document.getElementById("dropdown");
-      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-    }
-
-    // Fecha menu no clique de um link
-    document.querySelectorAll(".nav-links a").forEach(link => {
-      link.addEventListener("click", () => {
-        document.querySelector("header nav ul").classList.remove("show");
-      });
-    });
-
-    // Marca link ativo
-    const currentPage = window.location.pathname;
-    document.querySelectorAll('.nav-links .btn').forEach(item => {
-      if(item.href.includes(currentPage)) item.classList.add('active');
-      else item.classList.remove('active');
-    });
-    //carrega nome do usuário no menu
-    onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "../login.html"; // redireciona se não estiver logado
-    return;
-  }
-
-  try {
-    const userDoc = await getDoc(doc(db, "Usuario", user.uid));
-    if (userDoc.exists()) {
-      const dados = userDoc.data();
-      document.querySelector(".user-name").textContent = dados.nome || "Usuário";
-    }
-  } catch (error) {
-    console.error("Erro ao carregar nome do usuário:", error);
-  }
-});
-  </script>
+  <script type="module" src="../javaScript/meusIngressos.js"></script>
 </body>
 </html>

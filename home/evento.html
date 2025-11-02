@@ -22,67 +22,20 @@
           <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
           <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
           <li><a href="home.html" class="btn">EventFlow</a></li>
-          <li>
-            <div class="user-dropdown">
-              <div class="user-account" onclick="toggleDropdown()">
-                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
-                <span class="user-name">Usuário</span>
-                <span class="arrow">▾</span>
-              </div>
-              <div class="dropdown-menu" id="dropdown" style="display:none;">
-                <a href="perfil.html">👤 Perfil</a>
-                <a href="config.html">⚙️ Configurações</a>
-                <a href="#" id="dropdownLogout">🚪 Sair</a>
-              </div>
-            </div>
-          </li>
         </ul>
       </nav>
     </div>
   </header>
-  
+
   <main>
-    <h1 id="tituloEvento"></h1>
-    <img id="bannerEvento" style="max-width:400px; border-radius:12px; margin:10px 0;">
+    <h1 id="tituloEvento">Evento</h1>
+    <img id="bannerEvento" src="" alt="Banner do Evento" />
     <p id="descricaoEvento"></p>
     <p><b>Data:</b> <span id="dataEvento"></span></p>
-
-    <h2>Ingressos Disponíveis</h2>
+    <h2>Lotes disponíveis</h2>
     <div id="listaIngressos"></div>
-
-    <button id="comprarBtn" class="btn">🎟 Comprar Ingresso</button>
-    <p id="mensagem"></p>
   </main>
 
-  <!-- Script centralizado -->
-  <script type="module" src="../javaScript/ingresso.js"></script>
-
-  <script>
-    // Dropdown do usuário
-    function toggleDropdown() {
-      const dropdown = document.getElementById("dropdown");
-      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-    }
-
-    document.addEventListener("click", function(event) {
-      const userAccount = document.querySelector(".user-account");
-      const dropdown = document.getElementById("dropdown");
-      if (!userAccount.contains(event.target) && !dropdown.contains(event.target)) {
-        dropdown.style.display = "none";
-      }
-    });
-
-    // Menu mobile
-    const menuIcon = document.getElementById("menu-icon");
-    const navUl = document.querySelector(".nav-links ul");
-    menuIcon.addEventListener("click", () => navUl.classList.toggle("show"));
-
-    // Marca link ativo
-    const currentPage = window.location.pathname;
-    document.querySelectorAll('.nav-links .btn').forEach(item => {
-      if(item.href.includes(currentPage)) item.classList.add('active');
-      else item.classList.remove('active');
-    });
-  </script>
+  <script type="module" src="../javaScript/evento.js"></script>
 </body>
 </html>
