@@ -1,24 +1,17 @@
 {
-  "name": "functions",
-  "description": "Cloud Functions for Firebase",
-  "scripts": {
-    "serve": "firebase emulators:start --only functions",
-    "shell": "firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
-  },
-  "engines": {
-    "node": "22"
-  },
+  "name": "eventflow-functions",
+  "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
+    "express": "^4.18.2",
     "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.0.1",
-    "nodemailer": "^7.0.9"
-  },
-  "devDependencies": {
-    "firebase-functions-test": "^3.1.0"
-  },
-  "private": true
+    "nodemailer": "^7.0.9",
+    "pdfkit": "^0.17.2",
+    "qrcode": "^1.5.4",
+    "dotenv": "^17.2.3"
+  }
 }
