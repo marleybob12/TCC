@@ -4,7 +4,7 @@ import { doc, getDoc, collection, query, where, getDocs } from "https://www.gsta
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // URL do backend Vercel - Configure conforme seu deploy
-const BACKEND_URL = 'https://seu-projeto.vercel.app'; // ⚠️ ALTERAR APÓS DEPLOY
+const BACKEND_URL = 'https://tcc-puce-three.vercel.app/';
 
 const params = new URLSearchParams(window.location.search);
 const eventoID = params.get("id");
