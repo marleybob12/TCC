@@ -1,4 +1,11 @@
-// evento.js
+// evento.js - Integrado com Vercel Backend
+import { auth, db } from "./firebaseConfig.js";
+import { doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+// URL do backend Vercel - Configure conforme seu deploy
+const BACKEND_URL = 'https://seu-projeto.vercel.app'; // ⚠️ ALTERAR APÓS DEPLOY
+
 const params = new URLSearchParams(window.location.search);
 const eventoID = params.get("id");
 
@@ -8,45 +15,158 @@ const descricao = document.getElementById("descricaoEvento");
 const dataEvento = document.getElementById("dataEvento");
 const listaIngressos = document.getElementById("listaIngressos");
 
+// Formata data do Firestore
+function formatDate(timestamp) {
+  if (!timestamp) return "A definir";
+  if (timestamp.toDate) return timestamp.toDate().toLocaleDateString("pt-BR");
+  if (timestamp.seconds) return new Date(timestamp.seconds * 1000).toLocaleDateString("pt-BR");
+  return new Date(timestamp).toLocaleDateString("pt-BR");
+}
+
+// Carrega dados do evento
 async function carregarEvento() {
   try {
-    const res = await fetch(`https://SEU_BACKEND.vercel.app/api/evento/${eventoID}`);
-    const data = await res.json();
+    if (!eventoID) {
+      listaIngressos.innerHTML = "<p class='error'>ID do evento não encontrado.</p>";
+      return;
+    }
 
-    titulo.textContent = data.evento.titulo;
-    banner.src = data.evento.bannerURL || "";
-    descricao.textContent = data.evento.descricao;
-    dataEvento.textContent = data.evento.dataInicio;
+    // Busca evento no Firestore
+    const eventoDoc = await getDoc(doc(db, "Evento", eventoID));
+    
+    if (!eventoDoc.exists()) {
+      listaIngressos.innerHTML = "<p class='error'>Evento não encontrado.</p>";
+      return;
+    }
+
+    const evento = eventoDoc.data();
+    
+    // Preenche informações do evento
+    titulo.textContent = evento.titulo || "Evento";
+    banner.src = evento.imagemBanner || "../img/evento.jpg";
+    banner.alt = evento.titulo || "Banner do Evento";
+    descricao.textContent = evento.descricao || "Sem descrição disponível";
+    dataEvento.textContent = formatDate(evento.dataInicio);
+
+    // Busca lotes disponíveis
+    const lotesQuery = query(collection(db, "Lote"), where("eventoID", "==", eventoID));
+    const lotesSnap = await getDocs(lotesQuery);
+
+    if (lotesSnap.empty) {
+      listaIngressos.innerHTML = "<p>Nenhum ingresso disponível no momento.</p>";
+      return;
+    }
 
     listaIngressos.innerHTML = "";
-    data.lotes.forEach(lote => {
+
+    // Renderiza cada lote
+    lotesSnap.forEach(loteDoc => {
+      const lote = loteDoc.data();
+      const loteID = loteDoc.id;
+      
+      const disponivel = (lote.quantidade > 0);
+      
       const div = document.createElement("div");
       div.classList.add("lote-card");
       div.innerHTML = `
-        <p><b>Lote:</b> ${lote.nome}</p>
+        <h3>${lote.nome}</h3>
         <p><b>Preço:</b> R$ ${lote.preco.toFixed(2)}</p>
-        <button class="btnComprar" data-lote="${lote.id}">🎟 Comprar</button>
+        <p><b>Disponível:</b> ${lote.quantidade} ${lote.quantidade === 1 ? 'ingresso' : 'ingressos'}</p>
+        <button 
+          class="btnComprar" 
+          data-lote="${loteID}" 
+          data-evento="${eventoID}"
+          ${!disponivel ? 'disabled' : ''}
+        >
+          ${disponivel ? '🎟️ Comprar' : '❌ Esgotado'}
+        </button>
       `;
       listaIngressos.appendChild(div);
     });
 
-    document.querySelectorAll(".btnComprar").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        const loteID = btn.dataset.lote;
-        const token = localStorage.getItem("userToken");
-        await fetch(`https://SEU_BACKEND.vercel.app/api/comprarIngresso`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, eventoID, loteID })
-        });
-        alert("Ingresso comprado com sucesso!");
-      });
-    });
+    // Adiciona event listeners nos botões de compra
+    adicionarEventosCompra();
 
   } catch (err) {
-    console.error(err);
-    listaIngressos.innerHTML = "<p>Erro ao carregar o evento.</p>";
+    console.error("Erro ao carregar evento:", err);
+    listaIngressos.innerHTML = "<p class='error'>Erro ao carregar o evento. Tente novamente.</p>";
   }
 }
 
+// Adiciona eventos de clique nos botões de compra
+function adicionarEventosCompra() {
+  document.querySelectorAll(".btnComprar").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      const button = e.target;
+      const loteID = button.dataset.lote;
+      const eventoIDCompra = button.dataset.evento;
+
+      // Desabilita botão durante compra
+      button.disabled = true;
+      button.textContent = "⏳ Processando...";
+
+      try {
+        await comprarIngresso(eventoIDCompra, loteID);
+      } catch (error) {
+        console.error("Erro na compra:", error);
+        alert("Erro ao processar compra: " + error.message);
+        button.disabled = false;
+        button.textContent = "🎟️ Comprar";
+      }
+    });
+  });
+}
+
+// Função de compra integrada com Vercel
+async function comprarIngresso(eventoID, loteID) {
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("Você precisa estar logado para comprar ingressos.");
+        window.location.href = "../login.html";
+        return reject(new Error("Usuário não autenticado"));
+      }
+
+      try {
+        // Chama API do backend Vercel
+        const response = await fetch(`${BACKEND_URL}/comprar-ingresso`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            usuarioID: user.uid,
+            eventoID: eventoID,
+            loteID: loteID
+          })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || "Erro ao processar compra");
+        }
+
+        if (result.success) {
+          alert(`✅ ${result.message}\n\n📧 Um email com o ingresso em PDF foi enviado para você!`);
+          
+          // Recarrega a página para atualizar disponibilidade
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+          
+          resolve(result);
+        } else {
+          throw new Error(result.message || "Falha na compra");
+        }
+
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+        reject(error);
+      }
+    });
+  });
+}
+
+// Inicializa carregamento
 carregarEvento();
