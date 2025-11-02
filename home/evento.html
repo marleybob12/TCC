@@ -52,29 +52,37 @@
 
     <button id="comprarBtn" class="btn">🎟 Comprar Ingresso</button>
     <p id="mensagem"></p>
-
-    
   </main>
 
-  <script type="module" src="../javaScript/comprarIngresso.js"></script>
+  <!-- Script centralizado -->
+  <script type="module" src="../javaScript/ingresso.js"></script>
+
   <script>
+    // Dropdown do usuário
     function toggleDropdown() {
       const dropdown = document.getElementById("dropdown");
       dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
     }
 
-    document.querySelectorAll(".nav-links a").forEach(link => {
-      link.addEventListener("click", () => {
-        document.querySelector("header nav ul").classList.remove("show");
-      });
+    document.addEventListener("click", function(event) {
+      const userAccount = document.querySelector(".user-account");
+      const dropdown = document.getElementById("dropdown");
+      if (!userAccount.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = "none";
+      }
+    });
+
+    // Menu mobile
+    const menuIcon = document.getElementById("menu-icon");
+    const navUl = document.querySelector(".nav-links ul");
+    menuIcon.addEventListener("click", () => navUl.classList.toggle("show"));
+
+    // Marca link ativo
+    const currentPage = window.location.pathname;
+    document.querySelectorAll('.nav-links .btn').forEach(item => {
+      if(item.href.includes(currentPage)) item.classList.add('active');
+      else item.classList.remove('active');
     });
   </script>
-  <script type="module">
-  import { auth, db } from "../javaScript/firebaseConfig.js";
-  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-  
-</script>
 </body>
 </html>
