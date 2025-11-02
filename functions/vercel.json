@@ -9,11 +9,8 @@
   "routes": [
     {
       "src": "/comprar-ingresso",
+      "methods": ["POST"],
       "dest": "functions/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
     }
   ],
   "env": {

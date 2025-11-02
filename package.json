@@ -1,26 +1,30 @@
 {
+  "name": "tcc-homepage",
+  "version": "1.0.0",
+  "description": "Projeto EventFlow - Sistema de gestão de eventos",
+  "main": "functions/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "echo 'No build needed'",
+    "start": "node functions/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
+    "express": "^4.18.2",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
     "firebase": "^12.4.0",
     "firebase-admin": "^13.5.0",
     "nodemailer": "^7.0.10",
     "pdfkit": "^0.17.2",
-    "qrcode": "^1.5.4"
-  },
-  "name": "homepage",
-  "version": "1.0.0",
-  "description": "<!-- Adicione aqui uma descrição do projeto -->\r <!-- Inclua informações sobre como configurar e executar o projeto -->",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "qrcode": "^1.5.4",
+    "dotenv": "^17.2.3"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/marleybob12/TCC.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["eventflow", "tcc", "eventos", "ingressos"],
+  "author": "Marley Thales",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/marleybob12/TCC/issues"

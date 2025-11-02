@@ -4,10 +4,23 @@ import nodemailer from "nodemailer";
 import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
 import dotenv from "dotenv";
-
+import fs from "fs";
+import path from "path";
 dotenv.config();
+console.log("EMAIL:", process.env.GMAIL_EMAIL);
+console.log("SENHA:", process.env.GMAIL_SENHA);
 
-admin.initializeApp();
+
+
+// Caminho para a chave baixada do Firebase
+
+const serviceAccount = JSON.parse(fs.readFileSync(path.resolve("../eventflow-87d51-firebase-adminsdk-fbsvc-50e7b0db9a.json"), "utf-8"));
+
+
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 const db = admin.firestore();
 
 const transporter = nodemailer.createTransport({
@@ -25,7 +38,8 @@ app.post("/comprar-ingresso", async (req, res) => {
   try {
     const { usuarioID, eventoID, loteID } = req.body;
 
-    if (!usuarioID) return res.status(401).json({ success: false, message: "Usuário não autenticado" });
+    if (!usuarioID)
+      return res.status(401).json({ success: false, message: "Usuário não autenticado" });
 
     const [usuarioDoc, eventoDoc, loteDoc] = await Promise.all([
       db.collection("Usuario").doc(usuarioID).get(),
@@ -33,15 +47,19 @@ app.post("/comprar-ingresso", async (req, res) => {
       db.collection("Lote").doc(loteID).get(),
     ]);
 
-    if (!usuarioDoc.exists) return res.status(404).json({ success: false, message: "Usuário não encontrado" });
-    if (!eventoDoc.exists) return res.status(404).json({ success: false, message: "Evento não encontrado" });
-    if (!loteDoc.exists) return res.status(404).json({ success: false, message: "Lote não encontrado" });
+    if (!usuarioDoc.exists)
+      return res.status(404).json({ success: false, message: "Usuário não encontrado" });
+    if (!eventoDoc.exists)
+      return res.status(404).json({ success: false, message: "Evento não encontrado" });
+    if (!loteDoc.exists)
+      return res.status(404).json({ success: false, message: "Lote não encontrado" });
 
     const usuario = { id: usuarioID, ...usuarioDoc.data() };
     const evento = { id: eventoID, ...eventoDoc.data() };
     const lote = { id: loteID, ...loteDoc.data() };
 
-    if (lote.quantidade <= 0) return res.status(400).json({ success: false, message: "Ingressos esgotados para este lote" });
+    if (lote.quantidade <= 0)
+      return res.status(400).json({ success: false, message: "Ingressos esgotados" });
 
     const ingressoRef = await db.collection("Ingresso").add({
       eventoID,
@@ -61,7 +79,9 @@ app.post("/comprar-ingresso", async (req, res) => {
 
     const pdfBuffer = await gerarPDFIngresso(usuario, evento, lote, ingressoRef.id);
 
-    const dataEvento = evento.dataInicio?.toDate ? evento.dataInicio.toDate().toLocaleString('pt-BR') : 'A definir';
+    const dataEvento = evento.dataInicio?.toDate
+      ? evento.dataInicio.toDate().toLocaleString("pt-BR")
+      : "A definir";
 
     await transporter.sendMail({
       from: `"EventFlow" <${process.env.GMAIL_EMAIL}>`,
@@ -74,68 +94,75 @@ app.post("/comprar-ingresso", async (req, res) => {
           <p><strong>📅 Data:</strong> ${dataEvento}</p>
           <p><strong>🎫 Lote:</strong> ${lote.nome}</p>
           <p><strong>💰 Valor:</strong> R$ ${lote.preco.toFixed(2)}</p>
-          <p><strong>📍 Local:</strong> ${evento.local || 'A definir'}</p>
+          <p><strong>📍 Local:</strong> ${evento.local || "A definir"}</p>
         </div>
         <p>O ingresso em PDF está anexo a este email. Apresente o QR Code na entrada do evento.</p>
-        <p style="color: #6B7280; font-size: 14px; margin-top: 30px;">
-          <strong>EventFlow</strong> - Sistema de Gestão de Eventos
-        </p>
       </div>`,
-      attachments: [{ filename: `Ingresso_${evento.titulo.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`, content: pdfBuffer }],
+      attachments: [
+        {
+          filename: `Ingresso_${evento.titulo.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`,
+          content: pdfBuffer,
+        },
+      ],
     });
 
     await ingressoRef.update({ emailEnviado: true });
 
-    return res.json({ success: true, message: "Ingresso comprado e enviado por email!", ingressoID: ingressoRef.id });
+    res.json({
+      success: true,
+      message: "Ingresso comprado e enviado por email!",
+      ingressoID: ingressoRef.id,
+    });
   } catch (error) {
     console.error("Erro na compra:", error);
-    return res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 });
 
 async function gerarPDFIngresso(usuario, evento, lote, ingressoID) {
   return new Promise(async (resolve, reject) => {
     const chunks = [];
-    const doc = new PDFDocument({ size: "A4", margin: 50, info: { Title: `Ingresso - ${evento.titulo}`, Author: 'EventFlow' } });
+    const doc = new PDFDocument({ size: "A4", margin: 50 });
 
-    doc.on('data', chunk => chunks.push(chunk));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
-    doc.on('error', reject);
+    doc.on("data", (chunk) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
 
     try {
-      doc.rect(0, 0, 595, 842).fill("#eaf6f6");
-      doc.fillColor("#1E40AF").fontSize(28).text("🎟️ INGRESSO EVENTFLOW", { align: "center" });
-      doc.moveDown(0.5).fontSize(10).fillColor("#6B7280").text("Apresente este QR Code na entrada", { align: "center" });
-      doc.moveDown(2);
-      doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke("#CBD5E1");
+      doc.fillColor("#1E40AF").fontSize(24).text("🎟️ INGRESSO EVENTFLOW", { align: "center" });
       doc.moveDown();
-      doc.fillColor("#000000").fontSize(14);
+      doc.fontSize(12).fillColor("black");
 
-      const dataEvento = evento.dataInicio?.toDate ? evento.dataInicio.toDate().toLocaleString('pt-BR') : 'A definir';
+      const dataEvento = evento.dataInicio?.toDate
+        ? evento.dataInicio.toDate().toLocaleString("pt-BR")
+        : "A definir";
 
-      doc.text(`👤 Nome: ${usuario.nome}`, 50);
-      doc.moveDown(0.3); doc.text(`🎭 Evento: ${evento.titulo}`, 50);
-      doc.moveDown(0.3); doc.text(`📅 Data: ${dataEvento}`, 50);
-      doc.moveDown(0.3); doc.text(`📍 Local: ${evento.local || 'A definir'}`, 50);
-      doc.moveDown(0.3); doc.text(`🎫 Lote: ${lote.nome}`, 50);
-      doc.moveDown(0.3); doc.text(`💰 Valor: R$ ${lote.preco.toFixed(2)}`, 50);
-      doc.moveDown(0.3); doc.fontSize(10).fillColor("#6B7280"); doc.text(`🔢 ID do Ingresso: ${ingressoID}`, 50);
-      doc.moveDown(2);
+      doc.text(`👤 Nome: ${usuario.nome}`);
+      doc.text(`🎭 Evento: ${evento.titulo}`);
+      doc.text(`📅 Data: ${dataEvento}`);
+      doc.text(`📍 Local: ${evento.local || "A definir"}`);
+      doc.text(`🎫 Lote: ${lote.nome}`);
+      doc.text(`💰 Valor: R$ ${lote.preco.toFixed(2)}`);
+      doc.text(`🔢 ID do Ingresso: ${ingressoID}`);
+      doc.moveDown();
 
       const qrData = `EVENTFLOW-${ingressoID}`;
-      const qrImage = await QRCode.toDataURL(qrData, { errorCorrectionLevel: 'H', width: 300 });
-      const qrBuffer = Buffer.from(qrImage.split(',')[1], 'base64');
+      const qrImage = await QRCode.toDataURL(qrData, { errorCorrectionLevel: "H", width: 300 });
+      const qrBuffer = Buffer.from(qrImage.split(",")[1], "base64");
       const qrX = (595 - 200) / 2;
       doc.image(qrBuffer, qrX, doc.y, { fit: [200, 200] });
-      doc.moveDown(12);
-
-      doc.fontSize(9).fillColor("#9CA3AF");
-      doc.text("Válido apenas com documento de identificação", { align: "center" });
-      doc.text("EventFlow - Sistema de Gestão de Eventos", { align: "center" });
 
       doc.end();
-    } catch (error) { reject(error); }
+    } catch (error) {
+      reject(error);
+    }
   });
 }
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
+});
 
+
+// 🔹 ESSA LINHA É FUNDAMENTAL PARA FUNCIONAR NA VERCEL
 export default app;
