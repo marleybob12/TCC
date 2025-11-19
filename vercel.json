@@ -1,15 +1,15 @@
 {
   "version": 2,
   "functions": {
-     "api/comprar-ingresso.js":{
-       "runtime": "nodejs18.x",
+    "api/comprar-ingresso.js": {
+      "runtime": "@vercel/node@2.0.0",
       "memory": 1024,
       "maxDuration": 15
     }
   },
   "routes": [
     {
-      "src": "/api/comprar-ingresso.js",
+      "src": "/api/comprar-ingresso",
       "dest": "/api/comprar-ingresso.js",
       "methods": ["POST", "OPTIONS"]
     }
