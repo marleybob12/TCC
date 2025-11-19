@@ -1,4 +1,3 @@
-{ "version": 2,
- "builds": [ { "src": "api/comprar-ingresso.js", "use": "@vercel/node" } ],
-  "routes": [ { "src": "/api/comprar-ingresso", 
-  "dest": "/api/comprar-ingresso.js" } ] }
+{
+  "version": 2
+}
