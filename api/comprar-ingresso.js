@@ -8,7 +8,7 @@ if (!admin.apps.length) {
   try {
     const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || "{}");
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
+      credential: admin.credential.cert(serviceAccount),
     });
   } catch (err) {
     console.error("ERRO Firebase Init:", err.message);
@@ -18,7 +18,7 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-// ===== EMAIL CONFIG (SEM credenciais padrão!) =====
+// ===== EMAIL CONFIG =====
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -34,12 +34,12 @@ async function gerarPDFIngresso(usuario, evento, lote, ingressoID) {
       const chunks = [];
       const doc = new PDFDocument({ size: "A4", margin: 50 });
 
-      doc.on("data", chunk => chunks.push(chunk));
+      doc.on("data", (chunk) => chunks.push(chunk));
       doc.on("end", () => resolve(Buffer.concat(chunks)));
-      doc.on("error", err => reject(err));
+      doc.on("error", (err) => reject(err));
 
       // Título
-      doc.fillColor("#1E40AF").fontSize(24).text("🎟️ INGRESSO EVENTFLOW", { align: "center" });
+      doc.fillColor("#1E40AF").fontSize(24).text(" INGRESSO EVENTFLOW", { align: "center" });
       doc.moveDown();
       doc.fontSize(12).fillColor("black");
 
@@ -51,13 +51,13 @@ async function gerarPDFIngresso(usuario, evento, lote, ingressoID) {
         : "A definir";
 
       // Conteúdo
-      doc.text(`👤 Nome: ${usuario.nome || 'Usuário'}`);
-      doc.text(`🎭 Evento: ${evento.titulo || 'Evento'}`);
-      doc.text(`📅 Data: ${dataEvento}`);
-      doc.text(`📍 Local: ${evento.local || "A definir"}`);
-      doc.text(`🎫 Lote: ${lote.nome || 'Lote'}`);
-      doc.text(`💰 Valor: R$ ${(lote.preco || 0).toFixed(2)}`);
-      doc.text(`🔢 ID: ${ingressoID}`);
+      doc.text(` Nome: ${usuario.nome || "Usuário"}`);
+      doc.text(` Evento: ${evento.titulo || "Evento"}`);
+      doc.text(` Data: ${dataEvento}`);
+      doc.text(` Local: ${evento.local || "A definir"}`);
+      doc.text(` Lote: ${lote.nome || "Lote"}`);
+      doc.text(` Valor: R$ ${(lote.preco || 0).toFixed(2)}`);
+      doc.text(` ID: ${ingressoID}`);
       doc.moveDown();
 
       // QR Code
@@ -78,36 +78,23 @@ async function gerarPDFIngresso(usuario, evento, lote, ingressoID) {
   });
 }
 
-// ===== HANDLER VERCEL (SERVERLESS) =====
+// ===== HANDLER VERCEL =====
 export default async function handler(req, res) {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  // ===== CORS =====
+  const allowedOrigin = process.env.FRONTEND_URL || "*";
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
-  // Preflight
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  // Apenas POST
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, message: 'Apenas POST permitido' });
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).json({ success: false, message: "Apenas POST permitido" });
 
   try {
     const { usuarioID, eventoID, loteID } = req.body;
 
-    // Validação
-    if (!usuarioID || !eventoID || !loteID) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Faltam dados: usuarioID, eventoID, loteID' 
-      });
-    }
-
-    console.log('[COMPRA]', { usuarioID, eventoID, loteID });
+    if (!usuarioID || !eventoID || !loteID)
+      return res.status(400).json({ success: false, message: "Faltam dados: usuarioID, eventoID, loteID" });
 
     // Buscar documentos
     const [usuarioDoc, eventoDoc, loteDoc] = await Promise.all([
@@ -116,32 +103,26 @@ export default async function handler(req, res) {
       db.collection("Lote").doc(loteID).get(),
     ]);
 
-    if (!usuarioDoc.exists || !eventoDoc.exists || !loteDoc.exists) {
+    if (!usuarioDoc.exists || !eventoDoc.exists || !loteDoc.exists)
       return res.status(404).json({ success: false, message: "Usuário, evento ou lote não encontrado" });
-    }
 
     const usuario = { id: usuarioID, ...usuarioDoc.data() };
     const evento = { id: eventoID, ...eventoDoc.data() };
     const lote = { id: loteID, ...loteDoc.data() };
 
-    // Verificar disponibilidade
-    if (!lote.quantidade || lote.quantidade <= 0) {
+    if (!lote.quantidade || lote.quantidade <= 0)
       return res.status(400).json({ success: false, message: "Ingressos esgotados para este lote" });
-    }
 
-    // Transação Firestore
+    // Criar ingresso + decrementar quantidade em transação
     const ingressoRef = db.collection("Ingresso").doc();
     const ingressoID = ingressoRef.id;
 
     await db.runTransaction(async (transaction) => {
       const loteAtualizado = await transaction.get(loteDoc.ref);
       const qtdAtual = loteAtualizado.data().quantidade || 0;
-      
-      if (qtdAtual <= 0) {
-        throw new Error('Ingressos esgotados durante o processamento');
-      }
 
-      // Criar ingresso
+      if (qtdAtual <= 0) throw new Error("Ingressos esgotados durante o processamento");
+
       transaction.set(ingressoRef, {
         eventoID,
         loteID,
@@ -154,18 +135,12 @@ export default async function handler(req, res) {
         preco: lote.preco,
       });
 
-      // Decrementar quantidade
-      transaction.update(loteDoc.ref, {
-        quantidade: admin.firestore.FieldValue.increment(-1),
-      });
+      transaction.update(loteDoc.ref, { quantidade: admin.firestore.FieldValue.increment(-1) });
     });
-
-    console.log('[INGRESSO CRIADO]', ingressoID);
 
     // Gerar PDF
     const pdfBuffer = await gerarPDFIngresso(usuario, evento, lote, ingressoID);
 
-    // Data para email
     const dataEvento = evento.dataInicio?.toDate
       ? evento.dataInicio.toDate().toLocaleString("pt-BR")
       : evento.dataInicio?._seconds
@@ -176,67 +151,18 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: `"EventFlow" <${process.env.GMAIL_EMAIL}>`,
       to: usuario.email,
-      subject: `🎟️ Seu ingresso para ${evento.titulo}`,
+      subject: ` Seu ingresso para ${evento.titulo}`,
       html: `
-        
-
-          
-
-            
-🎉 Olá, ${usuario.nome}!
-
-            
-
-Seu ingresso para ${evento.titulo} foi confirmado com sucesso!
-
-
-            
-
-              
-
-📅 Data: ${dataEvento}
-
-
-              
-
-🎫 Lote: ${lote.nome}
-
-
-              
-
-💰 Valor: R$ ${lote.preco.toFixed(2)}
-
-
-              
-
-📍 Local: ${evento.local || "A definir"}
-
-
-              
-
-🔢 ID: ${ingressoID}
-
-
-            
-
-            
-
-O ingresso em PDF está anexado. Apresente o QR Code na entrada do evento.
-
-
-            
-
-              
-
-Obrigado por usar EventFlow! 🎟️
-
-
-            
-
-          
-
-        
-`,
+        <p> Olá, ${usuario.nome}!</p>
+        <p>Seu ingresso para <b>${evento.titulo}</b> foi confirmado com sucesso!</p>
+        <p> Data: ${dataEvento}<br>
+         Lote: ${lote.nome}<br>
+         Valor: R$ ${lote.preco.toFixed(2)}<br>
+         Local: ${evento.local || "A definir"}<br>
+         ID: ${ingressoID}</p>
+        <p>O ingresso em PDF está anexado. Apresente o QR Code na entrada do evento.</p>
+        <p>Obrigado por usar EventFlow! </p>
+      `,
       attachments: [
         {
           filename: `Ingresso_${evento.titulo.replace(/[^a-zA-Z0-9]/g, "_")}_${ingressoID}.pdf`,
@@ -245,28 +171,20 @@ Obrigado por usar EventFlow! 🎟️
       ],
     });
 
-    console.log('[EMAIL ENVIADO]', usuario.email);
-
-    // Marcar email como enviado
     await ingressoRef.update({ emailEnviado: true });
 
-    // Resposta sucesso
     return res.status(200).json({
       success: true,
-      message: 'Ingresso comprado e enviado por email com sucesso!',
+      message: "Ingresso comprado e enviado por email com sucesso!",
       data: {
         ingressoID,
         eventoTitulo: evento.titulo,
         loteNome: lote.nome,
-        usuarioEmail: usuario.email
-      }
+        usuarioEmail: usuario.email,
+      },
     });
-
   } catch (error) {
-    console.error('[ERRO]', error.message);
-    return res.status(500).json({
-      success: false,
-      message: error.message || 'Erro ao processar compra'
-    });
+    console.error("[ERRO]", error);
+    return res.status(500).json({ success: false, message: error.message || "Erro ao processar compra" });
   }
 }
