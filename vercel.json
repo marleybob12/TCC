@@ -9,8 +9,8 @@
   },
   "routes": [
     {
-      "src": "/api/enviar-ingresso",
-      "dest": "/api/enviar-ingresso.js",
+      "src": "/api/comprar-ingresso.js",
+      "dest": "/api/comprar-ingresso.js",
       "methods": ["POST", "OPTIONS"]
     }
   ]
