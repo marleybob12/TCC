@@ -1,33 +1,23 @@
 {
-  "name": "tcc-homepage",
+  "name": "eventflow-backend-vercel",
   "version": "1.0.0",
-  "description": "Projeto EventFlow - Sistema de gestão de eventos",
-  "main": "functions/index.js",
   "type": "module",
+  "description": "Backend EventFlow para Vercel com Firebase, Nodemailer e PDF",
+  "main": "api/comprar-ingresso.js",
   "scripts": {
-    "build": "echo 'No build needed'",
-    "start": "node functions/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "firebase": "^12.4.0",
-    "firebase-admin": "^13.5.0",
+    "firebase-admin": "^13.6.0",
     "nodemailer": "^7.0.10",
     "pdfkit": "^0.17.2",
-    "qrcode": "^1.5.4",
-    "dotenv": "^17.2.3"
+    "qrcode": "^1.5.4"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/marleybob12/TCC.git"
+  "devDependencies": {
+    "vercel": "^33.0.0"
   },
-  "keywords": ["eventflow", "tcc", "eventos", "ingressos"],
-  "author": "Marley Thales",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/marleybob12/TCC/issues"
-  },
-  "homepage": "https://github.com/marleybob12/TCC#readme"
+  "engines": {
+    "node": ">=18.x"
+  }
 }

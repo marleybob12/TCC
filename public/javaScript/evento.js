@@ -2,7 +2,7 @@ import { auth, db } from "./firebaseConfig.js";
 import { doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-const BACKEND_URL = 'https://tcc-puce-three.vercel.app/api'; // corrigido para /api
+const BACKEND_URL = 'https://tcc-puce-three.vercel.app';
 const params = new URLSearchParams(window.location.search);
 const eventoID = params.get("id");
 
@@ -106,7 +106,7 @@ function adicionarEventosCompra() {
 
 // Compra
 async function comprarIngresso(eventoID, loteID) {
-  const response = await fetch(`${BACKEND_URL}/comprar-ingresso`, {
+  const response = await fetch(`${BACKEND_URL}/api/comprar-ingresso`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ usuarioID: usuarioAtual.uid, eventoID, loteID }),

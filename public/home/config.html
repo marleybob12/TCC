@@ -3,134 +3,186 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EventFlow - Configurações</title>
+  <title>Configurações — EventFlow</title>
+
   <link rel="stylesheet" href="../css/config.css" />
-  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Ícones -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" />
 </head>
+
 <body>
-  <!-- Cabeçalho -->
-  <header>
-    <div class="header-container">
-      <a href="../home/home.html" class="logo">
-        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
-      </a>
-      <button class="menu-icon" id="menu-icon"><i class="fas fa-bars"></i></button>
-      <nav class="nav-links">
-        <ul>
-          <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
-          <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
-          <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
-          <li><a href="home.html" class="btn">Home</a></li>
-          <li>
-            <div class="user-dropdown">
-              <div class="user-account" onclick="toggleDropdown()">
-                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
-                <span class="user-name">Usuário</span>
-                <span class="arrow">▾</span>
-              </div>
-              <div class="dropdown-menu" id="dropdown">
-                <a href="perfil.html">👤 Perfil</a>
-                <a href="config.html">⚙️ Configurações</a>
-                <a href="#" id="dropdownLogout">🚪 Sair</a>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </nav>
+  <!-- =============================== -->
+  <!-- HEADER / MENU USUÁRIO          -->
+  <!-- =============================== -->
+  <header class="topbar">
+    <div class="logo">Event<span>Flow</span></div>
+
+    <nav aria-label="Menu principal">
+      <ul class="menu">
+        <li><a href="../home/home.html">Início</a></li>
+        <li><a href="../eventos/explorar.html">Explorar</a></li>
+        <li><a href="../dashboard/dashboard.html">Dashboard</a></li>
+      </ul>
+    </nav>
+
+    <div class="user-area" tabindex="0" aria-haspopup="true" aria-expanded="false">
+      <img src="../assets/user.png" alt="Foto do usuário" class="user-avatar">
+      <span class="user-name">Usuário</span>
+      <i class="ri-arrow-down-s-line"></i>
+
+      <ul class="user-dropdown" hidden>
+        <li><a href="config.html">Configurações</a></li>
+        <li><a href="../login/logout.html">Sair</a></li>
+      </ul>
     </div>
   </header>
 
-  <!-- Conteúdo principal -->
-  <main>
-    <h2>Configurações da Conta</h2>
+  <!-- =============================== -->
+  <!-- CONTAINER PRINCIPAL            -->
+  <!-- =============================== -->
+  <main class="config-container">
 
-    <!-- Conta -->
-    <div class="config-secao">
-      <button class="accordion">Conta</button>
-      <div class="panel">
-        <form id="perfilForm">
-          <label>Nome: <input type="text" id="nome" required /></label>
-          <label>Email: <input type="email" id="email" disabled /></label>
-          <label>Telefone: <input type="text" id="telefone" /></label>
-          <label>CPF: <input type="text" id="cpf" /></label>
-          <label>Data de Nascimento: <input type="date" id="dataNascimento" /></label>
-          <label>Nova Senha: <input type="password" id="novaSenha" /></label>
-          <button type="submit">Salvar Alterações</button>
-          <span id="mensagem"></span>
-        </form>
-      </div>
-    </div>
+    <!-- MENU LATERAL -->
+    <aside class="sidebar">
+      <h2>Configurações</h2>
+      <ul>
+        <li class="active" data-section="conta">Conta</li>
+        <li data-section="privacidade">Privacidade</li>
+        <li data-section="notificacoes">Notificações</li>
+        <li data-section="preferencias">Preferências</li>
+        <li data-section="seguranca">Segurança</li>
+      </ul>
+    </aside>
 
-    <!-- Privacidade -->
-    <div class="config-secao">
-      <button class="accordion">Privacidade</button>
-      <div class="panel">
-        <label><input type="checkbox" id="visibilidadePerfil" /> Perfil público</label>
-        <label><input type="checkbox" id="compartilharAtividades" /> Compartilhar atividades</label>
-        <label><input type="checkbox" id="ocultarEmail" /> Ocultar meu email</label>
-        <label><input type="checkbox" id="ocultarTelefone" /> Ocultar meu telefone</label>
-      </div>
-    </div>
+    <!-- CONTEÚDO -->
+    <section class="content">
 
-    <!-- Notificações -->
-    <div class="config-secao">
-      <button class="accordion">Notificações</button>
-      <div class="panel">
-        <label><input type="checkbox" id="notEmail" /> E-mail</label>
-        <label><input type="checkbox" id="notPush" /> Push</label>
-        <label><input type="checkbox" id="notSMS" /> SMS</label>
-        <label><input type="checkbox" id="notMarketing" /> Receber promoções</label>
-      </div>
-    </div>
+      <form id="perfilForm">
 
-    <!-- Preferências -->
-    <div class="config-secao">
-      <button class="accordion">Preferências</button>
-      <div class="panel">
-        <label>Idioma:
+        <!-- ===================== -->
+        <!-- SEÇÃO CONTA           -->
+        <!-- ===================== -->
+        <div class="section active" id="conta">
+          <h3>Informações da Conta</h3>
+
+          <label>Nome completo</label>
+          <input type="text" id="nome" required />
+
+          <label>Email</label>
+          <input type="email" id="email" disabled />
+
+          <label>Telefone</label>
+          <input type="text" id="telefone" />
+
+          <label>CPF</label>
+          <input type="text" id="cpf" />
+
+          <label>Data de nascimento</label>
+          <input type="date" id="dataNascimento" />
+
+          <label>Nova senha</label>
+          <input type="password" id="novaSenha" placeholder="Opcional" />
+
+        </div>
+
+        <!-- ===================== -->
+        <!-- SEÇÃO PRIVACIDADE     -->
+        <!-- ===================== -->
+        <div class="section" id="privacidade">
+          <h3>Privacidade</h3>
+
+          <label><input type="checkbox" id="visibilidadePerfil" /> Perfil público</label>
+          <label><input type="checkbox" id="compartilharAtividades" /> Compartilhar atividades</label>
+          <label><input type="checkbox" id="ocultarEmail" /> Ocultar email</label>
+          <label><input type="checkbox" id="ocultarTelefone" /> Ocultar telefone</label>
+        </div>
+
+        <!-- ===================== -->
+        <!-- SEÇÃO NOTIFICAÇÕES    -->
+        <!-- ===================== -->
+        <div class="section" id="notificacoes">
+          <h3>Notificações</h3>
+
+          <label><input type="checkbox" id="notEmail" /> Email</label>
+          <label><input type="checkbox" id="notPush" /> Push</label>
+          <label><input type="checkbox" id="notSMS" /> SMS</label>
+          <label><input type="checkbox" id="notMarketing" /> Ofertas e marketing</label>
+        </div>
+
+        <!-- ===================== -->
+        <!-- SEÇÃO PREFERÊNCIAS    -->
+        <!-- ===================== -->
+        <div class="section" id="preferencias">
+          <h3>Preferências</h3>
+
+          <label>Idioma</label>
           <select id="idioma">
-            <option value="pt-BR">Português</option>
+            <option value="pt-BR">Português (Brasil)</option>
             <option value="en-US">Inglês</option>
           </select>
-        </label>
-        <label>Fuso horário:
+
+          <label>Fuso horário</label>
           <select id="fusoHorario">
             <option value="GMT-3">GMT-3</option>
-            <option value="GMT-2">GMT-2</option>
+            <option value="GMT-4">GMT-4</option>
+            <option value="GMT">GMT</option>
           </select>
-        </label>
-        <label>Tema:
+
+          <label>Tema do sistema</label>
           <select id="tema">
             <option value="claro">Claro</option>
             <option value="escuro">Escuro</option>
           </select>
-        </label>
-      </div>
-    </div>
+        </div>
 
-    <!-- Segurança -->
-    <div class="config-secao">
-      <button class="accordion">Segurança</button>
-      <div class="panel">
-        <label><input type="checkbox" id="2fa" /> Ativar autenticação de dois fatores</label>
-        <p>Últimos logins:</p>
-        <ul id="historicoLogins"></ul>
-        <p>Alertas de segurança serão enviados quando houver atividades suspeitas.</p>
-      </div>
-    </div>
+        <!-- ===================== -->
+        <!-- SEÇÃO SEGURANÇA       -->
+        <!-- ===================== -->
+        <div class="section" id="seguranca">
+          <h3>Segurança</h3>
 
-    <!-- Excluir Conta -->
-    <div class="config-secao">
-      <button class="accordion">Excluir Conta</button>
-      <div class="panel">
-        <button id="excluirConta" class="btn-logout">Excluir minha conta</button>
-      </div>
-    </div>
+          <label><input type="checkbox" id="2fa" /> Autenticação em duas etapas</label>
 
+          <h4>Histórico de logins</h4>
+          <ul id="historicoLogins"></ul>
+        </div>
+
+        <!-- BOTÃO SALVAR -->
+        <button type="submit" class="btn-save">Salvar alterações</button>
+
+        <p id="mensagem"></p>
+
+      </form>
+
+    </section>
   </main>
 
+  <!-- SCRIPT PRINCIPAL -->
   <script type="module" src="../javaScript/config.js"></script>
+
+  <!-- Interação da UI -->
+  <script>
+    // Menu lateral
+    document.querySelectorAll(".sidebar li").forEach(item => {
+      item.addEventListener("click", () => {
+        document.querySelector(".sidebar .active").classList.remove("active");
+        item.classList.add("active");
+
+        document.querySelector(".section.active").classList.remove("active");
+        document.getElementById(item.dataset.section).classList.add("active");
+      });
+    });
+
+    // Dropdown do usuário
+    const userArea = document.querySelector(".user-area");
+    const dropdown = document.querySelector(".user-dropdown");
+
+    userArea.addEventListener("click", () => {
+      const expanded = userArea.getAttribute("aria-expanded") === "true";
+      userArea.setAttribute("aria-expanded", !expanded);
+      dropdown.hidden = expanded;
+    });
+  </script>
 </body>
 </html>

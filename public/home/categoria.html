@@ -1,116 +1,400 @@
-<!-- SCRIPT FIREBASE -->
-<script type="module">
-  import { db } from "../javaScript/firebaseConfig.js";
-  import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Categoria - EventFlow</title>
 
-  // --- pegar parâmetros da URL (uma única vez)
-  const params = new URLSearchParams(window.location.search);
-  const categoriaNome = params.get("nome"); // ?nome=...
-  const cidade = params.get("local");       // ?local=...
+  <link rel="stylesheet" href="../css/categoria.css" />
+  <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="../home/home.html" class="logo">
+        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+      </a>
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="nav-links" aria-label="Menu principal">
+        <ul>
+          <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
+          <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
+          <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
+          <li><a href="home.html" class="btn">EventFlow</a></li>
+          <li>
+            <div class="user-dropdown">
+              <div class="user-account" onclick="toggleDropdown()">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+                <span class="user-name">Usuário</span>
+                <span class="arrow">▾</span>
+              </div>
+              <div class="dropdown-menu" id="dropdown" style="display:none;">
+                <a href="perfil.html">👤 Perfil</a>
+                <a href="config.html">⚙️ Configurações</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-  // Título mais amigável quando faltar parâmetro
-  const tituloEl = document.getElementById("tituloCategoria");
-  if (categoriaNome && cidade) {
-    tituloEl.textContent = `Eventos de ${categoriaNome} — ${cidade}`;
-  } else if (categoriaNome) {
-    tituloEl.textContent = `Eventos de ${categoriaNome}`;
-  } else if (cidade) {
-    tituloEl.textContent = `Eventos em ${cidade}`;
-  } else {
-    tituloEl.textContent = `Eventos`;
-  }
+  <main>
+    <!-- Hero com título dinâmico -->
+    <section class="hero-categoria">
+      <div class="hero-content">
+        <h1 id="tituloCategoria">Eventos</h1>
+        <p>Explore os melhores eventos disponíveis</p>
+      </div>
+    </section>
 
-  const cardsContainer = document.querySelector(".cards-container");
+    <!-- Filtros -->
+    <section class="filtros-section">
+      <div class="filtros-container">
+        <button class="btn-filtro" id="btnFiltros">
+          <i class="fas fa-filter"></i> Filtros
+        </button>
+        
+        <div class="filtros-content" id="filtrosContent" style="display: none;">
+          <div class="filtro-item">
+            <label for="ordenar">Ordenar por:</label>
+            <select id="ordenar">
+              <option value="relevancia">Relevância</option>
+              <option value="data-asc">Data (mais próximo)</option>
+              <option value="data-desc">Data (mais distante)</option>
+              <option value="nome">Nome (A-Z)</option>
+            </select>
+          </div>
 
-  // formata Timestamp do Firestore de maneira segura
-  function formatDate(field) {
-    if (!field) return "A definir";
-    // Se for Timestamp com toDate()
-    if (typeof field.toDate === "function") {
-      return field.toDate().toLocaleDateString("pt-BR");
+          <div class="filtro-item">
+            <label for="dataInicio">Data Início:</label>
+            <input type="date" id="dataInicio" />
+          </div>
+
+          <div class="filtro-item">
+            <label for="dataFim">Data Fim:</label>
+            <input type="date" id="dataFim" />
+          </div>
+
+          <button class="btn-aplicar-filtros" id="btnAplicarFiltros">
+            Aplicar Filtros
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cards de eventos -->
+    <section class="eventos-section">
+      <div class="cards-container">
+        <!-- Cards serão inseridos dinamicamente -->
+        <div class="loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Carregando eventos...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>Sobre o EventFlow</h3>
+        <p>Facilitando e transformando a experiência de planejar e realizar eventos.</p>
+      </div>
+    </div>
+    <p class="copyright">&copy; 2025 EventFlow. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Script Firebase -->
+  <script type="module">
+    import { auth, db } from "../javaScript/firebaseConfig.js";
+    import { logoutUsuario } from "../javaScript/auth.js";
+    import { collection, query, where, getDocs, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Mapeamento de nomes exibidos para valores no banco
+    const categoriasMap = {
+      "Música": "Musica",
+      "Palestra": "Palestra",
+      "Seminário": "Seminario",
+      "Esportes": "Esportes",
+      "Teatro e Espetáculos": "Teatro_e_Espetaculos",
+      "Tecnologia": "Tecnologia",
+      "Artes": "Artes",
+      "Gastronomia": "Gastronomia",
+      "Negócios": "Negocios",
+      "Educação": "Educacao",
+      "Saúde": "Saude",
+      "Moda": "Moda",
+      "Festas e Shows": "Festas_e_Shows",
+      "Stand up Comedy": "Stand_up_Comedy",
+      "Infantil": "Infantil",
+      "família": "Passeios_para_toda_familia",
+      "Festas Típicas": "Festas_Tipicas",
+      "Convenções": "Convencoes",
+      "Games": "Games",
+      "Fitness": "Fitness",
+      "Encontros Sociais": "Encontros_Sociais",
+      "Cafés e Networking": "Cafes_e_Network",
+      "Workshops": "Workshops",
+      "Festivais": "Festivais",
+      "Outros": "Outros"
+    };
+
+    // Pegar parâmetros da URL
+    const params = new URLSearchParams(window.location.search);
+    let categoriaNome = params.get("nome");
+    const cidade = params.get("local");
+
+    // Converter nome exibido para valor do banco
+    if (categoriaNome && categoriasMap[categoriaNome]) {
+      categoriaNome = categoriasMap[categoriaNome];
     }
-    // Se for estrutura { seconds: ... }
-    if (field.seconds) {
-      return new Date(field.seconds * 1000).toLocaleDateString("pt-BR");
+
+    const tituloEl = document.getElementById("tituloCategoria");
+    const cardsContainer = document.querySelector(".cards-container");
+
+    let eventosCache = []; // Cache para filtros
+
+    // Nome amigável para exibição no título
+    const nomeExibicao = params.get("nome") || categoriaNome;
+
+    // Atualizar título
+    if (nomeExibicao && cidade) {
+      tituloEl.textContent = `Eventos de ${nomeExibicao} — ${cidade}`;
+    } else if (nomeExibicao) {
+      tituloEl.textContent = `Eventos de ${nomeExibicao}`;
+    } else if (cidade) {
+      tituloEl.textContent = `Eventos em ${cidade}`;
+    } else {
+      tituloEl.textContent = `Todos os Eventos`;
     }
-    // Se for string/date
-    const d = new Date(field);
-    if (!isNaN(d)) return d.toLocaleDateString("pt-BR");
-    return "A definir";
-  }
 
-  async function carregarEventosPorCategoria() {
-    try {
-      // Se não houver nome de categoria, podemos listar por cidade (ou listar todos)
-      if (!categoriaNome) {
-        // Caso queira bloquear quando não houver categoria, descomente o bloco abaixo:
-        // cardsContainer.innerHTML = `<p class="no-events">Nenhuma categoria especificada.</p>`; return;
+    // Formatar data do Firestore
+    function formatDate(field) {
+      if (!field) return "A definir";
+      if (typeof field.toDate === "function") {
+        return field.toDate().toLocaleDateString("pt-BR");
       }
-
-      // Buscar o ID da categoria pelo nome (se categoriaNome existir)
-      let categoriaID = null;
-      if (categoriaNome) {
-        const categoriaQuery = query(collection(db, "Categoria"), where("nome", "==", categoriaNome));
-        const categoriaSnap = await getDocs(categoriaQuery);
-
-        if (categoriaSnap.empty) {
-          cardsContainer.innerHTML = `<p class="no-events">Nenhuma categoria encontrada com o nome <b>${categoriaNome}</b>.</p>`;
-          return;
-        }
-
-        categoriaID = categoriaSnap.docs[0].id;
+      if (field.seconds) {
+        return new Date(field.seconds * 1000).toLocaleDateString("pt-BR");
       }
+      const d = new Date(field);
+      if (!isNaN(d)) return d.toLocaleDateString("pt-BR");
+      return "A definir";
+    }
 
-      // Montar query para eventos:
-      const eventosCol = collection(db, "Evento");
-      let eventosQuery;
-      if (categoriaID && cidade) {
-        eventosQuery = query(eventosCol, where("categoriaID", "==", categoriaID), where("local", "==", cidade));
-      } else if (categoriaID) {
-        eventosQuery = query(eventosCol, where("categoriaID", "==", categoriaID));
-      } else if (cidade) {
-        eventosQuery = query(eventosCol, where("local", "==", cidade));
-      } else {
-        // sem filtros: pega todos (cuidado em produção se houver muitos docs)
-        eventosQuery = query(eventosCol);
-      }
+    // Criar card de evento
+    function criarCardEvento(evento, eventoID) {
+      const card = document.createElement("div");
+      card.classList.add("card-glass");
+      card.innerHTML = `
+        <a href="evento.html?id=${eventoID}">
+          <div class="card-image">
+            <img src="${evento.imagemBanner || '../img/evento.jpg'}" 
+                 alt="${evento.titulo || 'Evento'}">
+          </div>
+          <div class="card-content">
+            <h3>${evento.titulo || "Sem título"}</h3>
+            <p class="card-info">
+              <i class="fas fa-calendar"></i>
+              ${formatDate(evento.dataInicio)}
+            </p>
+            <p class="card-info">
+              <i class="fas fa-map-marker-alt"></i>
+              ${evento.local || "A definir"}
+            </p>
+            ${evento.preco ? `
+              <p class="card-preco">
+                <i class="fas fa-ticket-alt"></i>
+                A partir de R$ ${parseFloat(evento.preco).toFixed(2)}
+              </p>
+            ` : ''}
+          </div>
+        </a>
+      `;
+      return card;
+    }
 
-      const eventosSnap = await getDocs(eventosQuery);
+    // Renderizar eventos
+    function renderizarEventos(eventos) {
+      cardsContainer.innerHTML = "";
 
-      if (eventosSnap.empty) {
-        const nomeExib = categoriaNome || cidade || "a categoria/consulta";
-        cardsContainer.innerHTML = `<p class="no-events">Nenhum evento encontrado para <b>${nomeExib}</b>.</p>`;
+      if (eventos.length === 0) {
+        const nomeExib = categoriaNome || cidade || "esta busca";
+        cardsContainer.innerHTML = `
+          <div class="no-events">
+            <i class="fas fa-calendar-times"></i>
+            <p>Nenhum evento encontrado para <b>${nomeExib}</b></p>
+            <a href="home.html" class="btn-voltar">Voltar para Home</a>
+          </div>
+        `;
         return;
       }
 
-      // limpar container antes de adicionar
-      cardsContainer.innerHTML = "";
-
-      eventosSnap.forEach(docEvento => {
-        const evento = docEvento.data();
-        const eventoID = docEvento.id;
-
-        const card = document.createElement("div");
-        card.classList.add("card-glass");
-        card.innerHTML = `
-          <a href="evento.html?id=${eventoID}">
-            <img src="${evento.imagemBanner || '../img/evento.jpg'}" 
-                 alt="${evento.titulo || 'Evento'}" class="card-img">
-            <div class="card-content">
-              <h3>${evento.titulo || "Sem título"}</h3>
-              <p><b>Data:</b> ${formatDate(evento.dataInicio)}</p>
-              <p><b>Local:</b> ${evento.local || "A definir"}</p>
-            </div>
-          </a>
-        `;
-        cardsContainer.appendChild(card);
+      eventos.forEach(({ evento, eventoID }) => {
+        cardsContainer.appendChild(criarCardEvento(evento, eventoID));
       });
-    } catch (err) {
-      console.error("Erro ao carregar eventos por categoria:", err);
-      cardsContainer.innerHTML = "<p class='error-msg'>Erro ao carregar eventos.</p>";
     }
-  }
 
-  // executa carregamento
-  carregarEventosPorCategoria();
-</script>
+    // Carregar eventos
+    async function carregarEventos() {
+      try {
+        let categoriaID = null;
+
+        // Buscar categoria se fornecida
+        if (categoriaNome) {
+          const categoriaQuery = query(collection(db, "Categoria"), where("nome", "==", categoriaNome));
+          const categoriaSnap = await getDocs(categoriaQuery);
+
+          if (categoriaSnap.empty) {
+            cardsContainer.innerHTML = `
+              <div class="no-events">
+                <i class="fas fa-search"></i>
+                <p>Nenhuma categoria encontrada com o nome <b>${categoriaNome}</b></p>
+                <a href="home.html" class="btn-voltar">Voltar para Home</a>
+              </div>
+            `;
+            return;
+          }
+
+          categoriaID = categoriaSnap.docs[0].id;
+        }
+
+        // Montar query de eventos
+        const eventosCol = collection(db, "Evento");
+        let eventosQuery;
+
+        if (categoriaID && cidade) {
+          eventosQuery = query(eventosCol, where("categoriaID", "==", categoriaID), where("local", "==", cidade));
+        } else if (categoriaID) {
+          eventosQuery = query(eventosCol, where("categoriaID", "==", categoriaID));
+        } else if (cidade) {
+          eventosQuery = query(eventosCol, where("local", "==", cidade));
+        } else {
+          eventosQuery = query(eventosCol);
+        }
+
+        const eventosSnap = await getDocs(eventosQuery);
+
+        eventosCache = eventosSnap.docs.map(docEvento => ({
+          evento: docEvento.data(),
+          eventoID: docEvento.id
+        }));
+
+        renderizarEventos(eventosCache);
+
+      } catch (err) {
+        console.error("Erro ao carregar eventos:", err);
+        cardsContainer.innerHTML = `
+          <div class="error-msg">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Erro ao carregar eventos. Tente novamente mais tarde.</p>
+          </div>
+        `;
+      }
+    }
+
+    // Aplicar filtros
+    function aplicarFiltros() {
+      let eventosFiltrados = [...eventosCache];
+
+      const ordenacao = document.getElementById("ordenar").value;
+      const dataInicio = document.getElementById("dataInicio").value;
+      const dataFim = document.getElementById("dataFim").value;
+
+      // Filtrar por data
+      if (dataInicio) {
+        const dataInicioTimestamp = new Date(dataInicio).getTime();
+        eventosFiltrados = eventosFiltrados.filter(({ evento }) => {
+          if (!evento.dataInicio) return false;
+          const eventoData = evento.dataInicio.seconds ? evento.dataInicio.seconds * 1000 : new Date(evento.dataInicio).getTime();
+          return eventoData >= dataInicioTimestamp;
+        });
+      }
+
+      if (dataFim) {
+        const dataFimTimestamp = new Date(dataFim).getTime();
+        eventosFiltrados = eventosFiltrados.filter(({ evento }) => {
+          if (!evento.dataInicio) return false;
+          const eventoData = evento.dataInicio.seconds ? evento.dataInicio.seconds * 1000 : new Date(evento.dataInicio).getTime();
+          return eventoData <= dataFimTimestamp;
+        });
+      }
+
+      // Ordenar
+      switch (ordenacao) {
+        case "data-asc":
+          eventosFiltrados.sort((a, b) => {
+            const dataA = a.evento.dataInicio?.seconds || 0;
+            const dataB = b.evento.dataInicio?.seconds || 0;
+            return dataA - dataB;
+          });
+          break;
+        case "data-desc":
+          eventosFiltrados.sort((a, b) => {
+            const dataA = a.evento.dataInicio?.seconds || 0;
+            const dataB = b.evento.dataInicio?.seconds || 0;
+            return dataB - dataA;
+          });
+          break;
+        case "nome":
+          eventosFiltrados.sort((a, b) => {
+            const nomeA = a.evento.titulo?.toLowerCase() || "";
+            const nomeB = b.evento.titulo?.toLowerCase() || "";
+            return nomeA.localeCompare(nomeB);
+          });
+          break;
+      }
+
+      renderizarEventos(eventosFiltrados);
+    }
+
+    // Event listeners
+    document.getElementById("btnFiltros").addEventListener("click", () => {
+      const filtrosContent = document.getElementById("filtrosContent");
+      filtrosContent.style.display = filtrosContent.style.display === "none" ? "flex" : "none";
+    });
+
+    document.getElementById("btnAplicarFiltros").addEventListener("click", aplicarFiltros);
+
+    // Auth
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "../login.html";
+      } else {
+        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
+        if (userDoc.exists()) {
+          document.querySelector(".user-name").textContent = userDoc.data().nome;
+        }
+      }
+    });
+
+    document.getElementById("dropdownLogout")?.addEventListener("click", async (e) => {
+      e.preventDefault();
+      await logoutUsuario();
+      window.location.href = "../login.html";
+    });
+
+    // Toggle menu mobile
+    document.getElementById("menu-icon")?.addEventListener("click", () => {
+      document.querySelector("header nav ul").classList.toggle("show");
+    });
+
+    function toggleDropdown() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+    window.toggleDropdown = toggleDropdown;
+
+    // Carregar eventos na inicialização
+    carregarEventos();
+  </script>
+</body>
+</html>
