@@ -1,3 +1,16 @@
 {
-  "version": 2
+  "version": 3,
+  "functions": {
+    "api/enviar-ingresso.js": {
+      "memory": 1024,
+      "maxDuration": 15
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/enviar-ingresso",
+      "dest": "/api/enviar-ingresso.js",
+      "methods": ["POST", "OPTIONS"]
+    }
+  ]
 }
