@@ -1,0 +1,40 @@
+<!-- header.html -->
+<link rel="stylesheet" href="../css/criarEvento.css" />
+<link rel="stylesheet" href="../css/stylesHome.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
+
+
+<header>
+  <div class="header-container">
+    <a href="../home/home.html" class="logo">
+      <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+    </a>
+    <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+      <i class="fas fa-bars"></i>
+    </button>
+    <nav class="nav-links" aria-label="Menu principal">
+      <ul>
+        <li><a href="criarEvento.html" class="btn active">Criar eventos</a></li>
+        <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
+        <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
+        <li><a href="home.html" class="btn">EventFlow</a></li>
+        <li>
+          <div class="user-dropdown">
+            <div class="user-account" onclick="toggleDropdown()">
+              <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+              <span class="user-name">Usuário</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="dropdown-menu" id="dropdown" style="display:none;">
+              <a href="perfil.html">👤 Perfil</a>
+              <a href="config.html">⚙️ Configurações</a>
+              <a href="#" id="dropdownLogout">🚪 Sair</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
