@@ -47,5 +47,68 @@
   </main>
 
   <script type="module" src="../javaScript/meusIngressos.js"></script>
+  
+<!-- ============================================ -->
+<!-- ADICIONE ISTO ANTES DE FECHAR O </body>    -->
+<!-- ============================================ -->
+
+<!-- Placeholder do Header (será preenchido automaticamente) -->
+<div id="header-placeholder"></div>
+
+<!-- Script de carregamento do header -->
+<script src="../javaScript/loadHeader.js"></script>
+
+<!-- ============================================ -->
+<!-- Alternativa inline (se não quiser arquivo externo): -->
+<!-- ============================================ -->
+
+<script>
+(function(){
+  function garantirPlaceholder(){
+    let p=document.getElementById('header-placeholder');
+    if(!p){
+      p=document.createElement('div');
+      p.id='header-placeholder';
+      document.body.insertBefore(p,document.body.firstChild);
+    }
+    return p;
+  }
+  
+  async function carregarHeader(){
+    try{
+      document.querySelectorAll('header').forEach(h=>!h.closest('#header-placeholder')&&h.remove());
+      const placeholder=garantirPlaceholder();
+      placeholder.innerHTML='<div style="padding:10px;text-align:center;">Carregando...</div>';
+      
+      const caminhos=['./header.html','../home/header.html','./home/header.html','../../home/header.html'];
+      let html=null;
+      
+      for(const caminho of caminhos){
+        try{
+          const r=await fetch(caminho);
+          if(r.ok){html=await r.text();break;}
+        }catch(e){}
+      }
+      
+      if(!html)throw new Error('Header não encontrado');
+      placeholder.innerHTML=html;
+      window.dispatchEvent(new CustomEvent('headerLoaded'));
+      console.log('✅ Header carregado');
+    }catch(e){
+      console.error('❌ Erro ao carregar header:',e);
+      const p=document.getElementById('header-placeholder');
+      if(p)p.innerHTML='<div style="padding:20px;background:#fee;color:#c00;text-align:center;">⚠️ Erro ao carregar menu. <a href="../home/home.html">Voltar</a></div>';
+    }
+  }
+  
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',carregarHeader);
+  }else{
+    carregarHeader();
+  }
+})();
+</script> -->
+
+
 </body>
 </html>
