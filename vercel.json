@@ -1,17 +1,21 @@
 {
   "version": 2,
   "functions": {
-    "api/comprar-ingresso.js": {
+    "api/dados-compra.js": {
       "runtime": "@vercel/node@2.0.0",
       "memory": 1024,
-      "maxDuration": 15
+      "maxDuration": 10
     }
   },
   "routes": [
     {
-      "src": "/api/comprar-ingresso",
-      "dest": "/api/comprar-ingresso.js",
+      "src": "/api/dados-compra",
+      "dest": "/api/dados-compra.js",
       "methods": ["POST", "OPTIONS"]
     }
-  ]
+  ],
+  "env": {
+    "FIREBASE_SERVICE_ACCOUNT": "@firebase_service_account",
+    "FRONTEND_URL": "@frontend_url"
+  }
 }

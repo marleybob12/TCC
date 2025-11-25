@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "start": "vercel dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node scripts/testar-conexao.js",
+    "emails": "node scripts/processar-emails.js",
+    "emails:watch": "nodemon scripts/processar-emails.js",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "firebase-admin": "^13.5.0",
@@ -14,6 +17,9 @@
     "pdfkit": "^0.17.2",
     "qrcode": "^1.5.4",
     "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   },
   "keywords": ["eventflow", "tcc", "eventos", "ingressos"],
   "author": "Marley Thales",
