@@ -1,0 +1,32 @@
+
+
+{
+  "compilerOptions": {
+    "module": "ES6",
+    "target": "ES2020",
+    "moduleResolution": "node",
+    "checkJs": false,
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "/*": ["public/*"]
+    }
+  },
+  "include": [
+    "public/**/*",
+    "api/**/*",
+    "functions/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*",
+    ".vscode",
+    "dist",
+    "build"
+  ]
+}
