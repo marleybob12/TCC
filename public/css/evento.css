@@ -1,337 +1,523 @@
 /* =========================
-   Importação de fontes
-   ========================= */
+   Variáveis e Fontes
+========================= */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* =========================
-   Variáveis globais
-   ========================= */
 :root {
-  --header-height: 85px;
-  --primary-color: #1673ff;
-  --secondary-color: #6c63ff;
-  --btn-hover: #0056d2;
-  --btn-logout: #ff4d4d;
-  --btn-logout-hover: #cc0000;
-  --card-shadow: rgba(0,0,0,0.08);
-  --glass-bg: rgba(255,255,255,0.15);
-  --glass-border: rgba(255,255,255,0.2);
+  --primary-color: #1E40AF;
+  --secondary-color: #3B82F6;
+  --success-color: #10B981;
+  --danger-color: #EF4444;
+  --warning-color: #F59E0B;
+  --gray-50: #F9FAFB;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-400: #9CA3AF;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --gray-900: #111827;
 }
 
-/* =========================
-   Reset e estilos globais
-   ========================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth;
 }
 
 body {
   font-family: 'Poppins', sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
   line-height: 1.6;
-  color: #1f1f1f;
-  background: linear-gradient(to bottom, #f5f9ff, #e6eeff);
-  padding-top: var(--header-height);
 }
 
 /* =========================
-   Header
-   ========================= */
-header {
-  position: fixed;
-  top: 0;
+   Container Principal
+========================= */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+/* =========================
+   Hero Section - Banner e Info Principal
+========================= */
+.evento-hero {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin: 30px 0;
+}
+
+.evento-banner-container {
+  position: relative;
   width: 100%;
-  z-index: 10;
-  background: linear-gradient(135deg, rgba(47,120,227,0.7), rgba(156,140,235,0.7));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  border-bottom: 1px solid var(--glass-border);
+  height: 450px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
 }
 
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 30px;
-}
-
-header .logo img {
-  width: 190px;
-}
-
-header nav ul {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  list-style: none;
-}
-
-header nav a {
-  display: flex;
-  align-items: center;
+#bannerEvento {
+  width: 100%;
   height: 100%;
-  text-decoration: none;
-  color: #fff;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
+  object-fit: cover;
+  display: block;
 }
 
-header nav a:hover,
-header nav a.active {
-  background-color: rgba(0,86,210,0.8);
+.evento-info {
+  padding: 40px;
 }
 
-/* =========================
-   Menu Mobile
-   ========================= */
-.menu-icon {
-  display: none;
-  font-size: 1.8rem;
-  color: white;
-  background: none;
-  border: none;
-  cursor: pointer;
+#tituloEvento {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 20px;
+  line-height: 1.2;
 }
 
-/* =========================
-   Hero
-   ========================= */
-.hero {
-  text-align: center;
-  padding: 40px 20px;
+.evento-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--gray-200);
 }
 
-.hero h1 {
-  font-size: 2.5rem;
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--gray-700);
+  font-size: 16px;
+}
+
+.meta-item i {
   color: var(--primary-color);
+  font-size: 22px;
+  width: 24px;
+  text-align: center;
 }
 
-.hero p {
-  font-size: 1.2rem;
+.meta-item strong {
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+#descricaoEvento {
+  font-size: 16px;
+  color: var(--gray-700);
+  line-height: 1.8;
   margin-bottom: 20px;
 }
 
 /* =========================
-   Botões
-   ========================= */
-.btn {
-  background: var(--primary-color);
-  color: #fff;
-  padding: 0.8rem 1.4rem;
-  border-radius: 30px;
-  font-weight: 600;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+   Seção de Ingressos
+========================= */
+.ingressos-section {
+  margin-top: 40px;
 }
 
-.btn:hover {
-  background: var(--btn-hover);
-  transform: translateY(-2px);
+.ingressos-section h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.btn-logout {
-  background: var(--btn-logout);
+.ingressos-section h2 i {
+  color: var(--primary-color);
 }
 
-.btn-logout:hover {
-  background: var(--btn-logout-hover);
+#listaIngressos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
 }
 
 /* =========================
-   Dropdown usuário
-   ========================= */
-.user-dropdown {
+   Card de Ingresso - Estilo Sympla
+========================= */
+.lote-card {
+  background: #fff;
+  border: 2px solid var(--gray-200);
+  border-radius: 16px;
+  padding: 28px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   position: relative;
-  display: inline-block;
+  overflow: hidden;
 }
 
-.user-account {
+.lote-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lote-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 8px 24px rgba(30, 64, 175, 0.15);
+  transform: translateY(-4px);
+}
+
+.lote-card:hover::before {
+  opacity: 1;
+}
+
+.lote-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0;
+}
+
+.lote-preco {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.lote-preco .label {
+  font-size: 14px;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+.lote-preco .valor {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.lote-preco .valor::before {
+  content: 'R$ ';
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.lote-disponibilidade {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 12px;
-  border-radius: 30px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.user-account:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.user-account img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid white;
-}
-
-.user-name {
-  font-weight: 500;
-  color: white;
-  font-size: 16px;
-}
-
-.arrow {
-  color: white;
-  font-size: 14px;
-}
-
-.dropdown-menu {
-  position: absolute;
-  right: 0;
-  top: 120%;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  display: none;
-  flex-direction: column;
-  min-width: 150px;
-  z-index: 1000;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-}
-
-.dropdown-menu a {
-  color: rgb(39, 171, 211);
-  text-decoration: none;
-  padding: 10px 15px;
-  font-size: 15px;
-  border-radius: 8px;
-  transition: background 0.2s ease;
-}
-
-.dropdown-menu a:hover {
-  background: rgba(255,255,255,0.3);
-}
-
-/* =========================
-   Cards Glass
-   ========================= */
-.card-glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-  padding: 12px;
-  margin: 8px auto;
-  width: 100%;
-  max-width: 300px;
-  height: 320px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.card-glass img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
+  padding: 12px 16px;
+  background: var(--gray-50);
   border-radius: 10px;
+  margin: 8px 0;
 }
 
-.card-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-top: 8px;
+.lote-disponibilidade i {
+  font-size: 18px;
+  color: var(--success-color);
 }
 
-.card-glass h2 {
-  font-size: 1rem;
-  margin: 6px 0 4px;
-  line-height: 1.2;
+.lote-disponibilidade .texto {
+  font-size: 14px;
+  color: var(--gray-700);
 }
 
-.card-glass p {
-  font-size: 0.85rem;
-  margin: 2px 0;
-  line-height: 1.4;
-  color: #333;
+.lote-disponibilidade .qtdIngressos {
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+/* Badge de status */
+.badge-disponivel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #D1FAE5;
+  color: #065F46;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.badge-esgotado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #FEE2E2;
+  color: #991B1B;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 /* =========================
-   Cards Cidades
-   ========================= */
-.cards-cidades {
-  display: flex;
-  gap: 32px;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  margin: 18px 0;
-}
-
-.card-cidade {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px var(--card-shadow);
-  overflow: hidden;
-  width: 180px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  transition: transform 0.2s;
-}
-
-.card-cidade img {
+   Botão de Compra
+========================= */
+.btnComprar {
   width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-bottom: 2px solid #e6eeff;
-}
-
-.nome-cidade {
-  font-weight: 700;
-  font-size: 1.08rem;
-  color: #fff;
+  padding: 16px 24px;
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  width: 100%;
-  text-align: left;
-  padding: 10px 12px;
-  border-radius: 0 0 12px 12px;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
   margin-top: auto;
 }
 
-.card-cidade:hover {
-  transform: translateY(-6px) scale(1.04);
-  box-shadow: 0 8px 24px rgba(47,120,227,0.13);
+.btnComprar:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+}
+
+.btnComprar:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btnComprar:disabled {
+  background: var(--gray-300);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.btnComprar.sucesso {
+  background: var(--success-color);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btnComprar i {
+  font-size: 18px;
 }
 
 /* =========================
-   Botões de Categoria + Swiper
-   ========================= */
-.btn-categoria {
-  flex: none;
-  display: inline-flex;
-  flex-direction: column;
+   Modal de Sucesso
+========================= */
+.mensagem-sucesso {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  min-width: 86px;
-  min-height: 70px;
-  padding: 8px 10px;
-  font-size: 0.95rem;
-  border-radius: 14px;
-  white-space: nowrap;
-  box-sizing: border-box;
-  background: #4f8cff;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(4px);
 }
 
+.mensagem-conteudo {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 550px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: slideIn 0.3s ease;
+}
+
+.mensagem-conteudo h3 {
+  color: var(--success-color);
+  margin-top: 0;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.mensagem-conteudo p {
+  margin: 14px 0;
+  font-size: 15px;
+  color: var(--gray-700);
+}
+
+.mensagem-conteudo p strong {
+  color: var(--gray-900);
+  font-weight: 600;
+}
+
+.info-email {
+  background: #F0FDF4;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid var(--success-color);
+  margin: 24px 0;
+}
+
+.info-email i {
+  color: var(--success-color);
+  margin-right: 8px;
+}
+
+.info-secundaria {
+  color: var(--gray-500);
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 16px;
+}
+
+.mensagem-conteudo button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 24px;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.mensagem-conteudo button:hover {
+  background: #1E3A8A;
+  transform: translateY(-2px);
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    transform: translateY(-50px); 
+    opacity: 0; 
+  }
+  to { 
+    transform: translateY(0); 
+    opacity: 1; 
+  }
+}
+
+/* =========================
+   Mensagens de Estado
+========================= */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--gray-500);
+}
+
+.empty-state i {
+  font-size: 64px;
+  color: var(--gray-300);
+  margin-bottom: 20px;
+}
+
+.empty-state p {
+  font-size: 18px;
+  color: var(--gray-600);
+}
+
+.error {
+  color: var(--danger-color);
+  text-align: center;
+  padding: 40px;
+  background: #FEE2E2;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+/* =========================
+   Responsividade
+========================= */
+@media (max-width: 768px) {
+  .evento-banner-container {
+    height: 300px;
+  }
+
+  .evento-info {
+    padding: 24px;
+  }
+
+  #tituloEvento {
+    font-size: 26px;
+  }
+
+  .evento-meta {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ingressos-section h2 {
+    font-size: 24px;
+  }
+
+  #listaIngressos {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .lote-card {
+    padding: 20px;
+  }
+
+  .lote-preco .valor {
+    font-size: 28px;
+  }
+
+  .mensagem-conteudo {
+    padding: 28px 24px;
+    margin: 20px;
+  }
+
+  .mensagem-conteudo h3 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 0 12px 40px;
+  }
+
+  .evento-banner-container {
+    height: 220px;
+  }
+
+  .evento-info {
+    padding: 20px;
+  }
+
+  #tituloEvento {
+    font-size: 22px;
+  }
+
+  .lote-card {
+    padding: 16px;
+  }
+
+  .btnComprar {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+}
