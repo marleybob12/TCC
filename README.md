@@ -41,5 +41,6 @@ EventFlow é uma aplicação web para gerenciamento de eventos, permitindo que u
 
 1. **Clone o Repositório**
    ```bash
-   git clone https://github.com/seu-usuario/eventflow.git
-   cd eventflow
+   git clone https://github.com/marleybob12/TCC.git
+   cd TCC
+   
