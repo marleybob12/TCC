@@ -3,7 +3,7 @@
   "functions": {
     "api/dados-compra.js": {
       "runtime": "@vercel/node@2.0.0",
-      "memory": 1024,
+      
       "maxDuration": 10
     }
   },
