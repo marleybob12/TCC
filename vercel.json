@@ -15,7 +15,7 @@
     }
   ],
   "env": {
-    "FIREBASE_SERVICE_ACCOUNT": "@firebase_service_account",
-    "FRONTEND_URL": "@frontend_url"
+    "FIREBASE_SERVICE_ACCOUNT": "firebase_service_account",
+    "FRONTEND_URL": "https://tcc-puce-three.vercel.app/"
   }
 }
