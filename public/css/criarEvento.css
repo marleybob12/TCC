@@ -228,44 +228,19 @@ textarea {
 }
 
 /* =========================
-   Seção de Ingressos - Estilo Sympla
+   Ingresso Item - Layout Grid com Datas
 ========================= */
-.ingressos-section {
-  background: var(--gray-50);
-  border-radius: 12px;
-  padding: 24px;
-  margin-top: 24px;
-}
-
-.ingressos-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.ingressos-header h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--gray-900);
-}
-
-#listaIngressos {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
 .ingresso-item {
   background: #fff;
   border: 1px solid var(--gray-200);
   border-radius: 12px;
   padding: 20px;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr auto;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   align-items: start;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .ingresso-item:hover {
@@ -286,12 +261,70 @@ textarea {
   margin: 0;
 }
 
-.ingresso-field input {
+.ingresso-field input,
+.ingresso-field select {
   padding: 10px 12px;
   font-size: 14px;
   margin: 0;
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s ease;
 }
 
+.ingresso-field input:focus,
+.ingresso-field select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.ingresso-field input[type="datetime-local"] {
+  font-size: 13px;
+}
+
+/* Helper text para campos de data */
+.ingresso-field .helper-text {
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+/* Campo de tempo restante */
+.tempo-restante {
+  background: #f0fdf4;
+  border-left: 3px solid var(--success-color);
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: #065f46;
+  font-weight: 500;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+}
+
+.tempo-restante small {
+  display: block;
+  line-height: 1.4;
+}
+
+/* Badge de tempo */
+.tempo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #dbeafe;
+  color: #1e40af;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Botão remover */
 .remover-btn {
   background: transparent;
   border: 1px solid var(--gray-300);
@@ -304,16 +337,23 @@ textarea {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  margin-top: 26px;
+  align-self: flex-end;
   font-size: 18px;
+  margin-top: 26px;
 }
 
 .remover-btn:hover {
   background: var(--danger-color);
   color: #fff;
   border-color: var(--danger-color);
+  transform: scale(1.05);
 }
 
+.remover-btn:active {
+  transform: scale(0.95);
+}
+
+/* Botão adicionar ingresso */
 #addIngressoBtn {
   background: transparent;
   color: var(--primary-color);
@@ -329,15 +369,57 @@ textarea {
   justify-content: center;
   gap: 8px;
   width: 100%;
+  margin-top: 16px;
 }
 
 #addIngressoBtn:hover {
   background: var(--gray-50);
   border-color: var(--primary-color);
+  transform: translateY(-2px);
 }
 
 #addIngressoBtn i {
   font-size: 18px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .ingresso-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .remover-btn {
+    margin-top: 0;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+  }
+
+  .ingresso-field input[type="datetime-local"] {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ingresso-item {
+    padding: 16px 12px;
+    gap: 10px;
+  }
+
+  .ingresso-field label {
+    font-size: 12px;
+  }
+
+  .ingresso-field input {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .tempo-restante {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
 }
 
 /* =========================
