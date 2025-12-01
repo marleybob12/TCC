@@ -164,88 +164,99 @@
 
   <!-- Scripts -->
   <script type="module">
-    import { auth, db } from "../javaScript/firebaseConfig.js";
-    import { logoutUsuario } from "../javaScript/auth.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  // Script em módulo ES: importa funções do Firebase e manipula DOM
+  import { auth, db } from "../javaScript/firebaseConfig.js"; // Importa configuração do Firebase (auth + db)
+  import { logoutUsuario } from "../javaScript/auth.js"; // Função de logout
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"; // Listener de estado do auth
+  import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"; // Funções Firestore
 
-    const favoritosContainer = document.querySelector(".favoritos-da-semana .cards-container");
+  // Seleciona container para injetar cards
+  const favoritosContainer = document.querySelector(".favoritos-da-semana .cards-container");
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "../login.html";
-      } else {
-        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
-        if (userDoc.exists()) {
-          document.querySelector(".user-name").textContent = userDoc.data().nome;
-        }
+  // Verifica se usuário está logado
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { // Se não estiver logado, redireciona para login
+      window.location.href = "../login.html";
+    } else {
+      const userDoc = await getDoc(doc(db, "Usuario", user.uid)); // Busca documento do usuário no Firestore
+      if (userDoc.exists()) {
+        document.querySelector(".user-name").textContent = userDoc.data().nome; // Atualiza nome exibido no header
       }
-    });
+    }
+  });
 
-    document.getElementById("logoutBtn")?.addEventListener("click", async () => { 
-      await logoutUsuario(); 
-      window.location.href="../login.html"; 
-    });
-    document.getElementById("dropdownLogout")?.addEventListener("click", async (e) => { 
-      e.preventDefault(); 
-      await logoutUsuario(); 
-      window.location.href="../login.html"; 
-    });
+  // (Opcional) Botão logout principal
+  document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+    await logoutUsuario();
+    window.location.href = "../login.html";
+  });
 
-    document.getElementById("menu-icon")?.addEventListener("click", () => {
-      document.querySelector("header nav ul").classList.toggle("show");
-    });
+  // Logout pelo dropdown
+  document.getElementById("dropdownLogout")?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    await logoutUsuario();
+    window.location.href = "../login.html";
+  });
 
-    document.querySelectorAll(".nav-links a").forEach(link => {
-      link.addEventListener("click", () => {
-        document.querySelector("header nav ul").classList.remove("show");
+  // Toggle do menu em mobile
+  document.getElementById("menu-icon")?.addEventListener("click", () => {
+    document.querySelector("header nav ul").classList.toggle("show");
+  });
+
+  // Fecha menu quando um link é clicado
+  document.querySelectorAll(".nav-links a").forEach(link => {
+    link.addEventListener("click", () => {
+      document.querySelector("header nav ul").classList.remove("show");
+    });
+  });
+
+  // Função que carrega eventos do Firestore
+  async function carregarEventos() {
+    try {
+      const querySnap = await getDocs(collection(db, "Evento")); // Busca todos os documentos da coleção "Evento"
+      if (querySnap.empty) {
+        favoritosContainer.innerHTML = "<p>Nenhum evento disponível.</p>";
+        return;
+      }
+      querySnap.forEach((docEvento) => { // Para cada documento
+        const evento = docEvento.data(); // Dados do evento
+        const eventoID = docEvento.id; // ID do documento
+        const card = document.createElement("div"); // Cria container do card
+        card.classList.add("card-glass"); // Aplica classe de estilo
+        card.innerHTML = `<a href="evento.html?id=${eventoID}">
+          <img src="${evento.imagemBanner || '../img/evento.jpg'}" alt="${evento.titulo}">
+          <div class="card-content">
+            <h3>${evento.titulo}</h3>
+            <p><b>Data:</b> ${evento.dataInicio ? new Date(evento.dataInicio.seconds * 1000).toLocaleDateString() : 'A definir'}</p>
+          </div></a>`; // Conteúdo HTML do card com fallback de imagem e formatação de data
+        favoritosContainer.appendChild(card); // Adiciona o card ao DOM
       });
-    });
-
-    async function carregarEventos() {
-      try {
-        const querySnap = await getDocs(collection(db, "Evento"));
-        if (querySnap.empty) {
-          favoritosContainer.innerHTML = "<p>Nenhum evento disponível.</p>";
-          return;
-        }
-        querySnap.forEach((docEvento) => {
-          const evento = docEvento.data();
-          const eventoID = docEvento.id;
-          const card = document.createElement("div");
-          card.classList.add("card-glass");
-          card.innerHTML = `<a href="evento.html?id=${eventoID}">
-            <img src="${evento.imagemBanner || '../img/evento.jpg'}" alt="${evento.titulo}">
-            <div class="card-content">
-              <h3>${evento.titulo}</h3>
-              <p><b>Data:</b> ${evento.dataInicio ? new Date(evento.dataInicio.seconds * 1000).toLocaleDateString() : 'A definir'}</p>
-            </div></a>`;
-          favoritosContainer.appendChild(card);
-        });
-      } catch (e) {
-        favoritosContainer.innerHTML = "<p>Erro ao carregar eventos. Tente novamente mais tarde.</p>";
-        console.error(e);
-      }
+    } catch (e) {
+      favoritosContainer.innerHTML = "<p>Erro ao carregar eventos. Tente novamente mais tarde.</p>";
+      console.error(e);
     }
-    carregarEventos();
+  }
+  carregarEventos(); // Executa o carregamento de eventos ao montar a página
 
-    function toggleDropdown() {
-      const dropdown = document.getElementById("dropdown");
-      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-    }
-  </script>
+  // Função para abrir/fechar o dropdown do usuário
+  function toggleDropdown() {
+    const dropdown = document.getElementById("dropdown");
+    dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+  }
+</script>
   <script src="../javaScript/btnsCategoria.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
-    new Swiper('.categoria-swiper', { 
-      slidesPerView:'auto', 
-      spaceBetween:16,  /* 🔹 Espaço entre os botões ajustado */
+    // Inicializa Swiper com configurações
+    new Swiper('.categoria-swiper', {
+      slidesPerView:'auto', // Ajuste para que slides tenham largura automática
+      spaceBetween:16, /* 🔹 Espaço entre os botões ajustado */
       navigation:{
         nextEl:'.swiper-button-next',
         prevEl:'.swiper-button-prev'
-      }, 
-      freeMode:true, 
-      grabCursor:true 
+      },
+      freeMode:true,
+      grabCursor:true
     });
   </script>
   <script>
@@ -262,13 +273,13 @@
   </script>
   <script>
   // Redireciona ao clicar na cidade
-document.querySelectorAll('.card-cidade').forEach(card => {
-  card.addEventListener('click', function() {
-    const cidade = card.getAttribute('data-cidade');
-    window.location.href = `categoria.html?local=${encodeURIComponent(cidade)}`;
+  document.querySelectorAll('.card-cidade').forEach(card => { // Para cada card de cidade
+    card.addEventListener('click', function() {
+      const cidade = card.getAttribute('data-cidade'); // Lê o atributo data-cidade
+      window.location.href = `categoria.html?local=${encodeURIComponent(cidade)}`; // Redireciona para categoria com parâmetro de local
+    });
   });
-});
-</script>
+  </script>
   <!-- ============================================ -->
 <!-- ADICIONE ISTO ANTES DE FECHAR O </body>    -->
 <!-- ============================================ -->
@@ -285,7 +296,7 @@ document.querySelectorAll('.card-cidade').forEach(card => {
 
 <script>
 (function(){
-  function garantirPlaceholder(){
+  function garantirPlaceholder(){ // Garante que exista um elemento com id header-placeholder
     let p=document.getElementById('header-placeholder');
     if(!p){
       p=document.createElement('div');
@@ -294,41 +305,41 @@ document.querySelectorAll('.card-cidade').forEach(card => {
     }
     return p;
   }
-  
-  async function carregarHeader(){
+
+  async function carregarHeader(){ // Função que tenta carregar arquivo header de vários caminhos
     try{
-      document.querySelectorAll('header').forEach(h=>!h.closest('#header-placeholder')&&h.remove());
+      document.querySelectorAll('header').forEach(h=>!h.closest('#header-placeholder')&&h.remove()); // Remove headers existentes que não estão no placeholder
       const placeholder=garantirPlaceholder();
-      placeholder.innerHTML='<div style="padding:10px;text-align:center;">Carregando...</div>';
-      
-      const caminhos=['./header.html','../home/header.html','./home/header.html','../../home/header.html'];
+      placeholder.innerHTML='<div style="padding:10px;text-align:center;">Carregando...</div>'; // Mensagem temporária
+
+      const caminhos=['./header.html','../home/header.html','./home/header.html','../../home/header.html']; // Possíveis caminhos para o arquivo header
       let html=null;
-      
+
       for(const caminho of caminhos){
         try{
-          const r=await fetch(caminho);
-          if(r.ok){html=await r.text();break;}
+          const r=await fetch(caminho); // Tenta buscar cada caminho
+          if(r.ok){html=await r.text();break;} // Se encontrar, guarda o HTML e sai do loop
         }catch(e){}
       }
-      
-      if(!html)throw new Error('Header não encontrado');
-      placeholder.innerHTML=html;
-      window.dispatchEvent(new CustomEvent('headerLoaded'));
+
+      if(!html)throw new Error('Header não encontrado'); // Se não encontrou, lança erro
+      placeholder.innerHTML=html; // Insere o conteúdo do header
+      window.dispatchEvent(new CustomEvent('headerLoaded')); // Dispara evento customizado informando que header carregou
       console.log('✅ Header carregado');
     }catch(e){
       console.error('❌ Erro ao carregar header:',e);
       const p=document.getElementById('header-placeholder');
-      if(p)p.innerHTML='<div style="padding:20px;background:#fee;color:#c00;text-align:center;">⚠️ Erro ao carregar menu. <a href="../home/home.html">Voltar</a></div>';
+      if(p)p.innerHTML='<div style="padding:20px;background:#fee;color:#c00;text-align:center;">⚠️ Erro ao carregar menu. <a href="../home/home.html">Voltar</a></div>'; // Mensagem visual de erro
     }
   }
-  
+
   if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',carregarHeader);
+    document.addEventListener('DOMContentLoaded',carregarHeader); // Aguarda DOM carregado antes de executar
   }else{
-    carregarHeader();
+    carregarHeader(); // Executa imediatamente se DOM já estiver pronto
   }
 })();
-</script> -->
+</script> 
 
 </body>
 </html>

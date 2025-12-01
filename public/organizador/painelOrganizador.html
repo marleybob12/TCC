@@ -6,110 +6,167 @@
   <title>EventFlow - Painel Organizador</title>
   <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png">
   <link rel="stylesheet" href="../css/painelOrganizador.css">
-
+  
   <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+  
+  <!-- Instascan para QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/instascan/1.0.0/instascan.min.js"></script>
 </head>
 <body>
   <header>
-    <a href="../home/home.html" class="logo"><img src="../img/logo_barra.png" alt="Logo EventFlow" /></a>
-   <button class="menu-icon" onclick="toggleMenu()">☰</button>
+    <div class="header-container">
+      <a href="../home/home.html" class="logo">
+        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+      </a>
+      
+      <button class="menu-icon" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
 
-    <nav class="nav-links">
-      <ul id="nav-links">
-        <li><a href="../home/home.html">Home</a></li>
-        <li><a href="../home/meusEventos.html">Meus Eventos</a></li>
-        <li><a href="participantesValidar.html" class="active">Painel Organizador</a></li>
-      </ul>
-    </nav>
+      <nav class="nav-links">
+        <ul id="nav-links">
+          <li><a href="../home/home.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="../home/meusEventos.html"><i class="fas fa-calendar"></i> Meus Eventos</a></li>
+          <li><a href="painelOrganizador.html" class="active"><i class="fas fa-chart-line"></i> Painel Organizador</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
   <main>
     <h1>Painel do Organizador</h1>
 
+    <!-- Seletor de Evento -->
     <div class="evento-selector">
-      <label for="eventoSelect">Selecione um evento:</label>
+      <label for="eventoSelect">
+        <i class="fas fa-calendar-alt"></i> Selecione um evento para gerenciar:
+      </label>
       <select id="eventoSelect">
-        <option value="">Selecione um evento</option>
+        <option value="">Carregando eventos...</option>
       </select>
     </div>
   
-    <!-- Ações do evento (Edit, Delete, Ver Vendas) -->
-    <div id="eventoActions" style="display:none; margin:12px 0;">
-      <button id="btnEditarEvento" class="btn">✏️ Editar Evento</button>
-      <button id="btnVerVendas" class="btn">💳 Ver Vendas</button>
-      <button id="btnExcluirEvento" class="btn btn-danger">🗑 Excluir Evento</button>
-      <span id="infoVendas" style="margin-left:12px;"></span>
+    <!-- Ações do Evento -->
+    <div id="eventoActions" style="display:none;">
+      <button id="btnEditarEvento" class="btn">
+        <i class="fas fa-edit"></i> Editar Evento
+      </button>
+      <button id="btnVerVendas" class="btn">
+        <i class="fas fa-chart-bar"></i> Ver Relatórios
+      </button>
+      <button id="btnExcluirEvento" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Excluir Evento
+      </button>
+      <span id="infoVendas"></span>
     </div>
   
+    <!-- Tabs de Navegação -->
     <div class="tabs" style="display: none;">
-      <button class="tab active" data-tab="participantes">Participantes</button>
-      <button class="tab" data-tab="validar">Validar Ingressos</button>
-      <button class="tab" data-tab="relatorios">Relatórios</button>
-    </div>
-
-    <div class="tabs" style="display: none;">
-      <button class="tab active" data-tab="participantes">Participantes</button>
-      <button class="tab" data-tab="validar">Validar Ingressos</button>
-      <button class="tab" data-tab="relatorios">Relatórios</button>
+      <button class="tab active" data-tab="participantes">
+        <i class="fas fa-users"></i> Participantes
+      </button>
+      <button class="tab" data-tab="validar">
+        <i class="fas fa-qrcode"></i> Validar Ingressos
+      </button>
+      <button class="tab" data-tab="relatorios">
+        <i class="fas fa-chart-pie"></i> Relatórios
+      </button>
     </div>
 
     <!-- Aba Participantes -->
     <section id="participantes" class="tab-content active" style="display: none;">
+      <h2><i class="fas fa-users"></i> Lista de Participantes</h2>
       <div class="search-bar">
-        <input type="text" placeholder="Buscar participante..." id="buscarParticipante" />
+        <input 
+          type="text" 
+          placeholder="🔍 Buscar por nome ou email..." 
+          id="buscarParticipante" 
+        />
       </div>
-      <ul class="participantes-lista" id="listaParticipantes"></ul>
+      <ul class="participantes-lista" id="listaParticipantes">
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>Selecione um evento para ver os participantes</p>
+        </div>
+      </ul>
     </section>
 
     <!-- Aba Validar Ingressos -->
     <section id="validar" class="tab-content" style="display: none;">
-      <video id="preview" width="300" height="300"></video>
-      <p id="status">Aponte o QR Code do ingresso</p>
+      <h2><i class="fas fa-qrcode"></i> Validador de Ingressos</h2>
+      <p style="text-align: center; color: var(--gray-600); margin-bottom: 20px;">
+        Use a câmera do seu dispositivo para escanear os QR Codes dos ingressos
+      </p>
+      
+      <video id="preview" width="100%" height="auto"></video>
+      <p id="status">Aguardando inicialização do scanner...</p>
+      
       <div id="historico">
-        <h2>Últimos ingressos validados</h2>
-        <ul id="listaHistorico"></ul>
+        <h2><i class="fas fa-history"></i> Últimas Validações</h2>
+        <ul id="listaHistorico">
+          <li style="text-align: center; color: var(--gray-500);">
+            Nenhuma validação realizada ainda
+          </li>
+        </ul>
       </div>
     </section>
 
     <!-- Aba Relatórios -->
     <section id="relatorios" class="tab-content" style="display: none;">
-      <h2>Relatórios e Análises</h2>
-      <p>Selecione um evento para visualizar os relatórios:</p>
+      <h2><i class="fas fa-chart-pie"></i> Relatórios e Análises</h2>
+      <p>Visualize estatísticas detalhadas sobre seus eventos:</p>
+      
       <select id="eventoSelectorRelatorio">
-        <option value="">Selecione um evento</option>
+        <option value="">Selecione um evento para ver os relatórios</option>
       </select>
 
       <div id="relatoriosContainer" style="display: none;">
         <div class="swiper-container">
           <div class="swiper-wrapper">
+            <!-- Card 1: Participantes -->
             <div class="swiper-slide">
               <div class="relatorio-card">
-                <h2>Participantes Confirmados</h2>
+                <h2><i class="fas fa-users"></i> Total de Participantes</h2>
                 <canvas id="graficoParticipantes"></canvas>
               </div>
             </div>
+            
+            <!-- Card 2: Status dos Ingressos -->
             <div class="swiper-slide">
               <div class="relatorio-card">
-                <h2>Status dos Ingressos</h2>
+                <h2><i class="fas fa-ticket-alt"></i> Status dos Ingressos</h2>
                 <canvas id="graficoIngressos"></canvas>
               </div>
             </div>
+            
+            <!-- Card 3: Categorias -->
             <div class="swiper-slide">
               <div class="relatorio-card">
-                <h2>Categoria dos Participantes</h2>
+                <h2><i class="fas fa-layer-group"></i> Ingressos por Lote</h2>
                 <canvas id="graficoCategorias"></canvas>
               </div>
             </div>
+            
+            <!-- Card 4: Avaliação -->
             <div class="swiper-slide">
               <div class="relatorio-card">
-                <h2>Avaliação Média</h2>
+                <h2><i class="fas fa-star"></i> Avaliação do Evento</h2>
                 <canvas id="graficoAvaliacao"></canvas>
+                <p style="margin-top: 15px; color: var(--gray-600); font-size: 14px;">
+                  Funcionalidade em desenvolvimento
+                </p>
               </div>
             </div>
           </div>
+          
+          <!-- Navegação do Swiper -->
           <div class="swiper-button-next"></div>
           <div class="swiper-button-prev"></div>
           <div class="swiper-pagination"></div>
@@ -124,12 +181,8 @@
 
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  
+  <!-- Script principal -->
   <script type="module" src="../javaScript/painelOrganizador.js"></script>
-  <script>
-function toggleMenu() {
-  document.getElementById('nav-links').classList.toggle('show');
-}
-</script>
-
 </body>
 </html>

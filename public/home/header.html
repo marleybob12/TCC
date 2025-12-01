@@ -1,40 +1,447 @@
-<!-- header.html -->
-<link rel="stylesheet" href="../css/criarEvento.css" />
-<link rel="stylesheet" href="../css/stylesHome.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png" />
+<!-- public/home/header.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    /* ===========================
+       HEADER GLOBAL - EVENTFLOW
+    =========================== */
+    :root {
+      --header-height: 85px;
+      --primary-gradient-start: #09B3CF;
+      --primary-gradient-end: #7D2AE7;
+      --primary-blue: #2F78E3;
+      --primary-light: #199BD9;
+      --text-white: #ffffff;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
 
+    /* Header fixo com gradiente EventFlow */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--header-height);
+      z-index: 1000;
+      background: linear-gradient(135deg, rgba(9, 179, 207, 0.95), rgba(125, 42, 231, 0.95));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-<header>
-  <div class="header-container">
-    <a href="../home/home.html" class="logo">
-      <img src="../img/logo_barra.png" alt="Logo EventFlow" />
-    </a>
-    <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
-      <i class="fas fa-bars"></i>
-    </button>
-    <nav class="nav-links" aria-label="Menu principal">
-      <ul>
-        <li><a href="criarEvento.html" class="btn active">Criar eventos</a></li>
-        <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
-        <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
-        <li><a href="home.html" class="btn">EventFlow</a></li>
-        <li>
-          <div class="user-dropdown">
-            <div class="user-account" onclick="toggleDropdown()">
-              <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
-              <span class="user-name">Usuário</span>
-              <span class="arrow">▾</span>
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 100%;
+    }
+
+    /* Logo */
+    header .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    header .logo img {
+      height: 50px;
+      width: auto;
+      transition: transform 0.3s ease;
+    }
+
+    header .logo:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Menu hambúrguer (mobile) */
+    .menu-icon {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-white);
+      font-size: 1.8rem;
+      cursor: pointer;
+      padding: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .menu-icon:hover {
+      transform: scale(1.1);
+    }
+
+    /* Navegação */
+    header nav ul {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    header nav li {
+      display: flex;
+      align-items: center;
+    }
+
+    header nav a.btn {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-white);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    header nav a.btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    header nav a.btn.active {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* User Dropdown */
+    .user-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .user-account {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .user-account:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .user-account img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--text-white);
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: var(--text-white);
+      font-size: 15px;
+    }
+
+    .arrow {
+      color: var(--text-white);
+      font-size: 14px;
+      transition: transform 0.3s ease;
+    }
+
+    .user-account.active .arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Dropdown Menu */
+    .dropdown-menu {
+      position: absolute;
+      right: 0;
+      top: 120%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      display: none;
+      flex-direction: column;
+      min-width: 180px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      z-index: 1001;
+    }
+
+    .dropdown-menu.show {
+      display: flex;
+      animation: fadeInDown 0.3s ease;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dropdown-menu a {
+      color: var(--primary-blue);
+      text-decoration: none;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dropdown-menu a:hover {
+      background: rgba(9, 179, 207, 0.1);
+      color: var(--primary-gradient-start);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .header-container {
+        padding: 0 20px;
+      }
+
+      .menu-icon {
+        display: block;
+      }
+
+      header nav ul {
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: linear-gradient(135deg, rgba(9, 179, 207, 0.98), rgba(125, 42, 231, 0.98));
+        backdrop-filter: blur(12px);
+        padding: 20px;
+        gap: 15px;
+        display: none;
+        box-shadow: var(--shadow);
+      }
+
+      header nav ul.show {
+        display: flex;
+        animation: slideDown 0.3s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      header nav a.btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 18px;
+      }
+
+      .user-name {
+        display: none;
+      }
+
+      .user-account {
+        padding: 8px 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-container {
+        padding: 0 12px;
+      }
+
+      header .logo img {
+        height: 40px;
+      }
+
+      .user-account img {
+        width: 32px;
+        height: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="../home/home.html" class="logo">
+        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
+      </a>
+      
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <nav class="nav-links" aria-label="Menu principal">
+        <ul id="nav-menu">
+          <li><a href="../home/criarEvento.html" class="btn">Criar eventos</a></li>
+          <li><a href="../home/meusIngressos.html" class="btn">Meus ingressos</a></li>
+          <li><a href="../home/meusEventos.html" class="btn">Meus eventos</a></li>
+          <li><a href="../home/home.html" class="btn">EventFlow</a></li>
+          <li>
+            <div class="user-dropdown">
+              <div class="user-account" id="userAccount">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" id="userAvatar" />
+                <span class="user-name" id="userName">Carregando...</span>
+                <span class="arrow">▾</span>
+              </div>
+              <div class="dropdown-menu" id="dropdown">
+                <a href="../home/perfil.html">👤 Perfil</a>
+                <a href="../home/config.html">⚙️ Configurações</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
+              </div>
             </div>
-            <div class="dropdown-menu" id="dropdown" style="display:none;">
-              <a href="perfil.html">👤 Perfil</a>
-              <a href="config.html">⚙️ Configurações</a>
-              <a href="#" id="dropdownLogout">🚪 Sair</a>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</header>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
+  <script type="module">
+    import { auth, db } from '../javaScript/firebaseConfig.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { logoutUsuario } from '../javaScript/auth.js';
+
+    console.log('🎨 Header EventFlow carregado');
+
+    function initHeader() {
+      const userAccount = document.getElementById('userAccount');
+      const dropdown = document.getElementById('dropdown');
+      const menuIcon = document.getElementById('menu-icon');
+      const navMenu = document.getElementById('nav-menu');
+      const dropdownLogout = document.getElementById('dropdownLogout');
+
+      // Toggle dropdown
+      if (userAccount) {
+        userAccount.addEventListener('click', (e) => {
+          e.stopPropagation();
+          dropdown.classList.toggle('show');
+          userAccount.classList.toggle('active');
+        });
+      }
+
+      // Fecha dropdown ao clicar fora
+      document.addEventListener('click', (e) => {
+        if (dropdown && !userAccount.contains(e.target)) {
+          dropdown.classList.remove('show');
+          userAccount.classList.remove('active');
+        }
+      });
+
+      // Menu mobile
+      if (menuIcon && navMenu) {
+        menuIcon.addEventListener('click', () => {
+          navMenu.classList.toggle('show');
+        });
+
+        navMenu.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navMenu.classList.remove('show');
+          });
+        });
+      }
+
+      // Logout
+      if (dropdownLogout) {
+        dropdownLogout.addEventListener('click', async (e) => {
+          e.preventDefault();
+          try {
+            await logoutUsuario();
+            window.location.href = '../login.html';
+          } catch (error) {
+            console.error('Erro ao fazer logout:', error);
+          }
+        });
+      }
+
+      // Marca página ativa
+      const currentPage = window.location.pathname.split('/').pop();
+      navMenu.querySelectorAll('a').forEach(link => {
+        const linkPage = link.getAttribute('href').split('/').pop();
+        if (linkPage === currentPage) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    async function carregarDadosUsuario() {
+      const userNameEl = document.getElementById('userName');
+      const userAvatarEl = document.getElementById('userAvatar');
+
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          if (!window.location.pathname.includes('login.html') && 
+              !window.location.pathname.includes('cadastro.html') &&
+              !window.location.pathname.includes('index.html')) {
+            window.location.href = '../login.html';
+          }
+          return;
+        }
+
+        try {
+          const userDoc = await getDoc(doc(db, 'Usuario', user.uid));
+          if (userDoc.exists()) {
+            const dados = userDoc.data();
+            if (userNameEl) {
+              userNameEl.textContent = dados.nome || 'Usuário';
+            }
+            if (dados.fotoPerfil && userAvatarEl) {
+              userAvatarEl.src = dados.fotoPerfil;
+            }
+          } else {
+            if (userNameEl) {
+              userNameEl.textContent = user.email.split('@')[0];
+            }
+          }
+        } catch (error) {
+          console.error('Erro ao carregar dados do usuário:', error);
+          if (userNameEl) {
+            userNameEl.textContent = 'Usuário';
+          }
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        initHeader();
+        carregarDadosUsuario();
+      });
+    } else {
+      initHeader();
+      carregarDadosUsuario();
+    }
+
+    window.toggleDropdown = function() {
+      const dropdown = document.getElementById('dropdown');
+      const userAccount = document.getElementById('userAccount');
+      if (dropdown) {
+        dropdown.classList.toggle('show');
+        userAccount.classList.toggle('active');
+      }
+    };
+  </script>
+</body>
+</html>

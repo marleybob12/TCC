@@ -4,111 +4,372 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meus Ingressos - EventFlow</title>
+  
+  <!-- CSS da página -->
   <link rel="stylesheet" href="../css/stylesMeusIngressos.css">
   <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png">
+  
+  <!-- FontAwesome para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+  <style>
+    /* Garante espaçamento para header fixo */
+    body {
+      padding-top: 85px;
+    }
+    
+    /* Estilos adicionais para a página */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    main h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #1673ff;
+      font-size: 2.2rem;
+    }
+
+    #listaMeusIngressos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .ingresso-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      padding: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .ingresso-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .empty-state i {
+      font-size: 64px;
+      color: #ddd;
+      margin-bottom: 20px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #1673ff;
+    }
+
+    .loading i {
+      font-size: 48px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(47, 120, 227, 0.85);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 40px 20px 20px;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .footer-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .footer-section {
+      flex: 1 1 200px;
+      min-width: 180px;
+    }
+
+    .footer-section h3 {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .social-media {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .social-media a {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .social-media a:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .copyright {
+      margin-top: 25px;
+      font-size: 0.85rem;
+      color: #ffffff99;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      main {
+        padding: 40px 16px;
+      }
+
+      main h1 {
+        font-size: 1.8rem;
+      }
+
+      #listaMeusIngressos {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <div class="header-container">
-      <a href="../home/home.html" class="logo">
-        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
-      </a>
-      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
-        <i class="fas fa-bars"></i>
-      </button>
-      <nav class="nav-links" aria-label="Menu principal">
-        <ul>
-          <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
-          <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
-          <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
-          <li><a href="home.html" class="btn">EventFlow</a></li>
-          <li>
-            <div class="user-dropdown">
-              <div class="user-account" id="userAccount">
-                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
-                <span class="user-name">Usuário</span>
-                <span class="arrow">▾</span>
-              </div>
-              <div class="dropdown-menu" id="dropdown" style="display:none;">
-                <a href="perfil.html"> Perfil</a>
-                <a href="config.html"> Configurações</a>
-                <a href="#" id="dropdownLogout">Sair</a>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <!-- Placeholder do Header -->
+  <div id="header-placeholder"></div>
 
+  <!-- Conteúdo Principal -->
   <main>
     <h1>Meus Ingressos</h1>
-    <div id="listaMeusIngressos"></div>
+    
+    <!-- Lista de ingressos será preenchida dinamicamente -->
+    <div id="listaMeusIngressos">
+      <div class="loading">
+        <i class="fas fa-spinner"></i>
+        <p>Carregando seus ingressos...</p>
+      </div>
+    </div>
   </main>
 
-  <script type="module" src="../javaScript/meusIngressos.js"></script>
-  
-<!-- ============================================ -->
-<!-- ADICIONE ISTO ANTES DE FECHAR O </body>    -->
-<!-- ============================================ -->
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>Sobre o EventFlow</h3>
+        <p>Facilitando e transformando a experiência de planejar e realizar eventos de forma prática e acessível.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Links</h3>
+        <ul style="list-style:none;padding:0;">
+          <li><a href="#sobre" style="color:#ffffffcc;text-decoration:none;">Sobre</a></li>
+          <li><a href="#politica" style="color:#ffffffcc;text-decoration:none;">Política de Privacidade</a></li>
+          <li><a href="#termos" style="color:#ffffffcc;text-decoration:none;">Termos de Serviço</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Siga-nos</h3>
+        <div class="social-media">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    <p class="copyright">&copy; 2025 EventFlow. Todos os direitos reservados.</p>
+  </footer>
 
-<!-- Placeholder do Header (será preenchido automaticamente) -->
-<div id="header-placeholder"></div>
+  <!-- Script de carregamento do header -->
+  <script src="../javaScript/loadHeader.js"></script>
 
-<!-- Script de carregamento do header -->
-<script src="../javaScript/loadHeader.js"></script>
+  <!-- Script da página (Meus Ingressos) -->
+  <script type="module">
+    import { auth, db } from "../javaScript/firebaseConfig.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<!-- ============================================ -->
-<!-- Alternativa inline (se não quiser arquivo externo): -->
-<!-- ============================================ -->
+    const listaMeusIngressos = document.getElementById("listaMeusIngressos");
 
-<script>
-(function(){
-  function garantirPlaceholder(){
-    let p=document.getElementById('header-placeholder');
-    if(!p){
-      p=document.createElement('div');
-      p.id='header-placeholder';
-      document.body.insertBefore(p,document.body.firstChild);
-    }
-    return p;
-  }
-  
-  async function carregarHeader(){
-    try{
-      document.querySelectorAll('header').forEach(h=>!h.closest('#header-placeholder')&&h.remove());
-      const placeholder=garantirPlaceholder();
-      placeholder.innerHTML='<div style="padding:10px;text-align:center;">Carregando...</div>';
+    /**
+     * Formata data do Firestore
+     */
+    function formatarData(timestamp) {
+      if (!timestamp) return "A definir";
       
-      const caminhos=['./header.html','../home/header.html','./home/header.html','../../home/header.html'];
-      let html=null;
-      
-      for(const caminho of caminhos){
-        try{
-          const r=await fetch(caminho);
-          if(r.ok){html=await r.text();break;}
-        }catch(e){}
+      try {
+        if (timestamp.toDate && typeof timestamp.toDate === "function") {
+          return timestamp.toDate().toLocaleDateString("pt-BR");
+        }
+        if (timestamp.seconds) {
+          return new Date(timestamp.seconds * 1000).toLocaleDateString("pt-BR");
+        }
+        const date = new Date(timestamp);
+        if (!isNaN(date)) {
+          return date.toLocaleDateString("pt-BR");
+        }
+      } catch (error) {
+        console.error("Erro ao formatar data:", error);
       }
       
-      if(!html)throw new Error('Header não encontrado');
-      placeholder.innerHTML=html;
-      window.dispatchEvent(new CustomEvent('headerLoaded'));
-      console.log('✅ Header carregado');
-    }catch(e){
-      console.error('❌ Erro ao carregar header:',e);
-      const p=document.getElementById('header-placeholder');
-      if(p)p.innerHTML='<div style="padding:20px;background:#fee;color:#c00;text-align:center;">⚠️ Erro ao carregar menu. <a href="../home/home.html">Voltar</a></div>';
+      return "A definir";
     }
-  }
-  
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',carregarHeader);
-  }else{
-    carregarHeader();
-  }
-})();
-</script> -->
 
+    /**
+     * Gera QR Code usando API gratuita
+     */
+    function gerarQRCode(texto) {
+      return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(texto)}`;
+    }
 
+    /**
+     * Cria card de ingresso
+     */
+    function criarCardIngresso(ingresso, evento) {
+      const qrCodeUrl = gerarQRCode(ingresso.codigoUnico || ingresso.id);
+      
+      const card = document.createElement("div");
+      card.classList.add("ingresso-card");
+      card.innerHTML = `
+        <div style="text-align:center; margin-bottom:15px;">
+          <img src="${qrCodeUrl}" alt="QR Code" style="max-width:150px; border-radius:10px;">
+        </div>
+        <h3 style="font-size:1.4rem; color:#2563eb; margin-bottom:10px;">
+          ${evento?.titulo || "Evento"}
+        </h3>
+        <p><strong>Lote:</strong> ${ingresso.nomeLote || "N/A"}</p>
+        <p><strong>Data:</strong> ${formatarData(evento?.dataInicio)}</p>
+        <p><strong>Local:</strong> ${evento?.local || "A definir"}</p>
+        <p><strong>Código:</strong> <code style="background:#f0f0f0;padding:4px 8px;border-radius:4px;">${ingresso.codigoUnico || ingresso.id}</code></p>
+        <p style="margin-top:10px;">
+          <strong>Status:</strong> 
+          <span style="color:${ingresso.usado ? '#ef4444' : '#10b981'};font-weight:600;">
+            ${ingresso.usado ? '❌ Usado' : '✅ Válido'}
+          </span>
+        </p>
+        ${ingresso.usado ? `
+          <p style="font-size:0.85rem;color:#666;">
+            <strong>Usado em:</strong> ${formatarData(ingresso.dataUso)}
+          </p>
+        ` : ''}
+      `;
+      return card;
+    }
+
+    /**
+     * Mostra estado vazio
+     */
+    function mostrarEstadoVazio() {
+      listaMeusIngressos.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1;">
+          <i class="fas fa-ticket-alt"></i>
+          <h2>Nenhum ingresso encontrado</h2>
+          <p>Você ainda não possui ingressos para eventos.</p>
+          <a href="home.html" style="display:inline-block;margin-top:20px;padding:12px 24px;background:#1673ff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;">
+            Explorar Eventos
+          </a>
+        </div>
+      `;
+    }
+
+    /**
+     * Mostra erro
+     */
+    function mostrarErro(mensagem) {
+      listaMeusIngressos.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:40px;background:#fee2e2;border-radius:12px;color:#991b1b;">
+          <i class="fas fa-exclamation-triangle" style="font-size:48px;margin-bottom:15px;"></i>
+          <h2>Erro ao carregar ingressos</h2>
+          <p>${mensagem}</p>
+          <button onclick="window.location.reload()" style="margin-top:20px;padding:12px 24px;background:#ef4444;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">
+            Tentar Novamente
+          </button>
+        </div>
+      `;
+    }
+
+    /**
+     * Carrega ingressos do usuário
+     */
+    async function carregarMeusIngressos(user) {
+      try {
+        // Busca ingressos do usuário
+        const ingressosQuery = query(
+          collection(db, "Ingresso"),
+          where("usuarioID", "==", user.uid)
+        );
+        
+        const ingressosSnap = await getDocs(ingressosQuery);
+
+        if (ingressosSnap.empty) {
+          mostrarEstadoVazio();
+          return;
+        }
+
+        // Limpa loading
+        listaMeusIngressos.innerHTML = "";
+
+        // Para cada ingresso, busca informações do evento
+        for (const docIngresso of ingressosSnap.docs) {
+          const ingresso = { id: docIngresso.id, ...docIngresso.data() };
+          
+          try {
+            // Busca informações do evento
+            const eventoDoc = await getDoc(doc(db, "Evento", ingresso.eventoID));
+            const evento = eventoDoc.exists() ? eventoDoc.data() : null;
+            
+            // Cria e adiciona o card
+            const card = criarCardIngresso(ingresso, evento);
+            listaMeusIngressos.appendChild(card);
+          } catch (error) {
+            console.error(`Erro ao carregar evento ${ingresso.eventoID}:`, error);
+            
+            // Cria card mesmo sem dados do evento
+            const card = criarCardIngresso(ingresso, null);
+            listaMeusIngressos.appendChild(card);
+          }
+        }
+
+        console.log(`✅ ${ingressosSnap.size} ingresso(s) carregado(s)`);
+        
+      } catch (error) {
+        console.error("Erro ao carregar ingressos:", error);
+        mostrarErro("Não foi possível carregar seus ingressos. Tente novamente mais tarde.");
+      }
+    }
+
+    /**
+     * Observa autenticação e carrega ingressos
+     */
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        console.log("❌ Usuário não autenticado");
+        window.location.href = "../login.html";
+        return;
+      }
+
+      console.log("✅ Usuário autenticado:", user.uid);
+      await carregarMeusIngressos(user);
+    });
+  </script>
 </body>
 </html>
