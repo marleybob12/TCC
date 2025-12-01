@@ -77,16 +77,22 @@ header .logo img {
   background: none;
   border: none;
   cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-header nav ul {
+.menu-icon:hover {
+  color: var(--primary-color);
+}
+
+/* Navegação */
+.nav-links ul {
   display: flex;
   align-items: center;
   gap: 8px;
   list-style: none;
 }
 
-header nav a {
+.nav-links a {
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -96,11 +102,82 @@ header nav a {
   padding: 10px 18px;
   border-radius: 8px;
   transition: all 0.2s ease;
+  gap: 6px;
 }
 
-header nav a:hover,
-header nav a.active {
+.nav-links a:hover,
+.nav-links a.active {
   background-color: var(--gray-100);
+  color: var(--primary-color);
+}
+
+/* Dropdown do usuário */
+.user-dropdown {
+  position: relative;
+}
+
+.user-account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-account:hover {
+  background: var(--gray-100);
+}
+
+.user-account img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-700);
+}
+
+.arrow {
+  font-size: 12px;
+  color: var(--gray-500);
+  transition: transform 0.2s ease;
+}
+
+.user-account:hover .arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  min-width: 200px;
+  padding: 8px;
+  z-index: 100;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px 16px;
+  color: var(--gray-700);
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+  background: var(--gray-100);
   color: var(--primary-color);
 }
 
@@ -141,6 +218,11 @@ main h1 {
   margin-bottom: 10px;
 }
 
+.evento-selector label i {
+  margin-right: 6px;
+  color: var(--primary-color);
+}
+
 .evento-selector select {
   width: 100%;
   padding: 12px 16px;
@@ -158,6 +240,12 @@ main h1 {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.evento-selector select:disabled {
+  background: var(--gray-100);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* =========================
@@ -187,6 +275,7 @@ main h1 {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-family: 'Poppins', sans-serif;
 }
 
 #eventoActions .btn:not(.btn-danger) {
@@ -211,10 +300,21 @@ main h1 {
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
+#eventoActions .btn:active {
+  transform: translateY(0);
+}
+
 #infoVendas {
   font-size: 14px;
   color: var(--gray-600);
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#infoVendas i {
+  color: var(--primary-color);
 }
 
 /* =========================
@@ -243,6 +343,10 @@ main h1 {
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .tabs .tab:hover {
@@ -267,6 +371,20 @@ main h1 {
   border: 1px solid var(--gray-200);
 }
 
+.tab-content h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tab-content h2 i {
+  color: var(--primary-color);
+}
+
 /* =========================
    Busca de Participantes
 ========================= */
@@ -276,18 +394,23 @@ main h1 {
 
 .search-bar input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 16px 12px 44px;
   border: 2px solid var(--gray-300);
   border-radius: 10px;
   font-size: 15px;
   font-family: 'Poppins', sans-serif;
   transition: all 0.2s ease;
+  background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%236B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>') no-repeat 14px center;
 }
 
 .search-bar input:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.search-bar input::placeholder {
+  color: var(--gray-400);
 }
 
 /* =========================
@@ -314,6 +437,7 @@ main h1 {
 .participantes-lista li:hover {
   background: #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
 }
 
 .participante-info {
@@ -331,6 +455,7 @@ main h1 {
   font-size: 13px;
   color: var(--gray-600);
   display: block;
+  margin-top: 2px;
 }
 
 .status-uso {
@@ -338,6 +463,7 @@ main h1 {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .status-uso.usado {
@@ -362,31 +488,48 @@ main h1 {
   text-align: center;
 }
 
+#validar h2 {
+  justify-content: center;
+}
+
+#validar > p {
+  text-align: center;
+  color: var(--gray-600);
+  margin-bottom: 24px;
+  font-size: 15px;
+}
+
 #preview {
   width: 100%;
   max-width: 500px;
   height: auto;
+  min-height: 375px;
   border-radius: 16px;
   border: 3px solid var(--gray-300);
   margin: 0 auto 20px;
   display: block;
   background: #000;
+  object-fit: cover;
 }
 
 #status {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--gray-700);
-  margin-bottom: 30px;
-  padding: 12px 20px;
+  margin: 20px auto;
+  padding: 14px 24px;
   background: var(--gray-100);
   border-radius: 10px;
   display: inline-block;
+  max-width: 500px;
 }
 
 #historico {
   margin-top: 40px;
   text-align: left;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #historico h2 {
@@ -394,6 +537,13 @@ main h1 {
   font-weight: 700;
   color: var(--gray-900);
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#historico h2 i {
+  color: var(--primary-color);
 }
 
 #listaHistorico {
@@ -410,6 +560,28 @@ main h1 {
   border: 1px solid var(--gray-200);
   font-size: 14px;
   color: var(--gray-700);
+  transition: all 0.2s ease;
+}
+
+#listaHistorico li:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* =========================
+   Loading
+========================= */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--gray-500);
+  font-size: 16px;
+}
+
+.loading i {
+  font-size: 32px;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+  display: block;
 }
 
 /* =========================
@@ -422,9 +594,10 @@ main h1 {
   margin-bottom: 12px;
 }
 
-#relatorios p {
+#relatorios > p {
   color: var(--gray-600);
   margin-bottom: 20px;
+  font-size: 15px;
 }
 
 #eventoSelectorRelatorio {
@@ -449,7 +622,7 @@ main h1 {
 
 .swiper-container {
   width: 100%;
-  padding: 20px 0 40px;
+  padding: 20px 0 50px;
 }
 
 .relatorio-card {
@@ -462,41 +635,76 @@ main h1 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.relatorio-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  transform: translateY(-4px);
 }
 
 .relatorio-card h2 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--gray-900);
   margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
+.relatorio-card h2 i {
+  color: var(--primary-color);
+}
+
+.relatorio-card canvas {
+  max-height: 300px;
+}
+
+.relatorio-card > p {
+  margin-top: 15px;
+  color: var(--gray-600);
+  font-size: 14px;
+}
+
+/* Swiper customização */
 .swiper-button-next,
 .swiper-button-prev {
-  color: var(--primary-color);
+  color: var(--primary-color) !important;
   background: #fff;
   width: 44px;
   height: 44px;
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: var(--primary-color);
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
 }
 
 .swiper-button-next::after,
 .swiper-button-prev::after {
-  font-size: 18px;
+  font-size: 18px !important;
   font-weight: 700;
 }
 
 .swiper-pagination-bullet {
-  background: var(--primary-color);
+  background: var(--gray-400) !important;
   width: 10px;
   height: 10px;
+  opacity: 0.5;
 }
 
 .swiper-pagination-bullet-active {
-  background: var(--primary-color);
+  background: var(--primary-color) !important;
   width: 24px;
   border-radius: 5px;
+  opacity: 1;
 }
 
 /* =========================
@@ -518,6 +726,30 @@ main h1 {
 .empty-state p {
   font-size: 16px;
   color: var(--gray-600);
+  margin-bottom: 10px;
+}
+
+.empty-state .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--primary-color);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.empty-state .btn:hover {
+  background: #1E3A8A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
 }
 
 /* =========================
@@ -539,6 +771,17 @@ footer p {
 /* =========================
    Responsividade
 ========================= */
+@media (max-width: 1024px) {
+  main {
+    padding: 30px 24px 60px;
+  }
+
+  .tabs .tab {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}
+
 @media (max-width: 768px) {
   .header-container {
     padding: 12px 20px;
@@ -550,13 +793,14 @@ footer p {
 
   main h1 {
     font-size: 26px;
+    margin-bottom: 20px;
   }
 
   .menu-icon {
     display: block;
   }
 
-  header nav ul {
+  .nav-links ul {
     display: none;
     position: absolute;
     top: 100%;
@@ -566,15 +810,34 @@ footer p {
     flex-direction: column;
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-top: 1px solid var(--gray-200);
   }
 
-  header nav ul.show {
+  .nav-links ul.show {
     display: flex;
+  }
+
+  .nav-links a {
+    width: 100%;
+    padding: 12px 16px;
+  }
+
+  .user-dropdown {
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    position: static;
+    width: 100%;
+    margin-top: 8px;
+    box-shadow: none;
+    border: 1px solid var(--gray-200);
   }
 
   #eventoActions {
     flex-direction: column;
     align-items: stretch;
+    padding: 16px;
   }
 
   #eventoActions .btn {
@@ -582,8 +845,26 @@ footer p {
     justify-content: center;
   }
 
+  #infoVendas {
+    width: 100%;
+    justify-content: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--gray-200);
+    margin-top: 8px;
+  }
+
   .tabs {
     flex-direction: column;
+    padding: 6px;
+  }
+
+  .tabs .tab {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .tab-content {
+    padding: 20px;
   }
 
   .participantes-lista li {
@@ -594,6 +875,34 @@ footer p {
 
   .status-uso {
     align-self: flex-start;
+  }
+
+  .search-bar input {
+    font-size: 14px;
+  }
+
+  #preview {
+    max-width: 100%;
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 36px;
+    height: 36px;
+  }
+
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-size: 14px !important;
+  }
+
+  .relatorio-card {
+    padding: 20px;
+    min-height: 350px;
+  }
+
+  .relatorio-card h2 {
+    font-size: 16px;
   }
 }
 
@@ -612,6 +921,125 @@ footer p {
   }
 
   #eventoActions {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  #eventoActions .btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .tabs {
+    gap: 6px;
+  }
+
+  .tabs .tab {
+    padding: 10px 12px;
+    font-size: 13px;
+    gap: 6px;
+  }
+
+  .participantes-lista li {
+    padding: 14px;
+  }
+
+  .participante-info strong {
+    font-size: 14px;
+  }
+
+  .participante-info span {
+    font-size: 12px;
+  }
+
+  .status-uso {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  #status {
+    font-size: 14px;
+    padding: 12px 16px;
+  }
+
+  .relatorio-card {
     padding: 16px;
+    min-height: 300px;
+  }
+
+  .empty-state {
+    padding: 40px 16px;
+  }
+
+  .empty-state i {
+    font-size: 48px;
+  }
+
+  footer {
+    padding: 24px 20px;
+  }
+
+  footer p {
+    font-size: 13px;
+  }
+}
+
+/* =========================
+   Animações
+========================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tab-content.active {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* =========================
+   Impressão
+========================= */
+@media print {
+  header,
+  footer,
+  .tabs,
+  .evento-selector,
+  #eventoActions,
+  .search-bar,
+  .swiper-button-next,
+  .swiper-button-prev,
+  .swiper-pagination {
+    display: none !important;
+  }
+
+  body {
+    padding-top: 0;
+  }
+
+  main {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .tab-content {
+    box-shadow: none;
+    border: none;
+    page-break-inside: avoid;
   }
 }

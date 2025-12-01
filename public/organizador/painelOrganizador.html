@@ -20,28 +20,43 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/instascan/1.0.0/instascan.min.js"></script>
 </head>
 <body>
+  <!-- Header -->
   <header>
     <div class="header-container">
       <a href="../home/home.html" class="logo">
         <img src="../img/logo_barra.png" alt="Logo EventFlow" />
       </a>
       
-      <button class="menu-icon" onclick="toggleMenu()">
+      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
         <i class="fas fa-bars"></i>
       </button>
 
-      <nav class="nav-links">
+      <nav class="nav-links" aria-label="Menu principal">
         <ul id="nav-links">
           <li><a href="../home/home.html"><i class="fas fa-home"></i> Home</a></li>
           <li><a href="../home/meusEventos.html"><i class="fas fa-calendar"></i> Meus Eventos</a></li>
-          <li><a href="painelOrganizador.html" class="active"><i class="fas fa-chart-line"></i> Painel Organizador</a></li>
+          <li><a href="painelOrganizador.html" class="active"><i class="fas fa-chart-line"></i> Painel</a></li>
+          <li>
+            <div class="user-dropdown">
+              <div class="user-account" id="userAccount">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Conta" />
+                <span class="user-name">Carregando...</span>
+                <span class="arrow">▾</span>
+              </div>
+              <div class="dropdown-menu" id="dropdown" style="display:none;">
+                <a href="../home/perfil.html">👤 Perfil</a>
+                <a href="../home/config.html">⚙️ Configurações</a>
+                <a href="#" id="dropdownLogout">🚪 Sair</a>
+              </div>
+            </div>
+          </li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main>
-    <h1>Painel do Organizador</h1>
+    <h1>🎯 Painel do Organizador</h1>
 
     <!-- Seletor de Evento -->
     <div class="evento-selector">
@@ -64,7 +79,7 @@
       <button id="btnExcluirEvento" class="btn btn-danger">
         <i class="fas fa-trash"></i> Excluir Evento
       </button>
-      <span id="infoVendas"></span>
+      <span id="infoVendas" style="margin-left: auto; color: var(--gray-700); font-weight: 500;"></span>
     </div>
   
     <!-- Tabs de Navegação -->
@@ -105,13 +120,18 @@
         Use a câmera do seu dispositivo para escanear os QR Codes dos ingressos
       </p>
       
-      <video id="preview" width="100%" height="auto"></video>
-      <p id="status">Aguardando inicialização do scanner...</p>
+      <video id="preview" width="100%" height="auto" style="max-width: 500px; display: block; margin: 0 auto; border-radius: 12px; border: 2px solid var(--gray-300);"></video>
       
-      <div id="historico">
-        <h2><i class="fas fa-history"></i> Últimas Validações</h2>
-        <ul id="listaHistorico">
-          <li style="text-align: center; color: var(--gray-500);">
+      <p id="status" style="text-align: center; margin: 20px 0; padding: 12px; background: var(--gray-100); border-radius: 8px; font-weight: 500;">
+        Aguardando inicialização do scanner...
+      </p>
+      
+      <div id="historico" style="margin-top: 40px;">
+        <h2 style="font-size: 20px; margin-bottom: 15px;">
+          <i class="fas fa-history"></i> Últimas Validações
+        </h2>
+        <ul id="listaHistorico" style="list-style: none; padding: 0;">
+          <li style="text-align: center; color: var(--gray-500); padding: 20px;">
             Nenhuma validação realizada ainda
           </li>
         </ul>
@@ -121,9 +141,11 @@
     <!-- Aba Relatórios -->
     <section id="relatorios" class="tab-content" style="display: none;">
       <h2><i class="fas fa-chart-pie"></i> Relatórios e Análises</h2>
-      <p>Visualize estatísticas detalhadas sobre seus eventos:</p>
+      <p style="margin-bottom: 20px; color: var(--gray-600);">
+        Visualize estatísticas detalhadas sobre seus eventos:
+      </p>
       
-      <select id="eventoSelectorRelatorio">
+      <select id="eventoSelectorRelatorio" style="width: 100%; padding: 12px; border: 2px solid var(--gray-300); border-radius: 10px; margin-bottom: 30px; font-family: 'Poppins', sans-serif; font-size: 15px;">
         <option value="">Selecione um evento para ver os relatórios</option>
       </select>
 
@@ -182,7 +204,56 @@
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
   
-  <!-- Script principal -->
+  <!-- Script principal do painel -->
   <script type="module" src="../javaScript/painelOrganizador.js"></script>
+
+  <!-- Scripts auxiliares -->
+  <script type="module">
+    import { auth } from "../javaScript/firebaseConfig.js";
+    import { signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // Dropdown do usuário
+    const userAccount = document.getElementById('userAccount');
+    const dropdown = document.getElementById('dropdown');
+
+    if (userAccount && dropdown) {
+      userAccount.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      });
+
+      // Fechar dropdown ao clicar fora
+      document.addEventListener('click', (e) => {
+        if (!userAccount.contains(e.target)) {
+          dropdown.style.display = 'none';
+        }
+      });
+    }
+
+    // Logout
+    const logoutBtn = document.getElementById('dropdownLogout');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+          await signOut(auth);
+          window.location.href = '../login.html';
+        } catch (error) {
+          console.error('Erro ao fazer logout:', error);
+          alert('Erro ao sair. Tente novamente.');
+        }
+      });
+    }
+
+    // Menu mobile
+    const menuIcon = document.getElementById('menu-icon');
+    const navLinks = document.getElementById('nav-links');
+
+    if (menuIcon && navLinks) {
+      menuIcon.addEventListener('click', () => {
+        navLinks.classList.toggle('show');
+      });
+    }
+  </script>
 </body>
 </html>
