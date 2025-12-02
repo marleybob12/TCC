@@ -4,99 +4,211 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalhes do Evento - EventFlow</title>
+  
+  <!-- CSS -->
   <link rel="stylesheet" href="../css/evento.css">
   <link rel="icon" href="../img/logo_colorida_cortada.png" type="image/png">
+  
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+  <style>
+    /* Estilos adicionais para melhor UX */
+    body {
+      padding-top: 85px;
+    }
+    
+    /* Loader */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--primary-color);
+    }
+    
+    .loading i {
+      font-size: 48px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray-500);
+    }
+    
+    .empty-state i {
+      font-size: 64px;
+      color: var(--gray-300);
+      margin-bottom: 20px;
+    }
+    
+    .empty-state p {
+      font-size: 18px;
+      color: var(--gray-600);
+      margin: 20px 0;
+    }
+    
+    /* Error State */
+    .error {
+      text-align: center;
+      padding: 40px;
+      background: #FEE2E2;
+      border-radius: 12px;
+      margin: 20px 0;
+      color: var(--danger-color);
+    }
+    
+    .error i {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+    
+    .error p {
+      font-size: 16px;
+      margin: 12px 0;
+    }
+    
+    .error .btn {
+      margin-top: 20px;
+      background: var(--danger-color);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    
+    .error .btn:hover {
+      background: #DC2626;
+      transform: translateY(-2px);
+    }
+    
+    /* Detalhes do Evento */
+    .evento-detalhes {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    
+    .evento-detalhes p {
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+      color: var(--gray-700);
+    }
+    
+    .evento-detalhes i {
+      color: var(--primary-color);
+      font-size: 20px;
+      width: 24px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <div class="header-container">
-      <a href="../home/home.html" class="logo">
-        <img src="../img/logo_barra.png" alt="Logo EventFlow" />
-      </a>
-      <button class="menu-icon" id="menu-icon" aria-label="Abrir menu" type="button">
-        <i class="fas fa-bars"></i>
-      </button>
-      <nav class="nav-links" aria-label="Menu principal">
-        <ul>
-          <li><a href="criarEvento.html" class="btn">Criar eventos</a></li>
-          <li><a href="meusIngressos.html" class="btn">Meus ingressos</a></li>
-          <li><a href="meusEventos.html" class="btn">Meus eventos</a></li>
-          <li><a href="home.html" class="btn">EventFlow</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+    <!-- Placeholder do Header -->
+    <div id="header-placeholder"></div>
 
+  <!-- Conteúdo Principal -->
   <main>
-    <h1 id="tituloEvento">Evento</h1>
-    <img id="bannerEvento" src="" alt="Banner do Evento" />
-    <p id="descricaoEvento"></p>
-    <p><b>Data:</b> <span id="dataEvento"></span></p>
-    <h2>Lotes disponíveis</h2>
-    <div id="listaIngressos"></div>
+    <!-- Hero Section -->
+    <section class="evento-hero">
+      <div class="evento-banner-container">
+        <img id="bannerEvento" src="" alt="Banner do Evento" style="display:none;">
+      </div>
+      
+      <div class="evento-info">
+        <h1 id="tituloEvento">Carregando...</h1>
+        
+        <div class="evento-meta">
+          <div class="meta-item">
+            <i class="fas fa-calendar-alt"></i>
+            <div>
+              <strong>Data:</strong>
+              <span id="dataEvento">Carregando...</span>
+            </div>
+          </div>
+          
+          <div class="meta-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+              <strong>Local:</strong>
+              <span id="localEvento">Carregando...</span>
+            </div>
+          </div>
+        </div>
+        
+        <div id="descricaoEvento" style="margin-top:20px;line-height:1.8;">
+          Carregando descrição...
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção de Ingressos -->
+    <section class="ingressos-section">
+      <h2>
+        <i class="fas fa-ticket-alt"></i>
+        Ingressos Disponíveis
+      </h2>
+      
+      <div id="listaIngressos">
+        <div class="loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Carregando ingressos...</p>
+        </div>
+      </div>
+    </section>
   </main>
 
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>Sobre o EventFlow</h3>
+        <p>Facilitando e transformando a experiência de planejar e realizar eventos.</p>
+      </div>
+    </div>
+    <p class="copyright">&copy; 2025 EventFlow. Todos os direitos reservados.</p>
+  </footer>
+    <!-- Script de carregamento do header -->
+    <script src="../javaScript/loadHeader.js"></script>
+
+  <!-- Scripts -->
   <script type="module" src="../javaScript/evento.js"></script>
-  <!-- ============================================ -->
-<!-- ADICIONE ISTO ANTES DE FECHAR O </body>    -->
-<!-- ============================================ -->
-
-<!-- Placeholder do Header (será preenchido automaticamente) -->
-<div id="header-placeholder"></div>
-
-<!-- Script de carregamento do header -->
-<script src="../javaScript/loadHeader.js"></script>
-
-<!-- ============================================ -->
-<!-- Alternativa inline (se não quiser arquivo externo): -->
-<!-- ============================================ -->
-
-<script>
-(function(){
-  function garantirPlaceholder(){
-    let p=document.getElementById('header-placeholder');
-    if(!p){
-      p=document.createElement('div');
-      p.id='header-placeholder';
-      document.body.insertBefore(p,document.body.firstChild);
-    }
-    return p;
-  }
   
-  async function carregarHeader(){
-    try{
-      document.querySelectorAll('header').forEach(h=>!h.closest('#header-placeholder')&&h.remove());
-      const placeholder=garantirPlaceholder();
-      placeholder.innerHTML='<div style="padding:10px;text-align:center;">Carregando...</div>';
+  <script>
+    // Dropdown do usuário
+    function toggleDropdown() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+
+    // Fecha dropdown ao clicar fora
+    document.addEventListener("click", (e) => {
+      const userAccount = document.querySelector(".user-account");
+      const dropdown = document.getElementById("dropdown");
       
-      const caminhos=['./header.html','../home/header.html','./home/header.html','../../home/header.html'];
-      let html=null;
-      
-      for(const caminho of caminhos){
-        try{
-          const r=await fetch(caminho);
-          if(r.ok){html=await r.text();break;}
-        }catch(e){}
+      if (userAccount && dropdown && !userAccount.contains(e.target)) {
+        dropdown.style.display = "none";
       }
-      
-      if(!html)throw new Error('Header não encontrado');
-      placeholder.innerHTML=html;
-      window.dispatchEvent(new CustomEvent('headerLoaded'));
-      console.log('✅ Header carregado');
-    }catch(e){
-      console.error('❌ Erro ao carregar header:',e);
-      const p=document.getElementById('header-placeholder');
-      if(p)p.innerHTML='<div style="padding:20px;background:#fee;color:#c00;text-align:center;">⚠️ Erro ao carregar menu. <a href="../home/home.html">Voltar</a></div>';
-    }
-  }
-  
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',carregarHeader);
-  }else{
-    carregarHeader();
-  }
-})();
-</script> -->
+    });
 
+    // Menu mobile
+    document.getElementById("menu-icon")?.addEventListener("click", () => {
+      const navMenu = document.querySelector(".nav-links ul");
+      navMenu?.classList.toggle("show");
+    });
+  </script>
 </body>
 </html>

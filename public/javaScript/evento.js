@@ -1,400 +1,407 @@
+// public/javaScript/evento.js - INTEGRADO COM APIs
 import { auth, db } from "./firebaseConfig.js";
-import { inserirDadosComOrganizador } from "./inserirDados.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const form = document.getElementById("formCriarEvento");
+// Elementos do DOM
+const tituloEl = document.getElementById("tituloEvento");
+const bannerEl = document.getElementById("bannerEvento");
+const descricaoEl = document.getElementById("descricaoEvento");
+const dataEl = document.getElementById("dataEvento");
+const localEl = document.getElementById("localEvento");
 const listaIngressos = document.getElementById("listaIngressos");
-const addIngressoBtn = document.getElementById("addIngressoBtn");
-const mensagemEl = document.getElementById("mensagem");
-const btnCriarEvento = document.getElementById("btnCriarEvento");
-const loader = document.getElementById("loader");
 
-let contadorIngressos = 0;
+let eventoAtual = null;
+let lotesDisponiveis = [];
+let usuarioLogado = null;
 
 /**
- * Formata data para o input type="datetime-local"
+ * Formata timestamp do Firestore para data legível
  */
-function formatarDataLocal(date) {
-  if (!date) return "";
-  const d = new Date(date);
-  const ano = d.getFullYear();
-  const mes = String(d.getMonth() + 1).padStart(2, '0');
-  const dia = String(d.getDate()).padStart(2, '0');
-  const horas = String(d.getHours()).padStart(2, '0');
-  const minutos = String(d.getMinutes()).padStart(2, '0');
-  return `${ano}-${mes}-${dia}T${horas}:${minutos}`;
+function formatarData(timestamp) {
+  if (!timestamp) return "A definir";
+  
+  try {
+    if (timestamp.toDate && typeof timestamp.toDate === "function") {
+      return timestamp.toDate().toLocaleString("pt-BR");
+    }
+    if (timestamp.seconds) {
+      return new Date(timestamp.seconds * 1000).toLocaleString("pt-BR");
+    }
+    const date = new Date(timestamp);
+    if (!isNaN(date)) {
+      return date.toLocaleString("pt-BR");
+    }
+  } catch (error) {
+    console.error("Erro ao formatar data:", error);
+  }
+  
+  return "A definir";
 }
 
 /**
- * Calcula tempo restante até uma data
+ * Verifica se o lote está disponível para venda
  */
-function calcularTempoRestante(dataFim) {
+function verificarDisponibilidade(lote) {
   const agora = new Date();
-  const diff = new Date(dataFim) - agora;
   
-  if (diff <= 0) return { disponivel: false, texto: "Prazo expirado" };
+  // Verifica quantidade
+  if (!lote.quantidade || lote.quantidade <= 0) {
+    return { disponivel: false, motivo: "Esgotado" };
+  }
   
-  const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  // Verifica data de início
+  if (lote.dataInicio) {
+    const dataInicio = lote.dataInicio.toDate ? lote.dataInicio.toDate() : new Date(lote.dataInicio);
+    if (agora < dataInicio) {
+      return { 
+        disponivel: false, 
+        motivo: `Vendas iniciam em ${dataInicio.toLocaleDateString("pt-BR")}` 
+      };
+    }
+  }
   
-  let texto = "";
-  if (dias > 0) texto += `${dias}d `;
-  if (horas > 0) texto += `${horas}h `;
-  if (minutos > 0) texto += `${minutos}m`;
+  // Verifica data de fim
+  if (lote.dataFim) {
+    const dataFim = lote.dataFim.toDate ? lote.dataFim.toDate() : new Date(lote.dataFim);
+    if (agora > dataFim) {
+      return { disponivel: false, motivo: "Prazo expirado" };
+    }
+  }
   
-  return { disponivel: true, texto: texto.trim() || "Menos de 1 minuto" };
+  return { disponivel: true };
 }
 
 /**
- * Adiciona dinamicamente um novo ingresso com campos de data/hora
+ * Carrega dados do evento
  */
-function adicionarIngresso(nome = "", preco = "", quantidade = "", dataInicio = "", dataFim = "") {
-  contadorIngressos++;
+async function carregarEvento(eventoId) {
+  try {
+    console.log("🔍 Carregando evento:", eventoId);
+    
+    // Buscar evento
+    const eventoDoc = await getDoc(doc(db, "Evento", eventoId));
+    
+    if (!eventoDoc.exists()) {
+      throw new Error("Evento não encontrado");
+    }
+    
+    eventoAtual = { id: eventoDoc.id, ...eventoDoc.data() };
+    
+    // Atualizar interface
+    tituloEl.textContent = eventoAtual.titulo || "Evento";
+    descricaoEl.textContent = eventoAtual.descricao || "Sem descrição";
+    dataEl.textContent = formatarData(eventoAtual.dataInicio);
+    localEl.textContent = eventoAtual.local || "Local a definir";
+    
+    // Banner
+    if (eventoAtual.imagemBanner) {
+      bannerEl.src = eventoAtual.imagemBanner;
+      bannerEl.style.display = "block";
+    } else {
+      bannerEl.style.display = "none";
+    }
+    
+    // Carregar lotes
+    await carregarLotes(eventoId);
+    
+    console.log("✅ Evento carregado:", eventoAtual.titulo);
+    
+  } catch (error) {
+    console.error("❌ Erro ao carregar evento:", error);
+    
+    tituloEl.textContent = "Erro ao carregar evento";
+    descricaoEl.textContent = error.message;
+    listaIngressos.innerHTML = `
+      <div class="error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Não foi possível carregar o evento.</p>
+        <a href="home.html" class="btn">Voltar para Home</a>
+      </div>
+    `;
+  }
+}
+
+/**
+ * Carrega lotes (ingressos) do evento
+ */
+async function carregarLotes(eventoId) {
+  try {
+    console.log("🎫 Carregando lotes do evento...");
+    
+    listaIngressos.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Carregando ingressos...</div>';
+    
+    // Buscar lotes
+    const lotesQuery = query(
+      collection(db, "Lote"),
+      where("eventoID", "==", eventoId)
+    );
+    
+    const lotesSnap = await getDocs(lotesQuery);
+    
+    if (lotesSnap.empty) {
+      listaIngressos.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-ticket-alt"></i>
+          <p>Nenhum ingresso disponível para este evento</p>
+        </div>
+      `;
+      return;
+    }
+    
+    lotesDisponiveis = [];
+    listaIngressos.innerHTML = "";
+    
+    lotesSnap.forEach((docLote) => {
+      const lote = { id: docLote.id, ...docLote.data() };
+      lotesDisponiveis.push(lote);
+      
+      const card = criarCardLote(lote);
+      listaIngressos.appendChild(card);
+    });
+    
+    console.log(`✅ ${lotesDisponiveis.length} lote(s) carregado(s)`);
+    
+  } catch (error) {
+    console.error("❌ Erro ao carregar lotes:", error);
+    listaIngressos.innerHTML = `
+      <div class="error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Erro ao carregar ingressos</p>
+      </div>
+    `;
+  }
+}
+
+/**
+ * Cria card visual do lote
+ */
+function criarCardLote(lote) {
+  const card = document.createElement("div");
+  card.className = "lote-card";
   
-  const div = document.createElement("div");
-  div.classList.add("ingresso-item");
-  div.setAttribute("data-id", contadorIngressos);
+  const { disponivel, motivo } = verificarDisponibilidade(lote);
   
-  const dataInicioFormatada = formatarDataLocal(dataInicio);
-  const dataFimFormatada = formatarDataLocal(dataFim);
+  const badge = disponivel 
+    ? '<span class="badge-disponivel"><i class="fas fa-check-circle"></i> Disponível</span>'
+    : '<span class="badge-esgotado"><i class="fas fa-times-circle"></i> Indisponível</span>';
   
-  div.innerHTML = `
-    <div class="ingresso-field">
-      <label for="ingresso-nome-${contadorIngressos}">
-        Nome do ingresso <span class="required">*</span>
-      </label>
-      <input 
-        type="text" 
-        id="ingresso-nome-${contadorIngressos}"
-        placeholder="Ex: Pista, VIP, Camarote" 
-        class="ingresso-nome" 
-        value="${nome}" 
-        required
-      >
+  card.innerHTML = `
+    ${badge}
+    
+    <h3>${lote.nome || "Ingresso"}</h3>
+    
+    <div class="lote-preco">
+      <span class="label">Valor:</span>
+      <span class="valor">${lote.preco ? lote.preco.toFixed(2) : "0.00"}</span>
     </div>
     
-    <div class="ingresso-field">
-      <label for="ingresso-preco-${contadorIngressos}">
-        Valor (R$) <span class="required">*</span>
-      </label>
-      <input 
-        type="number" 
-        id="ingresso-preco-${contadorIngressos}"
-        placeholder="0.00" 
-        class="ingresso-preco" 
-        min="0" 
-        step="0.01"
-        value="${preco}" 
-        required
-      >
-    </div>
-    
-    <div class="ingresso-field">
-      <label for="ingresso-qtd-${contadorIngressos}">
-        Quantidade <span class="required">*</span>
-      </label>
-      <input 
-        type="number" 
-        id="ingresso-qtd-${contadorIngressos}"
-        placeholder="100" 
-        class="ingresso-quantidade" 
-        min="1" 
-        value="${quantidade}" 
-        required
-      >
-    </div>
-
-    <div class="ingresso-field">
-      <label for="ingresso-inicio-${contadorIngressos}">
-        Início da venda <span class="required">*</span>
-      </label>
-      <input 
-        type="datetime-local" 
-        id="ingresso-inicio-${contadorIngressos}"
-        class="ingresso-data-inicio" 
-        value="${dataInicioFormatada}"
-        required
-      >
-      <small class="helper-text">Quando as vendas deste ingresso começam</small>
-    </div>
-
-    <div class="ingresso-field">
-      <label for="ingresso-fim-${contadorIngressos}">
-        Fim da venda <span class="required">*</span>
-      </label>
-      <input 
-        type="datetime-local" 
-        id="ingresso-fim-${contadorIngressos}"
-        class="ingresso-data-fim" 
-        value="${dataFimFormatada}"
-        required
-      >
-      <small class="helper-text">Quando as vendas deste ingresso terminam</small>
-    </div>
-
-    <div class="ingresso-field">
-      <label>Tempo restante:</label>
-      <div class="tempo-restante" style="padding: 8px; background: #f3f4f6; border-radius: 6px; color: #6b7280;">
-        <small>Será atualizado automaticamente</small>
+    <div class="lote-disponibilidade">
+      <i class="fas fa-ticket-alt"></i>
+      <div class="texto">
+        <span class="qtdIngressos">${lote.quantidade || 0}</span> 
+        ingresso(s) disponível(is)
       </div>
     </div>
     
+    ${!disponivel ? `
+      <div style="background:#FEE2E2;color:#991B1B;padding:12px;border-radius:8px;margin:12px 0;font-size:14px;">
+        <i class="fas fa-info-circle"></i> ${motivo}
+      </div>
+    ` : ''}
+    
     <button 
-      type="button" 
-      class="remover-btn" 
-      title="Remover ingresso"
-      aria-label="Remover ingresso"
+      class="btnComprar" 
+      data-lote-id="${lote.id}"
+      ${!disponivel ? 'disabled' : ''}
     >
-      <i class="fas fa-trash-alt"></i>
+      <i class="fas fa-shopping-cart"></i>
+      ${disponivel ? 'Comprar Ingresso' : 'Indisponível'}
     </button>
   `;
   
-  div.style.opacity = "0";
-  div.style.transform = "translateY(-10px)";
+  // Adicionar evento de clique
+  const btnComprar = card.querySelector(".btnComprar");
+  btnComprar.addEventListener("click", () => comprarIngresso(lote.id));
   
-  listaIngressos.appendChild(div);
-  
-  setTimeout(() => {
-    div.style.transition = "all 0.3s ease";
-    div.style.opacity = "1";
-    div.style.transform = "translateY(0)";
-  }, 10);
-  
-  // Remoção
-  div.querySelector(".remover-btn").addEventListener("click", () => {
-    div.style.opacity = "0";
-    div.style.transform = "translateY(-10px)";
-    setTimeout(() => div.remove(), 300);
-  });
-  
-  // Formata preço
-  const campoPreco = div.querySelector(".ingresso-preco");
-  campoPreco.addEventListener("blur", (e) => {
-    if (e.target.value) {
-      e.target.value = parseFloat(e.target.value).toFixed(2);
-    }
-  });
-
-  // Atualiza tempo restante
-  const campoFim = div.querySelector(".ingresso-data-fim");
-  const tempoDiv = div.querySelector(".tempo-restante");
-  
-  const atualizarTempo = () => {
-    const dataFim = campoFim.value;
-    if (dataFim) {
-      const { disponivel, texto } = calcularTempoRestante(dataFim);
-      tempoDiv.innerHTML = `<small>${disponivel ? '⏱️ Disponível por: ' : '⏸️ '}${texto}</small>`;
-    }
-  };
-  
-  campoFim.addEventListener("change", atualizarTempo);
-  atualizarTempo();
-  
-  // Atualiza a cada minuto
-  setInterval(atualizarTempo, 60000);
-}
-
-// Botão para adicionar ingresso
-addIngressoBtn.addEventListener("click", () => {
-  const agora = new Date();
-  const fimPadrao = new Date(agora.getTime() + 30 * 24 * 60 * 60 * 1000); // +30 dias
-  
-  adicionarIngresso(
-    "Ingresso Geral", 
-    "", 
-    "",
-    formatarDataLocal(agora),
-    formatarDataLocal(fimPadrao)
-  );
-  
-  setTimeout(() => {
-    const ultimoIngresso = listaIngressos.lastElementChild;
-    if (ultimoIngresso) {
-      ultimoIngresso.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, 100);
-});
-
-function mostrarMensagem(texto, tipo = "success") {
-  mensagemEl.textContent = texto;
-  mensagemEl.className = `mensagem ${tipo}`;
-  mensagemEl.style.display = "block";
-  
-  setTimeout(() => {
-    mensagemEl.style.display = "none";
-  }, 5000);
+  return card;
 }
 
 /**
- * Valida formulário incluindo datas
+ * Processa compra do ingresso via API
  */
-function validarFormulario() {
-  const ingressos = [];
-  const ingressosItems = listaIngressos.querySelectorAll(".ingresso-item");
-  
-  if (ingressosItems.length === 0) {
-    throw new Error("Adicione pelo menos um tipo de ingresso.");
-  }
-  
-  ingressosItems.forEach((div, index) => {
-    const nome = div.querySelector(".ingresso-nome").value.trim();
-    const preco = parseFloat(div.querySelector(".ingresso-preco").value);
-    const quantidade = parseInt(div.querySelector(".ingresso-quantidade").value, 10);
-    const dataInicio = new Date(div.querySelector(".ingresso-data-inicio").value);
-    const dataFim = new Date(div.querySelector(".ingresso-data-fim").value);
-    
-    if (!nome) {
-      throw new Error(`O nome do ingresso ${index + 1} é obrigatório.`);
-    }
-    
-    if (isNaN(preco) || preco < 0) {
-      throw new Error(`O preço do ingresso "${nome}" deve ser um valor válido.`);
-    }
-    
-    if (isNaN(quantidade) || quantidade < 1) {
-      throw new Error(`A quantidade do ingresso "${nome}" deve ser pelo menos 1.`);
-    }
-
-    if (isNaN(dataInicio.getTime())) {
-      throw new Error(`Data de início do ingresso "${nome}" é inválida.`);
-    }
-
-    if (isNaN(dataFim.getTime())) {
-      throw new Error(`Data de fim do ingresso "${nome}" é inválida.`);
-    }
-
-    if (dataInicio >= dataFim) {
-      throw new Error(`A data de início deve ser anterior à data de fim para "${nome}".`);
-    }
-    
-    ingressos.push({ 
-      nome, 
-      preco, 
-      quantidade,
-      dataInicio: dataInicio.toISOString(),
-      dataFim: dataFim.toISOString()
-    });
-  });
-  
-  return ingressos;
-}
-
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
+async function comprarIngresso(loteId) {
+  if (!usuarioLogado) {
+    alert("⚠️ Você precisa estar logado para comprar ingressos");
     window.location.href = "../login.html";
     return;
   }
-
-  try {
-    const userDoc = await getDoc(doc(db, "Usuario", user.uid));
-    
-    if (userDoc.exists()) {
-      const dados = userDoc.data();
-      document.querySelector(".user-name").textContent = dados.nome || "Usuário";
-      document.getElementById("nomeUsuario").value = dados.nome || "";
-      document.getElementById("cpfUsuario").value = dados.cpf || "";
-      document.getElementById("telefoneUsuario").value = dados.telefone || "";
-      document.getElementById("dataNascimentoUsuario").value = dados.dataNascimento || "";
-    }
-  } catch (e) {
-    console.error("Erro ao buscar dados do usuário:", e);
-    mostrarMensagem("Erro ao carregar dados do usuário.", "error");
-  }
-
-  if (form) {
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      
-      mensagemEl.style.display = "none";
-      btnCriarEvento.disabled = true;
-      loader.style.display = "block";
-      
-      try {
-        const ingressos = validarFormulario();
-        
-        const eventoData = {
-          nome: document.getElementById("nomeEvento").value.trim(),
-          descricao: document.getElementById("descricaoEvento").value.trim(),
-          data: document.getElementById("dataEvento").value,
-          hora: document.getElementById("horaEvento").value,
-          endereco: document.getElementById("rua").value.trim(),
-          bairro: document.getElementById("bairro").value.trim(),
-          cidade: document.getElementById("cidade").value.trim(),
-          estado: document.getElementById("uf").value.trim(),
-          numero: document.getElementById("numero").value.trim(),
-          cep: document.getElementById("cepEvento").value.trim(),
-          tipo: document.getElementById("tipoEvento").value.trim(),
-          cnpj: document.getElementById("cnpjEvento").value.trim() || null,
-          bannerUrl: document.getElementById("bannerUrlEvento").value.trim() || "",
-          ingressos,
-          dataCriacao: new Date()
-        };
-        
-        if (!eventoData.nome) throw new Error("O nome do evento é obrigatório.");
-        if (!eventoData.data) throw new Error("A data do evento é obrigatória.");
-        if (!eventoData.tipo) throw new Error("Selecione uma categoria para o evento.");
-        
-        await inserirDadosComOrganizador(
-          db,
-          auth.currentUser.uid,
-          document.getElementById("nomeUsuario").value,
-          auth.currentUser.email,
-          document.getElementById("telefoneUsuario").value,
-          document.getElementById("cpfUsuario").value,
-          document.getElementById("dataNascimentoUsuario").value,
-          eventoData
-        );
-        
-        mostrarMensagem("✅ Evento criado com sucesso! Redirecionando...", "success");
-        
-        form.reset();
-        listaIngressos.innerHTML = "";
-        contadorIngressos = 0;
-        
-        setTimeout(() => {
-          window.location.href = "meusEventos.html";
-        }, 2000);
-        
-      } catch (error) {
-        console.error("Erro ao criar evento:", error);
-        mostrarMensagem(error.message || "Erro ao criar evento. Tente novamente.", "error");
-      } finally {
-        btnCriarEvento.disabled = false;
-        loader.style.display = "none";
-      }
-    });
-  }
-});
-
-window.addEventListener("load", () => {
-  if (listaIngressos.children.length === 0) {
-    const agora = new Date();
-    const fimPadrao = new Date(agora.getTime() + 30 * 24 * 60 * 60 * 1000);
-    
-    adicionarIngresso(
-      "Ingresso Geral", 
-      "", 
-      "",
-      formatarDataLocal(agora),
-      formatarDataLocal(fimPadrao)
-    );
-  }
-});
-
-document.getElementById("bannerUrlEvento")?.addEventListener("input", function () {
-  const url = this.value.trim();
-  const img = document.getElementById("previewBannerUrl");
   
-  if (url) {
-    img.src = url;
-    img.style.display = "block";
-    img.onerror = () => {
-      img.style.display = "none";
-      mostrarMensagem("URL da imagem inválida.", "error");
-    };
-  } else {
-    img.style.display = "none";
+  if (!eventoAtual) {
+    alert("❌ Erro: Evento não carregado");
+    return;
   }
+  
+  const btn = document.querySelector(`[data-lote-id="${loteId}"]`);
+  const textoOriginal = btn.innerHTML;
+  
+  try {
+    // Desabilita botão
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+    
+    console.log("🛒 Iniciando compra:", {
+      usuarioID: usuarioLogado.uid,
+      eventoID: eventoAtual.id,
+      loteID: loteId
+    });
+    
+    // ETAPA 1: Criar ingresso no banco (via API dados-compra)
+    const responseDados = await fetch("/api/dados-compra", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        usuarioID: usuarioLogado.uid,
+        eventoID: eventoAtual.id,
+        loteID: loteId
+      })
+    });
+    
+    const resultDados = await responseDados.json();
+    
+    if (!resultDados.success) {
+      throw new Error(resultDados.message || "Erro ao criar ingresso");
+    }
+    
+    console.log("✅ Ingresso criado:", resultDados.data.ingressoID);
+    
+    // ETAPA 2: Enviar email com PDF (via API comprar-ingresso)
+    // Esta API será chamada em background pelo servidor
+    // Para simplicidade, vamos apenas notificar que o email será enviado
+    
+    // Atualiza botão para sucesso
+    btn.classList.add("sucesso");
+    btn.innerHTML = '<i class="fas fa-check-circle"></i> Compra Confirmada!';
+    
+    // Mostrar modal de sucesso
+    mostrarModalSucesso(resultDados.data);
+    
+    // Recarregar lotes para atualizar quantidade
+    setTimeout(() => {
+      carregarLotes(eventoAtual.id);
+    }, 2000);
+    
+  } catch (error) {
+    console.error("❌ Erro na compra:", error);
+    
+    btn.disabled = false;
+    btn.innerHTML = textoOriginal;
+    
+    alert(`❌ Erro ao processar compra:\n\n${error.message}`);
+  }
+}
+
+/**
+ * Mostra modal de sucesso após compra
+ */
+function mostrarModalSucesso(dados) {
+  const modal = document.createElement("div");
+  modal.className = "mensagem-sucesso";
+  
+  modal.innerHTML = `
+    <div class="mensagem-conteudo">
+      <h3>
+        <i class="fas fa-check-circle"></i>
+        Compra Realizada com Sucesso!
+      </h3>
+      
+      <p><strong>Evento:</strong> ${dados.evento.titulo}</p>
+      <p><strong>Lote:</strong> ${dados.lote.nome}</p>
+      <p><strong>Valor:</strong> R$ ${dados.lote.preco}</p>
+      <p><strong>Data:</strong> ${dados.evento.dataInicio}</p>
+      <p><strong>Local:</strong> ${dados.evento.local}</p>
+      
+      <div class="info-email">
+        <i class="fas fa-envelope"></i>
+        <strong>Seu ingresso será enviado para:</strong><br>
+        ${dados.usuario.email}
+      </div>
+      
+      <p class="info-secundaria">
+        <i class="fas fa-info-circle"></i>
+        O PDF com o QR Code chegará em alguns minutos.
+        Verifique também a caixa de spam.
+      </p>
+      
+      <button onclick="this.closest('.mensagem-sucesso').remove()">
+        <i class="fas fa-times"></i>
+        Fechar
+      </button>
+      
+      <a href="meusIngressos.html" class="btn" style="margin-top:10px;display:inline-block;">
+        <i class="fas fa-ticket-alt"></i>
+        Ver Meus Ingressos
+      </a>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Fechar ao clicar fora
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.remove();
+    }
+  });
+}
+
+/**
+ * Inicialização
+ */
+document.addEventListener("DOMContentLoaded", () => {
+  // Pegar ID do evento da URL
+  const params = new URLSearchParams(window.location.search);
+  const eventoId = params.get("id");
+  
+  if (!eventoId) {
+    tituloEl.textContent = "Erro";
+    descricaoEl.textContent = "ID do evento não fornecido";
+    listaIngressos.innerHTML = `
+      <div class="error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Evento não especificado</p>
+        <a href="home.html" class="btn">Voltar para Home</a>
+      </div>
+    `;
+    return;
+  }
+  
+  // Verificar autenticação
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      console.log("⚠️ Usuário não autenticado");
+      // Permite ver o evento, mas não comprar
+    } else {
+      console.log("✅ Usuário autenticado:", user.uid);
+      usuarioLogado = user;
+      
+      // Atualizar nome no header
+      try {
+        const userDoc = await getDoc(doc(db, "Usuario", user.uid));
+        if (userDoc.exists()) {
+          const userName = document.querySelector(".user-name");
+          if (userName) {
+            userName.textContent = userDoc.data().nome || "Usuário";
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados do usuário:", error);
+      }
+    }
+    
+    // Carregar evento
+    carregarEvento(eventoId);
+  });
 });
