@@ -5,7 +5,7 @@
       "maxDuration": 10
     }
   },
-@@ -13,9 +12,5 @@
+
       "dest": "/api/dados-compra.js",
       "methods": ["POST", "OPTIONS"]
     }
