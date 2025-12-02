@@ -8,8 +8,7 @@
 
       "dest": "/api/dados-compra.js",
       "methods": ["POST", "OPTIONS"]
-    }
-  ],
+    },
   "env": {
     "FIREBASE_SERVICE_ACCOUNT": "firebase_service_account",
     "FRONTEND_URL": "https://tcc-puce-three.vercel.app/"
