@@ -1,16 +1,14 @@
 {
   "version": 2,
-  "functions": {
-    "api/dados-compra.js": {
-      "runtime": "@vercel/node@2.0.0",
-      "maxDuration": 10
-    }
-  },
-  "routes": [
+  "name": "eventflow",
+  "buildCommand": null,
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
     {
-      "src": "/api/dados-compra",
-      "dest": "/api/dados-compra.js",
-      "methods": ["POST", "OPTIONS"]
+      "source": "/",
+      "destination": "/home/home.html"
     }
   ]
 }

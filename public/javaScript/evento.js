@@ -1,8 +1,8 @@
-// public/javaScript/evento.js - INTEGRADO COM APIs
+// public/javaScript/evento.js
 import { auth, db } from "./firebaseConfig.js";
+import { EventFlowAPI } from "./api.js";  // ← IMPORTA O CLIENTE
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 // Elementos do DOM
 const tituloEl = document.getElementById("tituloEvento");
 const bannerEl = document.getElementById("bannerEvento");
@@ -22,15 +22,39 @@ function formatarData(timestamp) {
   if (!timestamp) return "A definir";
   
   try {
+    // Firestore Timestamp
     if (timestamp.toDate && typeof timestamp.toDate === "function") {
-      return timestamp.toDate().toLocaleString("pt-BR");
+      return timestamp.toDate().toLocaleString("pt-BR", {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      });
     }
+    
+    // Timestamp com seconds
     if (timestamp.seconds) {
-      return new Date(timestamp.seconds * 1000).toLocaleString("pt-BR");
+      return new Date(timestamp.seconds * 1000).toLocaleString("pt-BR", {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      });
     }
-    const date = new Date(timestamp);
-    if (!isNaN(date)) {
-      return date.toLocaleString("pt-BR");
+    
+    // String de data
+    if (typeof timestamp === 'string') {
+      const date = new Date(timestamp);
+      if (!isNaN(date)) {
+        return date.toLocaleString("pt-BR", {
+          dateStyle: 'short',
+          timeStyle: 'short'
+        });
+      }
+    }
+    
+    // Objeto Date
+    if (timestamp instanceof Date && !isNaN(timestamp)) {
+      return timestamp.toLocaleString("pt-BR", {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      });
     }
   } catch (error) {
     console.error("Erro ao formatar data:", error);
@@ -50,22 +74,30 @@ function verificarDisponibilidade(lote) {
     return { disponivel: false, motivo: "Esgotado" };
   }
   
-  // Verifica data de início
+  // Verifica data de início (se existir)
   if (lote.dataInicio) {
-    const dataInicio = lote.dataInicio.toDate ? lote.dataInicio.toDate() : new Date(lote.dataInicio);
-    if (agora < dataInicio) {
-      return { 
-        disponivel: false, 
-        motivo: `Vendas iniciam em ${dataInicio.toLocaleDateString("pt-BR")}` 
-      };
+    try {
+      const dataInicio = lote.dataInicio.toDate ? lote.dataInicio.toDate() : new Date(lote.dataInicio);
+      if (agora < dataInicio) {
+        return { 
+          disponivel: false, 
+          motivo: `Vendas iniciam em ${dataInicio.toLocaleDateString("pt-BR")}` 
+        };
+      }
+    } catch (e) {
+      console.warn("Erro ao verificar data de início:", e);
     }
   }
   
-  // Verifica data de fim
+  // Verifica data de fim (se existir)
   if (lote.dataFim) {
-    const dataFim = lote.dataFim.toDate ? lote.dataFim.toDate() : new Date(lote.dataFim);
-    if (agora > dataFim) {
-      return { disponivel: false, motivo: "Prazo expirado" };
+    try {
+      const dataFim = lote.dataFim.toDate ? lote.dataFim.toDate() : new Date(lote.dataFim);
+      if (agora > dataFim) {
+        return { disponivel: false, motivo: "Prazo expirado" };
+      }
+    } catch (e) {
+      console.warn("Erro ao verificar data de fim:", e);
     }
   }
   
@@ -79,6 +111,10 @@ async function carregarEvento(eventoId) {
   try {
     console.log("🔍 Carregando evento:", eventoId);
     
+    // Mostrar loading
+    tituloEl.textContent = "Carregando evento...";
+    descricaoEl.textContent = "Por favor aguarde...";
+    
     // Buscar evento
     const eventoDoc = await getDoc(doc(db, "Evento", eventoId));
     
@@ -87,17 +123,39 @@ async function carregarEvento(eventoId) {
     }
     
     eventoAtual = { id: eventoDoc.id, ...eventoDoc.data() };
+    console.log("📋 Dados do evento:", eventoAtual);
     
     // Atualizar interface
-    tituloEl.textContent = eventoAtual.titulo || "Evento";
-    descricaoEl.textContent = eventoAtual.descricao || "Sem descrição";
+    tituloEl.textContent = eventoAtual.titulo || "Evento sem título";
+    descricaoEl.textContent = eventoAtual.descricao || "Sem descrição disponível";
     dataEl.textContent = formatarData(eventoAtual.dataInicio);
-    localEl.textContent = eventoAtual.local || "Local a definir";
+    
+    // Buscar local se tiver localID
+    if (eventoAtual.localID) {
+      try {
+        const localDoc = await getDoc(doc(db, "Local", eventoAtual.localID));
+        if (localDoc.exists()) {
+          const localData = localDoc.data();
+          localEl.textContent = localData.endereco || "Local a definir";
+        } else {
+          localEl.textContent = eventoAtual.local || "Local a definir";
+        }
+      } catch (error) {
+        console.warn("Erro ao buscar local:", error);
+        localEl.textContent = eventoAtual.local || "Local a definir";
+      }
+    } else {
+      localEl.textContent = eventoAtual.local || "Local a definir";
+    }
     
     // Banner
     if (eventoAtual.imagemBanner) {
       bannerEl.src = eventoAtual.imagemBanner;
       bannerEl.style.display = "block";
+      bannerEl.onerror = () => {
+        console.warn("Erro ao carregar banner");
+        bannerEl.style.display = "none";
+      };
     } else {
       bannerEl.style.display = "none";
     }
@@ -112,11 +170,15 @@ async function carregarEvento(eventoId) {
     
     tituloEl.textContent = "Erro ao carregar evento";
     descricaoEl.textContent = error.message;
+    dataEl.textContent = "-";
+    localEl.textContent = "-";
+    
     listaIngressos.innerHTML = `
       <div class="error">
         <i class="fas fa-exclamation-triangle"></i>
-        <p>Não foi possível carregar o evento.</p>
-        <a href="home.html" class="btn">Voltar para Home</a>
+        <p><strong>Não foi possível carregar o evento</strong></p>
+        <p style="font-size:14px;margin-top:10px;">${error.message}</p>
+        <a href="home.html" class="btn" style="margin-top:20px;">Voltar para Home</a>
       </div>
     `;
   }
@@ -127,11 +189,11 @@ async function carregarEvento(eventoId) {
  */
 async function carregarLotes(eventoId) {
   try {
-    console.log("🎫 Carregando lotes do evento...");
+    console.log("🎫 Carregando lotes do evento:", eventoId);
     
-    listaIngressos.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Carregando ingressos...</div>';
+    listaIngressos.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Carregando ingressos...</p></div>';
     
-    // Buscar lotes
+    // Buscar lotes vinculados ao evento
     const lotesQuery = query(
       collection(db, "Lote"),
       where("eventoID", "==", eventoId)
@@ -139,11 +201,16 @@ async function carregarLotes(eventoId) {
     
     const lotesSnap = await getDocs(lotesQuery);
     
+    console.log(`📦 Lotes encontrados: ${lotesSnap.size}`);
+    
     if (lotesSnap.empty) {
       listaIngressos.innerHTML = `
         <div class="empty-state">
           <i class="fas fa-ticket-alt"></i>
           <p>Nenhum ingresso disponível para este evento</p>
+          <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">
+            Entre em contato com o organizador para mais informações
+          </p>
         </div>
       `;
       return;
@@ -154,6 +221,7 @@ async function carregarLotes(eventoId) {
     
     lotesSnap.forEach((docLote) => {
       const lote = { id: docLote.id, ...docLote.data() };
+      console.log("🎟️ Lote:", lote);
       lotesDisponiveis.push(lote);
       
       const card = criarCardLote(lote);
@@ -167,7 +235,8 @@ async function carregarLotes(eventoId) {
     listaIngressos.innerHTML = `
       <div class="error">
         <i class="fas fa-exclamation-triangle"></i>
-        <p>Erro ao carregar ingressos</p>
+        <p><strong>Erro ao carregar ingressos</strong></p>
+        <p style="font-size:14px;margin-top:10px;">${error.message}</p>
       </div>
     `;
   }
@@ -186,6 +255,9 @@ function criarCardLote(lote) {
     ? '<span class="badge-disponivel"><i class="fas fa-check-circle"></i> Disponível</span>'
     : '<span class="badge-esgotado"><i class="fas fa-times-circle"></i> Indisponível</span>';
   
+  const preco = typeof lote.preco === 'number' ? lote.preco.toFixed(2) : "0.00";
+  const quantidade = typeof lote.quantidade === 'number' ? lote.quantidade : 0;
+  
   card.innerHTML = `
     ${badge}
     
@@ -193,14 +265,14 @@ function criarCardLote(lote) {
     
     <div class="lote-preco">
       <span class="label">Valor:</span>
-      <span class="valor">${lote.preco ? lote.preco.toFixed(2) : "0.00"}</span>
+      <span class="valor">${preco}</span>
     </div>
     
     <div class="lote-disponibilidade">
       <i class="fas fa-ticket-alt"></i>
       <div class="texto">
-        <span class="qtdIngressos">${lote.quantidade || 0}</span> 
-        ingresso(s) disponível(is)
+        <span class="qtdIngressos">${quantidade}</span> 
+        ${quantidade === 1 ? 'ingresso disponível' : 'ingressos disponíveis'}
       </div>
     </div>
     
@@ -222,7 +294,9 @@ function criarCardLote(lote) {
   
   // Adicionar evento de clique
   const btnComprar = card.querySelector(".btnComprar");
-  btnComprar.addEventListener("click", () => comprarIngresso(lote.id));
+  if (btnComprar) {
+    btnComprar.addEventListener("click", () => comprarIngresso(lote.id));
+  }
   
   return card;
 }
@@ -232,23 +306,29 @@ function criarCardLote(lote) {
  */
 async function comprarIngresso(loteId) {
   if (!usuarioLogado) {
-    alert("⚠️ Você precisa estar logado para comprar ingressos");
-    window.location.href = "../login.html";
+    if (confirm("⚠️ Você precisa estar logado para comprar ingressos.\n\nDeseja fazer login agora?")) {
+      window.location.href = "../login.html?redirect=" + encodeURIComponent(window.location.href);
+    }
     return;
   }
   
   if (!eventoAtual) {
-    alert("❌ Erro: Evento não carregado");
+    alert("❌ Erro: Evento não carregado. Por favor, recarregue a página.");
     return;
   }
   
   const btn = document.querySelector(`[data-lote-id="${loteId}"]`);
+  if (!btn) {
+    alert("❌ Erro: Botão não encontrado");
+    return;
+  }
+  
   const textoOriginal = btn.innerHTML;
   
   try {
     // Desabilita botão
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando compra...';
     
     console.log("🛒 Iniciando compra:", {
       usuarioID: usuarioLogado.uid,
@@ -256,8 +336,8 @@ async function comprarIngresso(loteId) {
       loteID: loteId
     });
     
-    // ETAPA 1: Criar ingresso no banco (via API dados-compra)
-    const responseDados = await fetch("/api/dados-compra", {
+    // Chamar API para criar ingresso e enviar email
+    const response = await fetch("/api/comprar-ingresso", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -269,26 +349,22 @@ async function comprarIngresso(loteId) {
       })
     });
     
-    const resultDados = await responseDados.json();
+    const result = await response.json();
     
-    if (!resultDados.success) {
-      throw new Error(resultDados.message || "Erro ao criar ingresso");
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Erro ao processar compra");
     }
     
-    console.log("✅ Ingresso criado:", resultDados.data.ingressoID);
-    
-    // ETAPA 2: Enviar email com PDF (via API comprar-ingresso)
-    // Esta API será chamada em background pelo servidor
-    // Para simplicidade, vamos apenas notificar que o email será enviado
+    console.log("✅ Compra realizada:", result.data);
     
     // Atualiza botão para sucesso
     btn.classList.add("sucesso");
     btn.innerHTML = '<i class="fas fa-check-circle"></i> Compra Confirmada!';
     
     // Mostrar modal de sucesso
-    mostrarModalSucesso(resultDados.data);
+    mostrarModalSucesso(result.data);
     
-    // Recarregar lotes para atualizar quantidade
+    // Recarregar lotes após 2 segundos
     setTimeout(() => {
       carregarLotes(eventoAtual.id);
     }, 2000);
@@ -296,10 +372,16 @@ async function comprarIngresso(loteId) {
   } catch (error) {
     console.error("❌ Erro na compra:", error);
     
+    // Restaurar botão
     btn.disabled = false;
     btn.innerHTML = textoOriginal;
     
-    alert(`❌ Erro ao processar compra:\n\n${error.message}`);
+    // Mostrar erro amigável
+    alert(
+      `❌ Não foi possível processar sua compra\n\n` +
+      `Motivo: ${error.message}\n\n` +
+      `Por favor, tente novamente. Se o problema persistir, entre em contato com o suporte.`
+    );
   }
 }
 
@@ -317,16 +399,14 @@ function mostrarModalSucesso(dados) {
         Compra Realizada com Sucesso!
       </h3>
       
-      <p><strong>Evento:</strong> ${dados.evento.titulo}</p>
-      <p><strong>Lote:</strong> ${dados.lote.nome}</p>
-      <p><strong>Valor:</strong> R$ ${dados.lote.preco}</p>
-      <p><strong>Data:</strong> ${dados.evento.dataInicio}</p>
-      <p><strong>Local:</strong> ${dados.evento.local}</p>
+      <p><strong>Evento:</strong> ${dados.eventoTitulo || eventoAtual.titulo}</p>
+      <p><strong>Lote:</strong> ${dados.loteNome}</p>
+      <p><strong>ID do Ingresso:</strong> ${dados.ingressoID}</p>
       
       <div class="info-email">
         <i class="fas fa-envelope"></i>
-        <strong>Seu ingresso será enviado para:</strong><br>
-        ${dados.usuario.email}
+        <strong>Seu ingresso foi enviado para:</strong><br>
+        ${dados.usuarioEmail}
       </div>
       
       <p class="info-secundaria">
@@ -336,14 +416,8 @@ function mostrarModalSucesso(dados) {
       </p>
       
       <button onclick="this.closest('.mensagem-sucesso').remove()">
-        <i class="fas fa-times"></i>
         Fechar
       </button>
-      
-      <a href="meusIngressos.html" class="btn" style="margin-top:10px;display:inline-block;">
-        <i class="fas fa-ticket-alt"></i>
-        Ver Meus Ingressos
-      </a>
     </div>
   `;
   
@@ -361,18 +435,28 @@ function mostrarModalSucesso(dados) {
  * Inicialização
  */
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 Inicializando página de evento...");
+  
   // Pegar ID do evento da URL
   const params = new URLSearchParams(window.location.search);
   const eventoId = params.get("id");
   
+  console.log("📌 ID do evento da URL:", eventoId);
+  
   if (!eventoId) {
     tituloEl.textContent = "Erro";
-    descricaoEl.textContent = "ID do evento não fornecido";
+    descricaoEl.textContent = "ID do evento não fornecido na URL";
+    dataEl.textContent = "-";
+    localEl.textContent = "-";
+    
     listaIngressos.innerHTML = `
       <div class="error">
         <i class="fas fa-exclamation-triangle"></i>
-        <p>Evento não especificado</p>
-        <a href="home.html" class="btn">Voltar para Home</a>
+        <p><strong>Evento não especificado</strong></p>
+        <p style="font-size:14px;margin-top:10px;">
+          A URL deve conter o parâmetro ?id=EVENTO_ID
+        </p>
+        <a href="home.html" class="btn" style="margin-top:20px;">Voltar para Home</a>
       </div>
     `;
     return;
@@ -380,14 +464,11 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Verificar autenticação
   onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      console.log("⚠️ Usuário não autenticado");
-      // Permite ver o evento, mas não comprar
-    } else {
+    if (user) {
       console.log("✅ Usuário autenticado:", user.uid);
       usuarioLogado = user;
       
-      // Atualizar nome no header
+      // Atualizar nome no header se existir
       try {
         const userDoc = await getDoc(doc(db, "Usuario", user.uid));
         if (userDoc.exists()) {
@@ -399,9 +480,58 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (error) {
         console.error("Erro ao carregar dados do usuário:", error);
       }
+    } else {
+      console.log("⚠️ Usuário não autenticado (pode ver mas não comprar)");
     }
     
-    // Carregar evento
+    // Carregar evento (independente de autenticação)
     carregarEvento(eventoId);
   });
 });
+async function comprarIngresso(loteId) {
+  if (!usuarioLogado) {
+    if (confirm("⚠️ Você precisa estar logado para comprar ingressos.\n\nDeseja fazer login agora?")) {
+      window.location.href = "../login.html?redirect=" + encodeURIComponent(window.location.href);
+    }
+    return;
+  }
+  
+  if (!eventoAtual) {
+    alert("❌ Erro: Evento não carregado. Por favor, recarregue a página.");
+    return;
+  }
+  
+  const btn = document.querySelector(`[data-lote-id="${loteId}"]`);
+  if (!btn) return;
+  
+  const textoOriginal = btn.innerHTML;
+  
+  try {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando compra...';
+    
+    console.log("🛒 Iniciando compra via API externa");
+    
+    // ✅ AGORA USA O BACKEND SEPARADO
+    const result = await EventFlowAPI.comprarIngresso(
+      usuarioLogado.uid,
+      eventoAtual.id,
+      loteId
+    );
+    
+    console.log("✅ Compra realizada:", result.data);
+    
+    btn.classList.add("sucesso");
+    btn.innerHTML = '<i class="fas fa-check-circle"></i> Compra Confirmada!';
+    
+    mostrarModalSucesso(result.data);
+    
+    setTimeout(() => carregarLotes(eventoAtual.id), 2000);
+    
+  } catch (error) {
+    console.error("❌ Erro na compra:", error);
+    btn.disabled = false;
+    btn.innerHTML = textoOriginal;
+    alert(`❌ Não foi possível processar sua compra\n\nMotivo: ${error.message}`);
+  }
+}
