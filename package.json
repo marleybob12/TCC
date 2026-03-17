@@ -2,11 +2,8 @@
   "name": "tcc-homepage",
   "version": "1.0.0",
   "type": "module",
-  "engines": {
-  "node": "24.x"
-},
   "scripts": {
-    "start": "vercel dev",
+    "start": "node api/dados-compra.js",
     "deploy": "vercel --prod"
   },
   "dependencies": {
