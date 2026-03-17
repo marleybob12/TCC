@@ -1,41 +1,21 @@
 {
   "name": "tcc-homepage",
   "version": "1.0.0",
-  "description": "Projeto EventFlow - Sistema de gestão de eventos",
-  "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "start": "vercel dev",
-    "test": "node scripts/testar-conexao.js",
-    "emails": "node scripts/processar-emails.js",
-    "emails:watch": "nodemon scripts/processar-emails.js",
     "deploy": "vercel --prod"
   },
   "dependencies": {
-    "dotenv": "^17.2.3",
     "firebase-admin": "^13.5.0",
     "nodemailer": "^7.0.10",
     "pdfkit": "^0.17.2",
-    "qrcode": "^1.5.4",
-    "vercel": "^48.12.0"
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
-  },
-  "keywords": [
-    "eventflow",
-    "tcc",
-    "eventos",
-    "ingressos"
-  ],
-  "author": "Marley Thales",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/marleybob12/TCC.git"
-  },
-  "bugs": {
-    "url": "https://github.com/marleybob12/TCC/issues"
-  },
-  "homepage": "https://github.com/marleybob12/TCC#readme"
+  }
 }

@@ -11,6 +11,8 @@ const dataEl = document.getElementById("dataEvento");
 const localEl = document.getElementById("localEvento");
 const listaIngressos = document.getElementById("listaIngressos");
 
+// ← SEM nenhum fetch aqui fora!
+
 let eventoAtual = null;
 let lotesDisponiveis = [];
 let usuarioLogado = null;
