@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar | EventFlow</title>
+  <link rel="icon" href="/img/logo_colorida_cortada.png" type="image/png">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card">
+      <a href="/"><img class="auth-logo" src="/img/logo_barra.png" alt="EventFlow"></a>
+      <h1 style="font-size:2.1rem;color:#111827;margin-bottom:8px">Entrar</h1>
+      <p class="helper">Acesse sua conta para criar eventos, comprar ingressos e acompanhar suas atividades.</p>
+      <div id="message" class="message"></div>
+      <form id="loginForm">
+        <div class="form-row"><label for="email">E-mail</label><input id="email" type="email" autocomplete="email" required></div>
+        <div class="form-row"><label for="senha">Senha</label><input id="senha" type="password" autocomplete="current-password" required></div>
+        <button class="btn btn-primary" style="width:100%" type="submit">Entrar no EventFlow</button>
+      </form>
+      <p class="helper" style="text-align:center;margin-top:18px">Ainda não tem conta? <a style="color:#4f46e5;font-weight:900" href="/cadastro.html">Cadastre-se</a></p>
+    </section>
+  </main>
+  <script type="module" src="/javaScript/auth.js"></script>
+</body>
+</html>

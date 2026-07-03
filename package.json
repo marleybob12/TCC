@@ -1,0 +1,23 @@
+{
+  "name": "eventflow-2-firebase",
+  "version": "2.0.0",
+  "description": "EventFlow 2.0 - plataforma de eventos com frontend moderno, Firebase Auth/Firestore e backend em Node/Vercel Functions.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "check": "node --check server.js && node --check api/comprar-ingresso.js && node --check api/validar-ingresso.js && node --check api/health.js",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.5.0",
+    "nodemailer": "^7.0.10",
+    "pdfkit": "^0.17.2",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "keywords": ["eventflow", "eventos", "firebase", "firestore", "vercel", "ingressos"]
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel do organizador | EventFlow</title>
+  <link rel="icon" href="/img/logo_colorida_cortada.png" type="image/png">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="app-layout">
+  <main class="app-main">
+    <div class="page-shell">
+      <section class="app-hero">
+        <span class="eyebrow">🧾 Painel</span>
+        <h1>Painel do organizador</h1>
+        <p>Selecione um evento para acompanhar vendas, lotes e validar ingressos na entrada.</p>
+      </section>
+      <div class="grid-2">
+        <section class="light-card">
+          <h2 style="font-size:1.8rem;color:#111827">Evento</h2>
+          <div class="form-row"><label for="eventoSelect">Selecionar evento</label><select id="eventoSelect"><option value="">Carregando...</option></select></div>
+          <div id="resumo" class="list-stack"></div>
+        </section>
+        <section class="light-card">
+          <h2 style="font-size:1.8rem;color:#111827">Validar ingresso</h2>
+          <div id="message" class="message"></div>
+          <form id="validarForm">
+            <div class="form-row"><label for="ingressoID">Código do ingresso</label><input id="ingressoID" placeholder="Cole o ID do ingresso" required></div>
+            <button class="btn btn-primary" type="submit">Validar entrada</button>
+          </form>
+        </section>
+      </div>
+      <section class="light-card" style="margin-top:18px">
+        <h2 style="font-size:1.8rem;color:#111827">Participantes</h2>
+        <div id="participantes" class="list-stack"><div class="empty-state">Selecione um evento.</div></div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/javaScript/painelOrganizador.js"></script>
+</body>
+</html>

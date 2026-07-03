@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eventos | EventFlow</title>
+  <link rel="icon" href="/img/logo_colorida_cortada.png" type="image/png">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="app-layout">
+  <main class="app-main">
+    <div class="page-shell">
+      <section class="app-hero">
+        <span class="eyebrow">🔥 Eventos em destaque</span>
+        <h1>Encontre sua próxima experiência.</h1>
+        <p>Explore shows, palestras, tecnologia, esporte, teatro e eventos criados pelos organizadores da plataforma.</p>
+        <div class="filters">
+          <input id="busca" class="input" placeholder="Buscar por nome, descrição ou local...">
+          <select id="categoria"><option value="">Todas categorias</option></select>
+          <select id="cidade"><option value="">Todas cidades</option></select>
+          <select id="ordem"><option value="data">Mais próximos</option><option value="nome">Nome A-Z</option></select>
+        </div>
+      </section>
+      <div id="message" class="message"></div>
+      <section id="eventos" class="event-grid"><div class="loading">Carregando eventos...</div></section>
+    </div>
+  </main>
+  <script type="module" src="/javaScript/home.js"></script>
+</body>
+</html>

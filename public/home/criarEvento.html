@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Criar evento | EventFlow</title>
+  <link rel="icon" href="/img/logo_colorida_cortada.png" type="image/png">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="app-layout">
+  <main class="app-main">
+    <div class="page-shell">
+      <section class="app-hero">
+        <span class="eyebrow">➕ Organizador</span>
+        <h1>Criar novo evento</h1>
+        <p>Cadastre as informações do evento e configure os lotes de ingresso. Tudo será salvo no Firestore.</p>
+      </section>
+      <section class="light-card">
+        <div id="message" class="message"></div>
+        <form id="eventoForm" class="form-grid">
+          <div class="form-row full"><label for="titulo">Título</label><input id="titulo" required placeholder="Ex: Festival EventFlow"></div>
+          <div class="form-row full"><label for="descricao">Descrição</label><textarea id="descricao" required placeholder="Conte o que vai acontecer no evento..."></textarea></div>
+          <div class="form-row"><label for="categoria">Categoria</label><select id="categoria" required><option value="">Selecione</option><option>Música</option><option>Tecnologia</option><option>Palestra</option><option>Esportes</option><option>Teatro</option><option>Gastronomia</option><option>Artes</option><option>Outros</option></select></div>
+          <div class="form-row"><label for="dataInicio">Data e hora</label><input id="dataInicio" type="datetime-local" required></div>
+          <div class="form-row"><label for="cidade">Cidade</label><input id="cidade" required placeholder="São Paulo"></div>
+          <div class="form-row"><label for="local">Local</label><input id="local" required placeholder="Nome do espaço"></div>
+          <div class="form-row"><label for="cep">CEP</label><input id="cep" placeholder="00000-000"></div>
+          <div class="form-row"><label for="endereco">Endereço</label><input id="endereco" placeholder="Rua, número, bairro"></div>
+          <div class="form-row full"><label for="imagemBanner">URL do banner</label><input id="imagemBanner" type="url" placeholder="https://..."><p class="helper">Pode usar uma imagem do Firebase Storage ou uma URL pública.</p></div>
+          <div class="full">
+            <div class="section-heading" style="margin-bottom:12px"><div><h2 style="font-size:1.7rem;color:#111827">Lotes de ingresso</h2><p class="helper">Crie pelo menos um lote para o público comprar.</p></div><button id="addLote" class="btn btn-ghost" type="button">Adicionar lote</button></div>
+            <div id="lotes"></div>
+          </div>
+          <button class="btn btn-primary full" type="submit">Publicar evento</button>
+        </form>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/javaScript/criarEvento.js"></script>
+</body>
+</html>

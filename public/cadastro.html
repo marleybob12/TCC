@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastro | EventFlow</title>
+  <link rel="icon" href="/img/logo_colorida_cortada.png" type="image/png">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card" style="width:min(720px,100%)">
+      <a href="/"><img class="auth-logo" src="/img/logo_barra.png" alt="EventFlow"></a>
+      <h1 style="font-size:2.1rem;color:#111827;margin-bottom:8px">Criar conta</h1>
+      <p class="helper">Use a mesma conta para participar de eventos ou organizar os seus.</p>
+      <div id="message" class="message"></div>
+      <form id="cadastroForm" class="form-grid">
+        <div class="form-row full"><label for="nome">Nome completo</label><input id="nome" required autocomplete="name"></div>
+        <div class="form-row"><label for="email">E-mail</label><input id="email" type="email" required autocomplete="email"></div>
+        <div class="form-row"><label for="telefone">Telefone</label><input id="telefone" autocomplete="tel"></div>
+        <div class="form-row"><label for="cpf">CPF</label><input id="cpf"></div>
+        <div class="form-row"><label for="dataNascimento">Nascimento</label><input id="dataNascimento" type="date"></div>
+        <div class="form-row"><label for="senha">Senha</label><input id="senha" type="password" minlength="6" required autocomplete="new-password"></div>
+        <div class="form-row"><label for="confirmarSenha">Confirmar senha</label><input id="confirmarSenha" type="password" minlength="6" required autocomplete="new-password"></div>
+        <button class="btn btn-primary full" type="submit">Criar conta</button>
+      </form>
+      <p class="helper" style="text-align:center;margin-top:18px">Já tem conta? <a style="color:#4f46e5;font-weight:900" href="/login.html">Entrar</a></p>
+    </section>
+  </main>
+  <script type="module" src="/javaScript/auth.js"></script>
+</body>
+</html>

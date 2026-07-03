@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EventFlow 2.0 | Eventos, ingressos e experiências</title>
+  <link rel="icon" href="/img/logo_colorida_cortada.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="brand"><img src="/img/logo_barra.png" alt="EventFlow"></a>
+      <button id="menuButton" class="btn btn-secondary btn-small mobile-menu" type="button">☰ Menu</button>
+      <nav id="mainNav" class="nav">
+        <a href="#recursos">Recursos</a>
+        <a href="#fluxo">Como funciona</a>
+        <a href="/home/home.html">Explorar eventos</a>
+        <a href="/login.html" class="btn btn-primary">Entrar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="page-shell hero-grid">
+        <div>
+          <span class="eyebrow">🎟️ EventFlow 2.0 • Firebase + Vercel</span>
+          <h1>Eventos mais bonitos, rápidos e fáceis de gerenciar.</h1>
+          <p class="lead">Uma versão atualizada do EventFlow para divulgar eventos, vender ingressos, acompanhar participantes e validar entrada com QR Code, mantendo a identidade visual do projeto original.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="/cadastro.html">Criar minha conta</a>
+            <a class="btn btn-secondary" href="/home/home.html">Ver eventos</a>
+          </div>
+        </div>
+        <div class="hero-card" aria-label="Evento em destaque">
+          <div class="float-panel">
+            <strong>Dashboard do organizador</strong>
+            <p style="color:#dbeafe;margin:8px 0 0;line-height:1.5">Controle vendas, participantes e validação de ingressos em um só lugar.</p>
+            <div class="float-grid">
+              <div class="float-stat"><strong>QR</strong><span>validação</span></div>
+              <div class="float-stat"><strong>PDF</strong><span>ingresso</span></div>
+              <div class="float-stat"><strong>Cloud</strong><span>Firebase</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="recursos" class="section">
+      <div class="page-shell">
+        <div class="section-heading">
+          <div>
+            <h2>Fluxo completo para eventos</h2>
+            <p>Da criação do evento até a entrada do participante, tudo foi organizado para ficar mais limpo e funcional.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <article class="card-glass"><div class="icon-bubble">✨</div><h3>Vitrine moderna</h3><p>Eventos com cards, filtros por categoria/cidade e página de detalhes mais clara para o participante.</p></article>
+          <article class="card-glass"><div class="icon-bubble">🎫</div><h3>Venda com lote</h3><p>Cada evento pode ter vários tipos de ingresso, controle de quantidade e janela de venda.</p></article>
+          <article class="card-glass"><div class="icon-bubble">🔒</div><h3>Firebase mantido</h3><p>Login, cadastro, eventos, lotes e ingressos continuam usando Firebase Auth e Firestore.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="fluxo" class="section">
+      <div class="page-shell grid-2">
+        <div class="card-glass"><h2>Para participantes</h2><p>Entre, explore eventos, escolha o lote e receba o ingresso digital com QR Code. Na página “Meus ingressos”, o usuário acompanha tudo que comprou.</p><a class="btn btn-light" href="/home/home.html">Explorar agora</a></div>
+        <div class="card-glass"><h2>Para organizadores</h2><p>Crie eventos, acompanhe ingressos vendidos e valide códigos pelo painel do organizador, sem sair do fluxo principal do site.</p><a class="btn btn-light" href="/home/criarEvento.html">Criar evento</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="page-shell footer-inner">
+      <span>EventFlow 2.0</span>
+      <span>Projeto de eventos com Firebase</span>
+    </div>
+  </footer>
+  <script type="module">import { setupMenu } from '/javaScript/ui.js'; setupMenu();</script>
+</body>
+</html>

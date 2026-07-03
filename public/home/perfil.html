@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perfil | EventFlow</title>
+  <link rel="icon" href="/img/logo_colorida_cortada.png" type="image/png">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="app-layout">
+  <main class="app-main">
+    <div class="page-shell">
+      <section class="app-hero"><span class="eyebrow">👤 Conta</span><h1>Meu perfil</h1><p>Atualize seus dados básicos usados nos eventos e ingressos.</p></section>
+      <section class="light-card">
+        <div id="message" class="message"></div>
+        <form id="perfilForm" class="form-grid">
+          <div class="form-row full"><label for="nome">Nome</label><input id="nome" required></div>
+          <div class="form-row"><label for="email">E-mail</label><input id="email" disabled></div>
+          <div class="form-row"><label for="telefone">Telefone</label><input id="telefone"></div>
+          <div class="form-row"><label for="cpf">CPF</label><input id="cpf"></div>
+          <div class="form-row"><label for="dataNascimento">Nascimento</label><input id="dataNascimento" type="date"></div>
+          <button class="btn btn-primary full" type="submit">Salvar perfil</button>
+        </form>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/javaScript/perfil.js"></script>
+</body>
+</html>
